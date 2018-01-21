@@ -38,13 +38,15 @@ class AuthDirector : EventListenerInterface
     private SMTPSettings smtpSettings;
     protected Variant[string] eventMessages;
     
-    this(Container container) {
+    this(Container container) @safe
+    {
         this.relationalDb = container.getRelationalDb();
         this.helperFactory = container.getHelperFactory();
         this.smtpSettings = container.getSMTPSettings();
     }
     
-    public TypeInfo[] getInterestedEvents() {
+    public TypeInfo[] getInterestedEvents() @safe
+    {
         return [
             typeid(RegisterUserCommand),
             typeid(LoginCommand),
@@ -55,7 +57,8 @@ class AuthDirector : EventListenerInterface
         ];
     }
 
-    public EventListInterface handleEvent(EventInterface event, TypeInfo eventType) {
+    public EventListInterface handleEvent(EventInterface event, TypeInfo eventType) @safe
+    {
         const string eventTypeStr = eventType.toString();
 
         debug {
@@ -98,6 +101,7 @@ class AuthDirector : EventListenerInterface
         return eventList;
     }
 
+    /*
     public T getEventMessage(T)(string key)
     {
         if (key in this.eventMessages) {
@@ -105,5 +109,5 @@ class AuthDirector : EventListenerInterface
         }
 
         throw new Exception("Key does not exist in eventMessages hashmap");
-    } 
+    } */
 }

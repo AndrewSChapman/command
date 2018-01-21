@@ -14,11 +14,12 @@ class UserQuery
 {
     protected RelationalDBInterface relationalDb;
 
-    this(RelationalDBInterface relationalDb) {
+    this(RelationalDBInterface relationalDb) @safe
+    {
         this.relationalDb = relationalDb;
     }
 
-    public bool userExistsById(uint userId)
+    public bool userExistsById(uint userId) @safe
     {
         enforce(userId > 0, "UserId must be greater than 0");
 
@@ -38,8 +39,8 @@ class UserQuery
 
         return (numRows > 0);
     }
-
-    public bool userExistsByEmail(string emailAddress)
+ 
+    public bool userExistsByEmail(string emailAddress) @safe
     {
         enforce(emailAddress.length > 5, "Please supply a valid email address");
 
@@ -59,7 +60,7 @@ class UserQuery
         return (numRows > 0);
     }
 
-    public User getUserByEmail(in string emailAddress)
+    public User getUserByEmail(in string emailAddress) @safe
     {
         enforce(emailAddress != "", "Please supply a valid email address");
 
@@ -81,7 +82,7 @@ class UserQuery
         return user;
     }
 
-    public User getUserById(ulong usrId)
+    public User getUserById(ulong usrId) @safe
     {
         assert(usrId > 0, "Please supply a valid usrId");
         
@@ -102,7 +103,7 @@ class UserQuery
         return user;
     }
 
-    public Profile getProfileByUserId(ulong usrId)
+    public Profile getProfileByUserId(ulong usrId) @safe
     {
         assert(usrId > 0, "Please supply a valid usrId");
         

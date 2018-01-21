@@ -51,7 +51,7 @@ class AppConfig
         ushort SMTPPort,
         string SMTPUsername,
         string SMTPPassword
-    ) {
+    ) @safe {
         // Server
         this.serverListenIP = serverListenIP;
         this.serverListenPort = serverListenPort;
@@ -84,102 +84,102 @@ class AppConfig
     }
        
     // Server
-    public string getServerListenIP()
+    public string getServerListenIP() @safe
     {
         return this.serverListenIP;
     }
 
-    public ushort getServerListenPort()
+    public ushort getServerListenPort() @safe
     {
         return this.serverListenPort;
     }    
     
     // Session
-    public ulong getSessionTimeout()
+    public ulong getSessionTimeout() @safe
     {
         return this.sessionTimeout;
     }
 
     // MySQL
-    public string getRelationalDbHost()
+    public string getRelationalDbHost() @safe
     {
         return this.relationalDbHost;
     }
 
-    public ushort getRelationalDbPort()
+    public ushort getRelationalDbPort() @safe
     {
         return this.relationalDbPort;
     }
 
-    public string getRelationalDbUsername()
+    public string getRelationalDbUsername() @safe
     {
         return this.relationalDbUsername;
     }
 
-    public string getRelationalDbPassword()
+    public string getRelationalDbPassword() @safe
     {
         return this.relationalDbPassword;
     }
 
-    public string getRelationalDbName()
+    public string getRelationalDbName() @safe
     {
         return this.relationalDbName;
     }  
 
     // Mongo
-    public string getMongoHost()
+    public string getMongoHost() @safe
     {
         return this.mongoHost;
     }
 
-    public string getMongoDbName()
+    public string getMongoDbName() @safe
     {
         return this.mongoDbName;
     }
 
-    public string getMongoCollectionName()
+    public string getMongoCollectionName() @safe
     {
         return this.mongoCollectionName;
     }
 
-    public string getMongoEventStoreName()
+    public string getMongoEventStoreName() @safe
     {
         return this.mongoDbName ~ "." ~ this.mongoCollectionName;
     }
 
     // Redis
-    public string getRedisHost()
+    public string getRedisHost() @safe
     {
         return this.redisHost;
     }    
 
-    public ushort getRedisPort()
+    public ushort getRedisPort() @safe
     {
         return this.redisPort;
     } 
 
-    public uint getRedisDbNo()
+    public uint getRedisDbNo() @safe
     {
         return this.redisDbNo;
     }
 
     // SMTP
-    public string getSMTPHost()
+    public string getSMTPHost() @safe
     {
         return this.SMTPHost;
     }
 
-    public ushort getSMTPPort()
+    public ushort getSMTPPort() @safe
     {
         return this.SMTPPort;
     }
 
-    public string getSMTPUsername()
+    public string getSMTPUsername() @safe
     {
         return this.SMTPUsername;
     }
 
-    public string getSMTPPassword()
+    public string getSMTPPassword() @safe
     {
         return this.SMTPPassword;
     }         

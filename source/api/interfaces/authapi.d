@@ -12,18 +12,18 @@ interface AuthAPI
 {
 	@method(HTTPMethod.GET)
 	@before!getRequestInfo("requestInfo")
-	@property Prefix prefix(RequestInfo requestInfo);
+	@property Prefix prefix(RequestInfo requestInfo) @safe;
 
 	@method(HTTPMethod.POST)
-	@property void register(RegisterUserDMMeta register);	
+	@property void register(RegisterUserDMMeta register) @safe;	
 
 	@method(HTTPMethod.POST)
 	@before!getRequestInfo("requestInfo")
-	@property Token login(LoginRequestMeta login, RequestInfo requestInfo);
+	@property Token login(LoginRequestMeta login, RequestInfo requestInfo) @safe;
 
 	@method(HTTPMethod.POST)
-	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest);
+	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest) @safe;
 
 	@method(HTTPMethod.POST)
-	@property void passwordResetComplete(PasswordResetCompleteRequestMeta passwordResetCompleteRequest);		
+	@property void passwordResetComplete(PasswordResetCompleteRequestMeta passwordResetCompleteRequest) @safe;		
 }

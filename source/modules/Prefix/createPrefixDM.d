@@ -18,7 +18,7 @@ class CreatePrefixDM : DecisionMakerInterface
 {    
     private CreatePrefixDMMeta meta;
     
-    public this(ref CreatePrefixDMMeta meta)
+    public this(ref CreatePrefixDMMeta meta) @safe
     {
         enforce(meta.userAgent != "", "Please supply a valid user agent");
         enforce(meta.ipAddress != "", "Please supply a valid ip address");
@@ -27,7 +27,7 @@ class CreatePrefixDM : DecisionMakerInterface
         this.meta = meta;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {        
         eventList.append(new CreatePrefixCommand(this.meta), typeid(CreatePrefixCommand));
     }

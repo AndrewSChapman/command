@@ -14,11 +14,12 @@ class TokenQuery
 {
     protected RelationalDBInterface relationalDb;
 
-    this(RelationalDBInterface relationalDb) {
+    this(RelationalDBInterface relationalDb) @safe
+    {
         this.relationalDb = relationalDb;
     }
 
-    public bool existsByCode(string tokenCode)
+    public bool existsByCode(string tokenCode) @safe
     {
         enforce(tokenCode != "", "Please provide a valid token code");
 
@@ -39,7 +40,7 @@ class TokenQuery
         return (numRows > 0);
     }
 
-    public Token getByCode(in string tokenCode)
+    public Token getByCode(in string tokenCode) @safe
     {
         enforce(tokenCode != "", "Please provide a valid token code");
         

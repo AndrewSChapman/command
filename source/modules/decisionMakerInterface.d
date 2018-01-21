@@ -4,5 +4,5 @@ import eventmanager.all;
 
 interface DecisionMakerInterface
 {
-    public void execute(EventListInterface eventList);
+    public void execute(EventListInterface eventList) @safe;
 }

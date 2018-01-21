@@ -13,7 +13,7 @@ class MongoEventStore : EventStoreInterface
 {
     protected MongoCollection mongoCollection;
 
-    this(MongoClient client, string collectionName) {
+    this(MongoClient client, string collectionName) @safe {
         this.mongoCollection = client.getCollection(collectionName);
     }
 
@@ -27,7 +27,7 @@ class MongoEventStore : EventStoreInterface
         string workspaceId,
         long createdAfterSystime,
         EventStorePager pager,
-    ) {
+    ) @safe {
         auto queryData = [
             "eventType" : Bson(eventType),
             "metadataJson.workspaceId" : Bson(workspaceId)

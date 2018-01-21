@@ -12,12 +12,12 @@ class GroupQuery
 {
     protected RelationalDBInterface relationalDb;
 
-    this(RelationalDBInterface relationalDb)
+    this(RelationalDBInterface relationalDb) @safe
     {
         this.relationalDb = relationalDb;
     }
 
-    public bool existsById(string groupId)
+    public bool existsById(string groupId) @safe
     {
         enforce(groupId != "", "Please provide a valid group Id");
 
@@ -38,7 +38,7 @@ class GroupQuery
         return (numRows > 0);
     }
 
-    public Group getById(string groupId)
+    public Group getById(string groupId) @safe
     {
         enforce(groupId != "", "Please provide a valid group Id");        
 

@@ -32,7 +32,7 @@ class Container
         ref AppConfig appConfig,
         bool versionIsRelease,
         ref in SMTPSettings smtpSettings
-    ) {
+    ) @safe {
         this.appConfig = appConfig;
         this.versionIsRelease = versionIsRelease;
         this.smtpSettings = smtpSettings;       
@@ -42,32 +42,32 @@ class Container
         this.redisDatabase = redisDatabase;
     }
 
-    public RelationalDBInterface getRelationalDb()
+    public RelationalDBInterface getRelationalDb() @safe
     {
         return this.relationalDb;
     }
 
-    public string getMongoDBName()
+    public string getMongoDBName() @safe
     {
         return this.appConfig.getMongoDbName();
     }
 
-    public string getMongoDBEventCollectionName()
+    public string getMongoDBEventCollectionName() @safe
     {
         return this.appConfig.getMongoCollectionName();
     }    
 
-    public MongoClient getMongoClient()
+    public MongoClient getMongoClient() @safe
     {
         return this.mongoClient;
     }
 
-    public RedisDatabase getRedisDatabase()
+    public RedisDatabase getRedisDatabase() @safe
     {
         return this.redisDatabase;
     }      
 
-    public QueryFactory getQueryFactory()
+    public QueryFactory getQueryFactory() @safe
     {
         if (this.queryFactory is null) {
             this.queryFactory = new QueryFactory(this.relationalDb);
@@ -76,7 +76,7 @@ class Container
         return this.queryFactory;
     }
 
-    public HelperFactory getHelperFactory()
+    public HelperFactory getHelperFactory() @safe
     {
         if (this.helperFactory is null) {
             this.helperFactory = new HelperFactory(this.getQueryFactory());
@@ -85,18 +85,18 @@ class Container
         return this.helperFactory;
     }
 
-    public EventStoreInterface getEventStore()
+    public EventStoreInterface getEventStore() @safe
     {
         return new MongoEventStore(this.mongoClient, this.getMongoDBName() ~ "." ~
             this.getMongoDBEventCollectionName());
     }
 
-    public SMTPSettings getSMTPSettings()
+    public SMTPSettings getSMTPSettings() @safe
     {
         return this.smtpSettings;
     }
 
-    public static Container createFromAppConfig(AppConfig appConfig)
+    public static Container createFromAppConfig(AppConfig appConfig) @safe
     {
         // Build SMTP Settings
         SMTPSettings smtpSettings;

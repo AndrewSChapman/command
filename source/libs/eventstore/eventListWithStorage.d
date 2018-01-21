@@ -15,7 +15,8 @@ class EventListWithStorage : EventList
     protected EventStoreInterface eventStoreInterface;
     
 
-    this(EventStoreInterface eventStoreInterface) {
+    this(EventStoreInterface eventStoreInterface) @safe
+    {
         super();
         this.eventStoreInterface = eventStoreInterface;
     }    
@@ -26,8 +27,8 @@ class EventListWithStorage : EventList
     looping until all events have been processed and no new events
     have been created.
     */
-    override public void dispatch(EventDispatcherInterface dispatcher) {
-        
+    override public void dispatch(EventDispatcherInterface dispatcher) @safe
+    {    
         auto eventList = this.getEventList();
 
         while (true) {
@@ -56,5 +57,4 @@ class EventListWithStorage : EventList
             eventList = newEventList.getEventList();
         }
     }    
-
 }

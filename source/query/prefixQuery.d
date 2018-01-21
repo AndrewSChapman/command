@@ -13,11 +13,12 @@ class PrefixQuery
 {
     protected RelationalDBInterface relationalDb;
 
-    this(RelationalDBInterface relationalDb) {
+    this(RelationalDBInterface relationalDb) @safe
+    {
         this.relationalDb = relationalDb;
     }
 
-    public bool exists(in string prefixCode)
+    public bool exists(in string prefixCode) @safe
     {
         enforce(prefixCode != "", "Please supply a prefix code");
 
@@ -35,7 +36,7 @@ class PrefixQuery
         return (numRows > 0);
     }
 
-    public Prefix getPrefix(in string prefixCode)
+    public Prefix getPrefix(in string prefixCode) @safe
     {
         enforce(prefixCode != "", "Please supply a prefix code");
         

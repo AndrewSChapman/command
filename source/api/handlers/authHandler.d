@@ -37,11 +37,13 @@ class AuthHandler : AuthAPI
 {
 	private AppConfig appConfig;
 
-    this(AppConfig appConfig) {
+    this(AppConfig appConfig) @safe
+    {
 		this.appConfig = appConfig;
     }
 
-	private AuthDirector attachDirector(Container container, ref EventDispatcher dispatcher) {
+	private AuthDirector attachDirector(Container container, ref EventDispatcher dispatcher) @safe
+    {
 		auto director = new AuthDirector(
 			container
 		);
@@ -52,7 +54,7 @@ class AuthHandler : AuthAPI
 		return director;	
 	}
 
-	private AuthDirector executeCommand(Container container, DecisionMakerInterface DecisionMakerInterface)
+	private AuthDirector executeCommand(Container container, DecisionMakerInterface DecisionMakerInterface) @safe
 	{
 		auto eventList = new EventListWithStorage(
 			new MongoEventStore(container.getMongoClient(), this.appConfig.getMongoEventStoreName())
@@ -71,7 +73,7 @@ class AuthHandler : AuthAPI
 		return director;
 	}
 
-	@property Prefix prefix(RequestInfo requestInfo)
+	@property Prefix prefix(RequestInfo requestInfo) @safe
 	{
 		Container container = Container.createFromAppConfig(appConfig);
 
@@ -89,7 +91,7 @@ class AuthHandler : AuthAPI
 		return prefix;
 	}
 
-	@property void register(RegisterUserDMMeta registrationMetadata)
+	@property void register(RegisterUserDMMeta registrationMetadata) @safe
 	{
 		try {
 			Container container = Container.createFromAppConfig(appConfig);
@@ -108,7 +110,7 @@ class AuthHandler : AuthAPI
 		}
 	}
 
-	@property Token login(LoginRequestMeta meta, RequestInfo requestInfo)
+	@property Token login(LoginRequestMeta meta, RequestInfo requestInfo) @safe
 	{	
 		Token token;
 
@@ -157,7 +159,7 @@ class AuthHandler : AuthAPI
 		return token;
 	}	
 
-	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest)
+	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest) @safe
 	{
 		try {
 			Container container = Container.createFromAppConfig(appConfig);
@@ -188,7 +190,7 @@ class AuthHandler : AuthAPI
 		}		
 	}
 
-	@property void passwordResetComplete(PasswordResetCompleteRequestMeta passwordResetCompleteRequest)
+	@property void passwordResetComplete(PasswordResetCompleteRequestMeta passwordResetCompleteRequest) @safe
 	{
 		try {
 			Container container = Container.createFromAppConfig(appConfig);
