@@ -1,0 +1,29 @@
+[Server]
+listenIP = "127.0.0.1"
+listenPort = 8080
+
+[Sessions]
+timeoutInSeconds = 86400
+
+[MySQL]
+host = "192.168.1.1"
+port = 3306
+user = "myuser"
+password = "mypassword"
+database = "mydatabase"
+
+[Mongo]
+host = "192.168.1.1"
+dbName = "cloudpad"
+eventCollectionName = "events"
+
+[Redis]
+host = "192.168.1.1"
+port = 6379
+dbNo = 0
+
+[SMTP]
+host = "192.168.1.1"
+port = 25
+username = "yourusername"
+password = "yourpassword"
