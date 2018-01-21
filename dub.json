@@ -4,7 +4,12 @@
 		"Andy Chapman"
 	],
 	"dependencies": {
-		"vibe-d": "~>0.8.2"
+        "vibe-d": "~>0.8.2",
+		"vibemail": "~>2.0.0",
+		"eventmanager": "~>0.1.2",
+		"mysql-native": "~>1.1.0",
+        "dcorelib": "~>0.0.6",
+        "dini": "~>1.0.1"
 	},
 	"description": "The foundations for a Restful API with a command based architecture",
 	"license": "BSD 2-clause"
