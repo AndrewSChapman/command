@@ -56,9 +56,14 @@ class AuthHandler : AuthAPI
 
 	private AuthDirector executeCommand(Container container, DecisionMakerInterface DecisionMakerInterface) @safe
 	{
+        /*
 		auto eventList = new EventListWithStorage(
 			new MongoEventStore(container.getMongoClient(), this.appConfig.getMongoEventStoreName())
-		);
+		); */
+
+		auto eventList = new EventListWithStorage(
+			container.getEventStoreInterface()
+		);        
 
 		DecisionMakerInterface.execute(eventList);
 

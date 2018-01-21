@@ -42,7 +42,7 @@ class PasswordResetInitiateProjection
 
     private void sendResetEmail(string firstName, string email, ulong newPasswordPin)
     {
-        string message = format("Hi %s. CloudPad just receieved a request to reset your account password.
+        string message = format("Hi %s. WellRestD just receieved a request to reset your account password.
 
 To reset your password, please enter the reset pin shown below into the application.
 
@@ -51,7 +51,7 @@ Password Reset Pin: %d
 If you did not make this request, you can safely ignore this email.
 
 With regards,
-The CloudPad support team",
+The WellRestD support team",
             firstName,
             newPasswordPin
         );

@@ -5,3 +5,4 @@ public import eventstore.mongoeventstore;
 public import eventstore.storageevent;
 public import eventstore.eventlistwithstorage;
 public import eventstore.pager;
+public import eventstore.relationaleventstore;

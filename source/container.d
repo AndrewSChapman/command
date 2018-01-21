@@ -131,4 +131,11 @@ class Container
 
         return new Container(connection, mongoClient, redisDatabase, appConfig, versionIsRelease, smtpSettings);
     }
+
+    public EventStoreInterface getEventStoreInterface() @safe
+    {
+        // @todo - put in logic to switch between mongo and relational
+        // based on AppConfig setting
+        return new RelationalEventStore(this.relationalDb);
+    }
 }

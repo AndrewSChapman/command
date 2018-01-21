@@ -14,7 +14,6 @@ class EventListWithStorage : EventList
 {
     protected EventStoreInterface eventStoreInterface;
     
-
     this(EventStoreInterface eventStoreInterface) @safe
     {
         super();
