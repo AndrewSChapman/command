@@ -6,6 +6,7 @@ import std.conv;
 
 // Our imports
 import appconfig;
+import api.handlers.all;
 
 // Global objects
 AppConfig appConfig;
@@ -14,13 +15,36 @@ void main()
 {
 	appConfig = loadAppConfig();
 
+	auto router = new URLRouter;
+	router.registerRestInterface(new AuthHandler(appConfig));    
+
     auto settings = new HTTPServerSettings;
 	settings.port = appConfig.getServerListenPort();
     settings.bindAddresses = ["::1", "127.0.0.1", appConfig.getServerListenIP()];
-	listenHTTP(settings, &hello);
+	settings.errorPageHandler = delegate(HTTPServerRequest req, HTTPServerResponse res, HTTPServerErrorInfo errorInfo) {
 
-	logInfo(format("Server listening at http://%s:%d/", appConfig.getServerListenIP(), appConfig.getServerListenPort()));
+		struct APIResponse
+		{
+			uint code;
+			string message;
+			string info;
+		}
+
+		APIResponse response;
+		response.code = errorInfo.code;
+		response.message = errorInfo.message;
+
+		if (errorInfo.exception !is null) {
+			response.info = errorInfo.exception.msg;
+		}
+
+		res.writeBody(response.serializeToJsonString());
+	};	
+
+	listenHTTP(settings, router);
 	runApplication();
+
+    logInfo(format("Server listening at http://%s:%d/", appConfig.getServerListenIP(), appConfig.getServerListenPort()));
 }
 
 void hello(HTTPServerRequest req, HTTPServerResponse res)

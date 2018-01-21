@@ -140,7 +140,12 @@ class AppConfig
     public string getMongoCollectionName()
     {
         return this.mongoCollectionName;
-    }   
+    }
+
+    public string getMongoEventStoreName()
+    {
+        return this.mongoDbName ~ "." ~ this.mongoCollectionName;
+    }
 
     // Redis
     public string getRedisHost()
