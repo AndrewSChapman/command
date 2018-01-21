@@ -1,0 +1,11 @@
+{
+	"name": "wellrestd",
+	"authors": [
+		"Andy Chapman"
+	],
+	"dependencies": {
+		"vibe-d": "~>0.8.2"
+	},
+	"description": "The foundations for a Restful API with a command based architecture",
+	"license": "BSD 2-clause"
+}
