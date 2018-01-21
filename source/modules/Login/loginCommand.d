@@ -7,12 +7,12 @@ import decisionmakers.login;
 
 class LoginCommand : AbstractEvent!LoginDMMeta,StorableEvent
 {
-    this(LoginDMMeta meta)
+    this(LoginDMMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

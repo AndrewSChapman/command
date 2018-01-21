@@ -19,7 +19,7 @@ class TokenQuery
         this.relationalDb = relationalDb;
     }
 
-    public bool existsByCode(string tokenCode) @safe
+    public bool existsByCode(string tokenCode) @trusted
     {
         enforce(tokenCode != "", "Please provide a valid token code");
 
@@ -40,7 +40,7 @@ class TokenQuery
         return (numRows > 0);
     }
 
-    public Token getByCode(in string tokenCode) @safe
+    public Token getByCode(in string tokenCode) @trusted
     {
         enforce(tokenCode != "", "Please provide a valid token code");
         

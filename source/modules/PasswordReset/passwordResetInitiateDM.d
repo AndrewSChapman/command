@@ -36,7 +36,7 @@ class PasswordResetInitiateDM : DecisionMakerInterface
     private PasswordResetInitiateDMMeta meta;
     private PasswordResetInitiateFactors factors;
     
-    public this(ref PasswordResetInitiateDMMeta meta, ref PasswordResetInitiateFactors factors)
+    public this(ref PasswordResetInitiateDMMeta meta, ref PasswordResetInitiateFactors factors) @safe
     {
         enforce(meta.usrId > 0, "Sorry, we could not find your user account.");
         enforce(meta.newPassword != "", "Please supply a valid new password.");
@@ -52,7 +52,7 @@ class PasswordResetInitiateDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {
         eventList.append(new PasswordResetInitiateCommand(this.meta), typeid(PasswordResetInitiateCommand));
     }

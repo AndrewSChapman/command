@@ -15,7 +15,7 @@ class EmailHelper
     private string messageHTML;
 
 
-    this(ref SMTPSettings smtpSettings)
+    this(ref SMTPSettings smtpSettings) @safe
     {
         enforce(smtpSettings.host != "", "Please set a valid SMTPHost");
         enforce(smtpSettings.port > 0, "Please set a valid SMTPPort");
@@ -25,12 +25,12 @@ class EmailHelper
         this.messageHTML = "";
     }
 
-    public void setMessagePlainText(string message)
+    public void setMessagePlainText(string message) @safe
     {
         this.messagePlainText = message;
     }
 
-    public void setMessageHTML(string message)
+    public void setMessageHTML(string message) @safe
     {
         this.messageHTML = message;
     }
@@ -39,7 +39,7 @@ class EmailHelper
         string subject,
         EmailIdentity sender,
         EmailIdentity[] recipients
-    ) {
+    ) @trusted {
         enforce(recipients.length > 0, "You must provide at least one recipient");
 
         auto settings = new SMTPClientSettings(this.smtpSettings.host, this.smtpSettings.port);
@@ -107,7 +107,7 @@ class EmailIdentity
     protected string name;
     protected string email;
 
-    this(string email, string name = "")
+    this(string email, string name = "") @safe
     {
         enforce(email != "", "You must supply an email address");        
         
@@ -115,17 +115,17 @@ class EmailIdentity
         this.name = name;
     }
 
-    public string getName()
+    public string getName() @safe
     {
         return this.name;
     }
 
-    public string getEmail()
+    public string getEmail() @safe
     {
         return this.email;
     }
 
-    public string getNameAndEmail()
+    public string getNameAndEmail() @safe
     {
         if (this.name != "") {
             return format("\"%s\" <%s>", this.name, this.email); 

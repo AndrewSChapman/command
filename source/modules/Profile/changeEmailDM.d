@@ -27,7 +27,7 @@ class ChangeEmailDM : DecisionMakerInterface
     private ChangeEmailMeta meta;
     private ChangeEmailFactors factors;
     
-    public this(ref ChangeEmailMeta meta, ref ChangeEmailFactors factors)
+    public this(ref ChangeEmailMeta meta, ref ChangeEmailFactors factors) @safe
     {
         enforce(factors.userLoggedIn, "Sorry, you must be logged in to perform this action.");
         enforce(factors.emailAddressLooksValid, "Sorry, the proposed email address seems to be invalid.");
@@ -40,7 +40,7 @@ class ChangeEmailDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {        
         eventList.append(new ChangeEmailCommand(this.meta), typeid(ChangeEmailCommand));
     }

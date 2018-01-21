@@ -24,7 +24,7 @@ class RegisterUserDM : DecisionMakerInterface
 {
     private RegisterUserDMMeta meta;
     
-    public this(RegisterUserDMMeta meta, ref RegisterNewUserFactors factors)
+    public this(RegisterUserDMMeta meta, ref RegisterNewUserFactors factors) @safe
     {
         enforce(meta.userFirstName != "", "Please supply a user first name");
         enforce(meta.userLastName != "", "Please supply a user last name");
@@ -35,7 +35,7 @@ class RegisterUserDM : DecisionMakerInterface
         this.meta = meta;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {
         eventList.append(new RegisterUserCommand(this.meta), typeid(RegisterUserCommand));
     }

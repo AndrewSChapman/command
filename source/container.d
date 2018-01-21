@@ -96,7 +96,7 @@ class Container
         return this.smtpSettings;
     }
 
-    public static Container createFromAppConfig(AppConfig appConfig) @safe
+    public static Container createFromAppConfig(AppConfig appConfig) @trusted
     {
         // Build SMTP Settings
         SMTPSettings smtpSettings;

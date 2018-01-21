@@ -25,7 +25,7 @@ class UpdateUserDM : DecisionMakerInterface
     private UpdateUserMeta meta;
     private UpdateUserFactors factors;
     
-    public this(ref UpdateUserMeta meta, ref UpdateUserFactors factors)
+    public this(ref UpdateUserMeta meta, ref UpdateUserFactors factors) @safe
     {
         enforce(factors.userLoggedIn, "Sorry, you must be logged in to perform this action.");
         enforce(meta.usrId > 0, "Please supply a valid user Id.");
@@ -36,7 +36,7 @@ class UpdateUserDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {        
         eventList.append(new UpdateUserCommand(this.meta), typeid(UpdateUserCommand));
     }

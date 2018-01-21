@@ -41,7 +41,7 @@ class LoginDM : DecisionMakerInterface
     private LoginDMMeta meta;
     private LoginFactors factors;
     
-    public this(ref LoginDMMeta meta, ref LoginFactors factors)
+    public this(ref LoginDMMeta meta, ref LoginFactors factors) @safe
     {
         enforce(factors.userExists, "Sorry, a user account with the specified email address does not exist.");
         enforce(factors.passwordCorrect, "Sorry, the supplied password was incorrect.");            
@@ -56,7 +56,7 @@ class LoginDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {
         if (factors.prefixNotAssigned) {
             AssignPrefixMeta assignPrefixMeta;

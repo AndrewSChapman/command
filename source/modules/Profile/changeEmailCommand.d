@@ -12,12 +12,13 @@ struct ChangeEmailMeta
 
 class ChangeEmailCommand : AbstractEvent!ChangeEmailMeta,StorableEvent
 {
-    this(ChangeEmailMeta meta)
+    this(ChangeEmailMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

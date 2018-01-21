@@ -7,12 +7,13 @@ import decisionmakers.passwordresetcomplete;
 
 class PasswordResetCompleteCommand : AbstractEvent!PasswordResetCompleteDMMeta,StorableEvent
 {
-    this(PasswordResetCompleteDMMeta meta)
+    this(PasswordResetCompleteDMMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

@@ -13,7 +13,7 @@ class PasswordHelper
 {
     private const BCRYPT_LEVEL = 12;
     
-    public string HashBcrypt(string password)
+    public string HashBcrypt(string password) @safe
     {
         if (password == "") {
             throw new Exception("Password must not be empty");
@@ -34,7 +34,7 @@ class PasswordHelper
         return result;
     }
 
-    public bool VerifyBcryptHash(string hash, string password)
+    public bool VerifyBcryptHash(string hash, string password) @safe
     {
         if ((hash == "") || (password == "")) {
             throw new Exception("Hash and password must not be empty");
@@ -56,11 +56,12 @@ class PasswordHelper
         return result == "1";
     }
 
-    public bool passwordPassesSecurityPolicy(ref string password) {
+    public bool passwordPassesSecurityPolicy(ref string password) @safe
+    {
         return (password.length >= 6);
     }
 
-    public string getPasswordSecurityPolicyText()
+    public string getPasswordSecurityPolicyText() @safe
     {
         return "Password must be at least 6 characters long";
     }

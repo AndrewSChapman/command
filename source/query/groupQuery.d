@@ -17,7 +17,7 @@ class GroupQuery
         this.relationalDb = relationalDb;
     }
 
-    public bool existsById(string groupId) @safe
+    public bool existsById(string groupId) @trusted
     {
         enforce(groupId != "", "Please provide a valid group Id");
 
@@ -38,7 +38,7 @@ class GroupQuery
         return (numRows > 0);
     }
 
-    public Group getById(string groupId) @safe
+    public Group getById(string groupId) @trusted
     {
         enforce(groupId != "", "Please provide a valid group Id");        
 

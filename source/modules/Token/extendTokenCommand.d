@@ -16,12 +16,13 @@ struct ExtendTokenCommandMeta
 
 class ExtendTokenCommand : AbstractEvent!ExtendTokenCommandMeta,StorableEvent
 {
-    this(ExtendTokenCommandMeta meta)
+    this(ExtendTokenCommandMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

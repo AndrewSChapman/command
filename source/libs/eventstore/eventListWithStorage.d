@@ -27,7 +27,7 @@ class EventListWithStorage : EventList
     looping until all events have been processed and no new events
     have been created.
     */
-    override public void dispatch(EventDispatcherInterface dispatcher) @safe
+    override public void dispatch(EventDispatcherInterface dispatcher) @trusted
     {    
         auto eventList = this.getEventList();
 

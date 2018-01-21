@@ -12,11 +12,13 @@ class MySQLRelationalDB : RelationalDBInterface {
     private Connection conn;
     private const string classID = "MySQLRelationalDB";
 
-    this(Connection conn) {
+    this(Connection conn) @safe
+    {
         this.conn = conn;
     }    
 
-    public void execute(string sql, Variant[] params) {
+    public void execute(string sql, Variant[] params)
+    {
         Prepared prepared = prepare(this.conn, sql);
         prepared.setArgs(params);
         prepared.exec();

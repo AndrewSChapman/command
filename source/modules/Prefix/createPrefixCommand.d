@@ -7,12 +7,13 @@ import decisionmakers.createprefix;
 
 class CreatePrefixCommand : AbstractEvent!CreatePrefixDMMeta,StorableEvent
 {
-    this(CreatePrefixDMMeta meta)
+    this(CreatePrefixDMMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

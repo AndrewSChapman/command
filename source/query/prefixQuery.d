@@ -18,7 +18,7 @@ class PrefixQuery
         this.relationalDb = relationalDb;
     }
 
-    public bool exists(in string prefixCode) @safe
+    public bool exists(in string prefixCode) @trusted
     {
         enforce(prefixCode != "", "Please supply a prefix code");
 
@@ -36,7 +36,7 @@ class PrefixQuery
         return (numRows > 0);
     }
 
-    public Prefix getPrefix(in string prefixCode) @safe
+    public Prefix getPrefix(in string prefixCode) @trusted
     {
         enforce(prefixCode != "", "Please supply a prefix code");
         

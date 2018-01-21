@@ -29,7 +29,7 @@ class ChangePasswordDM : DecisionMakerInterface
     private ChangePasswordMeta meta;
     private ChangePasswordFactors factors;
     
-    public this(ref ChangePasswordMeta meta, ref ChangePasswordFactors factors)
+    public this(ref ChangePasswordMeta meta, ref ChangePasswordFactors factors) @safe
     {
         enforce(factors.userLoggedIn, "Sorry, you must be logged in to perform this action.");
         enforce(factors.repeatedPasswordMatches, "Sorry, your repeated password does not match the new password.");
@@ -42,7 +42,7 @@ class ChangePasswordDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {        
         eventList.append(new ChangePasswordCommand(this.meta), typeid(ChangePasswordCommand));
     }

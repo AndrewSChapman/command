@@ -12,12 +12,13 @@ struct ChangePasswordMeta
 
 class ChangePasswordCommand : AbstractEvent!ChangePasswordMeta,StorableEvent
 {
-    this(ChangePasswordMeta meta)
+    this(ChangePasswordMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

@@ -7,12 +7,13 @@ import decisionmakers.registeruser;
 
 class RegisterUserCommand : AbstractEvent!RegisterUserDMMeta,StorableEvent
 {
-    this(RegisterUserDMMeta meta)
+    this(RegisterUserDMMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

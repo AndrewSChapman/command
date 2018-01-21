@@ -57,7 +57,7 @@ class AuthDirector : EventListenerInterface
         ];
     }
 
-    public EventListInterface handleEvent(EventInterface event, TypeInfo eventType) @safe
+    public EventListInterface handleEvent(EventInterface event, TypeInfo eventType) @trusted
     {
         const string eventTypeStr = eventType.toString();
 
@@ -101,13 +101,12 @@ class AuthDirector : EventListenerInterface
         return eventList;
     }
 
-    /*
-    public T getEventMessage(T)(string key)
+    public T getEventMessage(T)(string key) @trusted
     {
         if (key in this.eventMessages) {
             return *((this.eventMessages[key]).peek!T);
         }
 
         throw new Exception("Key does not exist in eventMessages hashmap");
-    } */
+    }
 }

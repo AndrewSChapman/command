@@ -13,12 +13,13 @@ struct AssignPrefixMeta
 
 class AssignPrefixCommand : AbstractEvent!AssignPrefixMeta,StorableEvent
 {
-    this(AssignPrefixMeta meta)
+    this(AssignPrefixMeta meta) @safe
     {
         super(meta);
     }
 
-    public StorageEvent toStorageEvent() {
+    public StorageEvent toStorageEvent() @trusted
+    {
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 

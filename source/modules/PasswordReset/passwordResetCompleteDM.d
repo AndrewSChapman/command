@@ -32,7 +32,7 @@ class PasswordResetCompleteDM : DecisionMakerInterface
     private PasswordResetCompleteDMMeta meta;
     private PasswordResetCompleteFactors factors;
     
-    public this(ref PasswordResetCompleteDMMeta meta, ref PasswordResetCompleteFactors factors)
+    public this(ref PasswordResetCompleteDMMeta meta, ref PasswordResetCompleteFactors factors) @safe
     {
         enforce(meta.usrId > 0, "Sorry, we could not find your user account.");
         enforce(factors.userExists, "Sorry, a user account with the specified email address does not exist.");
@@ -43,7 +43,7 @@ class PasswordResetCompleteDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {
         eventList.append(new PasswordResetCompleteCommand(this.meta), typeid(PasswordResetCompleteCommand));
     }
