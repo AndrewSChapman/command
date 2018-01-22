@@ -6,6 +6,7 @@ import std.outbuffer;
 import std.exception;
 import std.string;
 import std.stdio;
+import std.digest.md;
 
 class StringsHelper
 {
@@ -60,6 +61,13 @@ class StringsHelper
         }        
 
         return result;
+    }
+
+    public string md5(in string stringToHash)
+    {
+        auto md5 = new MD5Digest();
+        ubyte[] hash = md5.digest(stringToHash);
+        return toHexString(hash);
     }
 }
 

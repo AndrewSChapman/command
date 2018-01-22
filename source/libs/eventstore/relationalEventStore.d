@@ -1,8 +1,4 @@
 module eventstore.relationaleventstore;
-
-import std.typecons;
-import std.stdio;
-import std.conv;
 import std.datetime;
 import vibe.vibe;
 
@@ -26,8 +22,6 @@ class RelationalEventStore : EventStoreInterface
                 INSERT INTO commandLog (id, eventType, createdDtm, usrId, processingTime, lifecycle, metadata)
                 VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?, ?);
             ";
-
-        writeln("ID: ", storageEvent._id.toString());
 
         auto metadata = storageEvent.metadataJson;
         this.removeSensitiveInformation(storageEvent.eventType, metadata);

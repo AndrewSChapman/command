@@ -70,7 +70,7 @@ class AuthDirector : EventListenerInterface
 
         if (eventType == typeid(RegisterUserCommand)) {
             RegisterUserDMMeta meta = *metaVariant.peek!(RegisterUserDMMeta);
-            auto handler = new RegisterUserProjection(this.relationalDb, this.helperFactory, meta);
+            auto handler = new RegisterUserProjection(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
             handler.handleEvent();
         } else if (eventType == typeid(AssignPrefixCommand)) {
             auto const meta = *metaVariant.peek!(AssignPrefixMeta);

@@ -62,7 +62,7 @@ class AuthHandler : AuthAPI
 		); */
 
 		auto eventList = new EventListWithStorage(
-			container.getEventStoreInterface()
+			container.getEventStore()
 		);        
 
 		DecisionMakerInterface.execute(eventList);

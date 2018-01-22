@@ -10,6 +10,7 @@ import relationaldb.all;
 import decisionmakers.passwordresetinitiate;
 import helpers.helperfactory;
 import entity.smtpsettings;
+import email.passwordreset;
 
 class PasswordResetInitiateProjection
 {
@@ -42,26 +43,16 @@ class PasswordResetInitiateProjection
 
     private void sendResetEmail(string firstName, string email, ulong newPasswordPin)
     {
-        string message = format("Hi %s. WellRestD just receieved a request to reset your account password.
-
-To reset your password, please enter the reset pin shown below into the application.
-
-Password Reset Pin: %d
-
-If you did not make this request, you can safely ignore this email.
-
-With regards,
-The WellRestD support team",
-            firstName,
-            newPasswordPin
-        );
-
+        auto passwordResetEmail = new PasswordResetEmail(firstName, to!string(newPasswordPin));
+        passwordResetEmail.render();
+        
         auto emailHelper = this.helperFactory.createEmailHelper(this.smtpSettings);
 
-        emailHelper.setMessagePlainText(message);
+        emailHelper.setMessagePlainText(passwordResetEmail.getPlainTextEmail());
+        emailHelper.setMessageHTML(passwordResetEmail.getHtmlEmail());
 
         emailHelper.sendEmail(
-            "CloudPad Password Reset Request",
+            "WellRestD Password Reset Request",
             new EmailIdentity("andy@chapmandigital.co.uk"),
             [new EmailIdentity(email)]
         );

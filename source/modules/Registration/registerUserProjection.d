@@ -6,6 +6,8 @@ import std.variant;
 import relationaldb.all;
 import decisionmakers.registeruser;
 import helpers.helperfactory;
+import entity.smtpsettings;
+import email.registernewuser;
 
 class RegisterUserProjection
 {
@@ -13,19 +15,40 @@ class RegisterUserProjection
     private RelationalDBInterface relationalDb;
     private RegisterUserDMMeta meta;
     private HelperFactory helperFactory;
+    private SMTPSettings smtpSettings;
 
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        RegisterUserDMMeta meta
+        RegisterUserDMMeta meta,
+        ref in SMTPSettings smtpSettings
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;
         this.meta = meta;
+        this.smtpSettings = smtpSettings;
     }
 
     void handleEvent() {
+        this.sendRegistrationEmail();
         ulong usrId = this.createUser();
+    }
+
+    private void sendRegistrationEmail()
+    {
+        auto registerNewUserEmail = new RegisterNewUserEmail(this.meta.userFirstName, this.meta.email);
+        registerNewUserEmail.render();
+
+        auto emailHelper = this.helperFactory.createEmailHelper(this.smtpSettings);
+
+        emailHelper.setMessagePlainText(registerNewUserEmail.getPlainTextEmail());
+        emailHelper.setMessageHTML(registerNewUserEmail.getHtmlEmail());
+
+        emailHelper.sendEmail(
+            "Welcome To WellRestD",
+            new EmailIdentity("andy@chapmandigital.co.uk"),
+            [new EmailIdentity(this.meta.email)]
+        );        
     }
 
     private ulong createUser() {

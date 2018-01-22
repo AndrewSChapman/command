@@ -82,6 +82,23 @@ AppConfig loadAppConfig()
     string SMTPUsername = ini["SMTP"].getKey("username");
     string SMTPPassword = ini["SMTP"].getKey("password");
 
+    EventStoreEngineType eventStoreEngineType = EventStoreEngineType.MySQL;
+
+    switch (ini["EventStore"].getKey("engine")) {
+        case "MySQL":
+            eventStoreEngineType = EventStoreEngineType.MySQL;
+            break;
+
+        case "Mongo":
+            eventStoreEngineType = EventStoreEngineType.Mongo;
+            break;            
+
+        default:
+            eventStoreEngineType = EventStoreEngineType.MySQL;
+            break;
+
+    }
+
 	AppConfig appConfig = new AppConfig(
         serverListenIP,
         serverListenPort,
@@ -100,7 +117,8 @@ AppConfig loadAppConfig()
         SMTPHost,
         SMTPPort,
         SMTPUsername,
-        SMTPPassword
+        SMTPPassword,
+        eventStoreEngineType
 	);
 
 	return appConfig;

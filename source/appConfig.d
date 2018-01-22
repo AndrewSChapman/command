@@ -1,5 +1,7 @@
 module appconfig;
 
+enum EventStoreEngineType { MySQL, Mongo };
+
 class AppConfig
 {
     // Server
@@ -32,6 +34,9 @@ class AppConfig
     private string SMTPUsername;
     private string SMTPPassword;
 
+    // EventStore
+    private EventStoreEngineType eventStoreEngineType;
+
     this(
         string serverListenIP,
         ushort serverListenPort,
@@ -50,7 +55,8 @@ class AppConfig
         string SMTPHost,
         ushort SMTPPort,
         string SMTPUsername,
-        string SMTPPassword
+        string SMTPPassword,
+        EventStoreEngineType eventStoreEngineType
     ) @safe {
         // Server
         this.serverListenIP = serverListenIP;
@@ -80,7 +86,10 @@ class AppConfig
         this.SMTPHost = SMTPHost;
         this.SMTPPort = SMTPPort;
         this.SMTPUsername = SMTPUsername;
-        this.SMTPPassword = SMTPPassword;             
+        this.SMTPPassword = SMTPPassword;   
+
+        // EventStore
+        this.eventStoreEngineType = eventStoreEngineType;
     }
        
     // Server
@@ -183,6 +192,12 @@ class AppConfig
     {
         return this.SMTPPassword;
     }         
+
+    // EventStore
+    public EventStoreEngineType getEventStoreEngineType() @safe
+    {
+        return this.eventStoreEngineType;
+    }
 }
 
 unittest {
@@ -210,6 +225,8 @@ unittest {
     string SMTPUsername = "SMTPUsername";
     string SMTPPassword = "SMTPPassword";
 
+    EventStoreEngineType engineType = EventStoreEngineType.MySQL;
+
     auto config = new AppConfig(
         serverListenIP,
         serverListenPort,
@@ -228,7 +245,8 @@ unittest {
         SMTPHost,
         SMTPPort,
         SMTPUsername,
-        SMTPPassword
+        SMTPPassword,
+        engineType
     );
 
     assert(config.getServerListenIP() == serverListenIP);
