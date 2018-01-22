@@ -13,7 +13,7 @@ import container;
 class ValidatorHelper
 {   
     // Rudimentary email address validator
-    public bool validateEmailAddress(string emailAddress)
+    public bool validateEmailAddress(string emailAddress) @safe
     {
         if (emailAddress == "") {
             return false;
@@ -44,7 +44,7 @@ class ValidatorHelper
     For a given struct instance of type T, validate that all the required members as defined in the
     required members array have a value set.
     */
-    public string[] enforceRequiredFields(T)(T structInstance, in string[] requiredMembers)
+    public string[] enforceRequiredFields(T)(T structInstance, in string[] requiredMembers) @trusted
     {
         string[] missingFields;
 
@@ -80,7 +80,7 @@ class ValidatorHelper
 
 class ValidationException : Exception
 {
-    this(string msg, string file = __FILE__, size_t line = __LINE__)
+    this(string msg, string file = __FILE__, size_t line = __LINE__) @safe
     {
         super("Validation Exception - " ~ msg, file, line);
     }

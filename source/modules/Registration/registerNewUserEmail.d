@@ -35,10 +35,9 @@ unittest {
     auto email = new RegisterNewUserEmail("Jane", "jane@janedoe.com");
     email.render();
 
-    //writeln(stringsHelper.md5(email.getPlainTextEmail()));
-    //writeln(stringsHelper.md5(email.getHtmlEmail()));
-    writeln(email.getHtmlEmail());
+    writeln(stringsHelper.md5(email.getPlainTextEmail()));
+    writeln(stringsHelper.md5(email.getHtmlEmail()));
 
     assert(stringsHelper.md5(email.getPlainTextEmail()) == "99345E86C0A8B5BE9673C2ED9F82CC18");
-    assert(stringsHelper.md5(email.getHtmlEmail()) == "F78EFD54A23141DBAB4FAAF36CBDB32D");
+    assert(stringsHelper.md5(email.getHtmlEmail()) == "6B02BF95C9B8D18A225683FA17AAD9AD");
 }

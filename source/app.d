@@ -16,7 +16,8 @@ void main()
 	appConfig = loadAppConfig();
 
 	auto router = new URLRouter;
-	router.registerRestInterface(new AuthHandler(appConfig));    
+	router.registerRestInterface(new AuthHandler(appConfig));
+    router.registerRestInterface(new ProfileHandler(appConfig));
 
     auto settings = new HTTPServerSettings;
 	settings.port = appConfig.getServerListenPort();

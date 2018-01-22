@@ -24,7 +24,7 @@ class ExtendTokenDM : DecisionMakerInterface
     private ExtendTokenCommandMeta meta;
     private ExtendTokenFactors factors;
     
-    public this(ref ExtendTokenCommandMeta meta, ref ExtendTokenFactors factors)
+    public this(ref ExtendTokenCommandMeta meta, ref ExtendTokenFactors factors) @safe
     {
         enforce(factors.tokenExists, "Sorry, your login token is invalid.");
         enforce(factors.tokenExpiry > Clock.currTime().toUnixTime(), "Sorry, your login token has expired.");
@@ -40,7 +40,7 @@ class ExtendTokenDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList)
+    public void execute(EventListInterface eventList) @safe
     {        
         eventList.append(new ExtendTokenCommand(this.meta), typeid(ExtendTokenCommand));
     }

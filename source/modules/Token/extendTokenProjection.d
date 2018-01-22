@@ -22,26 +22,29 @@ class ExtendTokenProjection
         RelationalDBInterface relationalDb,
         RedisDatabase redisDatabase,
         ExtendTokenCommandMeta meta
-    ) {
+    ) @safe {
         this.relationalDb = relationalDb;
         this.redisDatabase = redisDatabase;
         this.meta = meta;
     }
 
-    void handleEvent() {
+    void handleEvent() @safe
+    {
         this.extendToken();
     }
 
-    private long currentUnixTime()
+    private long currentUnixTime() @safe
     {
         return Clock.currTime().toUnixTime();
     }     
 
-    private long generateExpiryTime() {
+    private long generateExpiryTime() @safe
+    {
         return this.currentUnixTime() + this.tokenTimeoutInSeconds;
     }     
 
-    public void extendToken() {
+    public void extendToken() @trusted
+    {
         string sql = "
                 UPDATE token SET expiresAt = ? 
                 WHERE tokenCode = ?
