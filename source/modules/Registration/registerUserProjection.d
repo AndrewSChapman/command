@@ -45,7 +45,7 @@ class RegisterUserProjection
         emailHelper.setMessageHTML(registerNewUserEmail.getHtmlEmail());
 
         emailHelper.sendEmail(
-            "Welcome To WellRestD",
+            "Welcome To CommanD",
             new EmailIdentity("andy@chapmandigital.co.uk"),
             [new EmailIdentity(this.meta.email)]
         );        

@@ -52,7 +52,7 @@ class PasswordResetInitiateProjection
         emailHelper.setMessageHTML(passwordResetEmail.getHtmlEmail());
 
         emailHelper.sendEmail(
-            "WellRestD Password Reset Request",
+            "CommanD Password Reset Request",
             new EmailIdentity("andy@chapmandigital.co.uk"),
             [new EmailIdentity(email)]
         );
