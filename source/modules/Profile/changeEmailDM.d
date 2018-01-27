@@ -40,7 +40,7 @@ class ChangeEmailDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList) @safe
+    public void issueCommands(EventListInterface eventList) @safe
     {        
         eventList.append(new ChangeEmailCommand(this.meta), typeid(ChangeEmailCommand));
     }

@@ -8,17 +8,17 @@ import std.digest.crc;
 import relationaldb.all;
 import commands.assignprefix;
 import helpers.helperfactory;
-import decisionmakers.createprefix;
+import commands.createprefix;
 
 class CreatePrefixProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private CreatePrefixDMMeta meta;
+    private CreatePrefixCommandMetadata meta;
 
     this(
         RelationalDBInterface relationalDb,
-        CreatePrefixDMMeta meta
+        CreatePrefixCommandMetadata meta
     ) {
         this.relationalDb = relationalDb;
         this.meta = meta;

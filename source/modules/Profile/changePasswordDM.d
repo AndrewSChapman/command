@@ -42,7 +42,7 @@ class ChangePasswordDM : DecisionMakerInterface
         this.factors = factors;
     }
 
-    public void execute(EventListInterface eventList) @safe
+    public void issueCommands(EventListInterface eventList) @safe
     {        
         eventList.append(new ChangePasswordCommand(this.meta), typeid(ChangePasswordCommand));
     }

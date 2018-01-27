@@ -1,6 +1,8 @@
 module api.interfaces.authapi;
 
 import api.requestinterface.common;
+import container;
+
 import entity.all;
 
 import decisionmakers.registeruser;

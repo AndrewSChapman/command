@@ -35,7 +35,7 @@ class RegisterUserDM : DecisionMakerInterface
         this.meta = meta;
     }
 
-    public void execute(EventListInterface eventList) @safe
+    public void issueCommands(EventListInterface eventList) @safe
     {
         eventList.append(new RegisterUserCommand(this.meta), typeid(RegisterUserCommand));
     }
@@ -55,7 +55,7 @@ unittest {
 
         auto command = new RegisterUserDM(meta, factors);
         auto eventList = new EventList();
-        command.execute(eventList);
+        command.issueCommands(eventList);
 
         // Ensure an event was created by the command
         assert(eventList.size() == 1);
@@ -71,7 +71,7 @@ unittest {
 
         try {
             auto command = new RegisterUserDM(meta, factors);
-            command.execute(eventList);
+            command.issueCommands(eventList);
         } catch(Exception e) {
             errorThrown = true;
         }

@@ -5,19 +5,28 @@ import eventmanager.all;
 import eventstore.all;
 import decisionmakers.createprefix;
 
-class CreatePrefixCommand : AbstractEvent!CreatePrefixDMMeta,StorableEvent
+struct CreatePrefixCommandMetadata
 {
-    this(CreatePrefixDMMeta meta) @safe
+    string userAgent;
+    string ipAddress;
+    ulong timestamp;
+}
+
+class CreatePrefixCommand : AbstractEvent!CreatePrefixCommandMetadata,StorableEvent
+{
+    this(in ref string userAgent, in ref string ipAddress, in ref ulong timestamp) @safe
     {
-        super(meta);
+        CreatePrefixCommandMetadata data;
+        data.userAgent = userAgent;
+        data.ipAddress = ipAddress;
+        data.timestamp = timestamp;        
+        
+        super(data);
     }
 
     public StorageEvent toStorageEvent() @trusted
     {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto commandMeta = *metadata.peek!(CreatePrefixDMMeta);
-        return new StorageEvent(typeid(this), lifecycle, commandMeta.serializeToJson());       
+        auto metadata = *this.getMetadata().peek!(CreatePrefixCommandMetadata);
+        return new StorageEvent(typeid(this), this.getLifecycle(), metadata.serializeToJson());       
     }
 }

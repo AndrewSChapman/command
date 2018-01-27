@@ -17,6 +17,7 @@ class EventListWithStorage : EventList
     this(EventStoreInterface eventStoreInterface) @safe
     {
         super();
+        
         this.eventStoreInterface = eventStoreInterface;
     }    
     

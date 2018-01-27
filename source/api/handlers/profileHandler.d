@@ -10,13 +10,12 @@ import vibe.vibe;
 import mysql;
 import vibe.vibe;
 
+import api.handlers.abstracthandler;
 import appconfig;
 import container;
 import entity.all;
 import eventmanager.all;
 import eventstore.all;
-import directors.profile;
-import api.handlermixin;
 import helpers.validatorHelper;
 
 import api.interfaces.profileapi;
@@ -30,24 +29,18 @@ import commands.changepassword;
 import decisionmakers.changeemail;
 import commands.changeemail;
 
-class ProfileHandler : ProfileAPI
+class ProfileHandler : AbstractHandler,ProfileAPI
 {
-	private Container container;
-	private AppConfig appConfig;
-
     this(AppConfig appConfig)
 	{
-    	this.appConfig = appConfig;
+    	super(appConfig);
     }
-
-	mixin HandlerMixin!ProfileDirector;	
 
 	// POST Update Profile
 	@property void profile(UpdateUserRequestMeta updateProfile, RequestInfo requestInfo) @safe
 	{	
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
-			this.checkToken(container, requestInfo);
+			this.checkToken(this._container, requestInfo);
 
 			UpdateUserFactors factors;
 			factors.userLoggedIn = true;
@@ -58,7 +51,7 @@ class ProfileHandler : ProfileAPI
 			updateUserMeta.lastName = updateProfile.lastName;
 
 			auto decisionMaker = new UpdateUserDM(updateUserMeta, factors);		
-			this.executeCommand(container, decisionMaker);		
+			this.executeCommands(this._container, decisionMaker);		
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -68,18 +61,17 @@ class ProfileHandler : ProfileAPI
 	@property void changePassword(ChangePasswordRequestMeta changePassword, RequestInfo requestInfo) @safe
 	{	
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
-			this.checkToken(container, requestInfo);
+			this.checkToken(this._container, requestInfo);
 
 			// If we get this far user has logged in and the id is in the requestInfo
 			ChangePasswordFactors factors;
 			factors.userLoggedIn = true;
 			
 			// Get the helpers and queries we need.
-			auto validatorHelper = container.getHelperFactory().createValidatorHelper();
-			auto stringsHelper = container.getHelperFactory().createStringsHelper();
-			auto passwordHelper = container.getHelperFactory().createPasswordHelper();
-			auto userQuery = container.getQueryFactory().createUserQuery();
+			auto validatorHelper = this._container.getHelperFactory().createValidatorHelper();
+			auto stringsHelper = this._container.getHelperFactory().createStringsHelper();
+			auto passwordHelper = this._container.getHelperFactory().createPasswordHelper();
+			auto userQuery = this._container.getQueryFactory().createUserQuery();
 
 			// Ensure all required fields have values in the metadata struct
 			string[] requiredFields = ["existingPassword", "newPassword", "newPasswordRepeated"];
@@ -104,7 +96,7 @@ class ProfileHandler : ProfileAPI
 			changePasswordMeta.password = changePassword.newPassword;
 
 			auto decisionMaker = new ChangePasswordDM(changePasswordMeta, factors);		
-			this.executeCommand(container, decisionMaker);	
+			this.executeCommands(this._container, decisionMaker);	
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -114,18 +106,17 @@ class ProfileHandler : ProfileAPI
 	@property void changeEmail(ChangeEmailRequestMeta changeEmail, RequestInfo requestInfo) @safe
 	{	
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
-			this.checkToken(container, requestInfo);
+			this.checkToken(this._container, requestInfo);
 
 			// If we get this far user has logged in and the id is in the requestInfo
 			ChangeEmailFactors factors;
 			factors.userLoggedIn = true;
 			
 			// Get the helpers and queries we need.
-			auto validatorHelper = container.getHelperFactory().createValidatorHelper();
-			auto stringsHelper = container.getHelperFactory().createStringsHelper();
-			auto passwordHelper = container.getHelperFactory().createPasswordHelper();
-			auto userQuery = container.getQueryFactory().createUserQuery();
+			auto validatorHelper = this._container.getHelperFactory().createValidatorHelper();
+			auto stringsHelper = this._container.getHelperFactory().createStringsHelper();
+			auto passwordHelper = this._container.getHelperFactory().createPasswordHelper();
+			auto userQuery = this._container.getQueryFactory().createUserQuery();
 
 			// Ensure all required fields have values in the metadata struct
 			string[] requiredFields = ["emailAddress"];
@@ -147,7 +138,7 @@ class ProfileHandler : ProfileAPI
 			changeEmailMeta.usrId = requestInfo.usrId;		
 
 			auto decisionMaker = new ChangeEmailDM(changeEmailMeta, factors);		
-			this.executeCommand(container, decisionMaker);	
+			this.executeCommands(this._container, decisionMaker);	
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -156,24 +147,22 @@ class ProfileHandler : ProfileAPI
 	// GET profile
 	@property Profile profile(RequestInfo requestInfo) @safe
 	{
-		Container container = Container.createFromAppConfig(appConfig);
-		this.checkToken(container, requestInfo);
+		this.checkToken(this._container, requestInfo);
 
-		auto userQuery = container.getQueryFactory().createUserQuery();
+		auto userQuery = this._container.getQueryFactory().createUserQuery();
 		return userQuery.getProfileByUserId(requestInfo.usrId);
 	}
 
 	@property Profile findProfileByEmail(RequestInfo requestInfo, string email) @safe
 	{
-		Container container = Container.createFromAppConfig(appConfig);
-		this.checkToken(container, requestInfo);
+		this.checkToken(this._container, requestInfo);
 
-		auto validatorHelper = container.getHelperFactory().createValidatorHelper();
+		auto validatorHelper = this._container.getHelperFactory().createValidatorHelper();
 		if (!validatorHelper.validateEmailAddress(email)) {
 			throw new Exception("Invalid Email Address");
 		}
 
-		auto userQuery = container.getQueryFactory().createUserQuery();
+		auto userQuery = this._container.getQueryFactory().createUserQuery();
 
 		Profile profile;
 

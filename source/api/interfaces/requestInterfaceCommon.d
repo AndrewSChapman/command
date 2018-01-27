@@ -4,9 +4,12 @@ public import vibe.vibe;
 public import vibe.utils.dictionarylist;
 public import entity.all;
 
+import container;
+import helpers.commandHelper;
+
 alias HeaderDictionary = DictionaryList!(string,false,12L,false);
 
-static RequestInfo getRequestInfo(HTTPServerRequest req, HTTPServerResponse res)
+static RequestInfo getRequestInfo(HTTPServerRequest req, HTTPServerResponse res) @safe
 {
 	RequestInfo requestInfo;
 	requestInfo.headers = req.headers;

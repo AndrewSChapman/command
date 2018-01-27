@@ -7,7 +7,7 @@ import eventmanager.all;
 import decisionmakers.decisionmakerinterface;
 import commands.createprefix;
 
-struct CreatePrefixDMMeta
+struct CreatePrefixFacts
 {
     string userAgent;
     string ipAddress;
@@ -16,19 +16,25 @@ struct CreatePrefixDMMeta
 
 class CreatePrefixDM : DecisionMakerInterface
 {    
-    private CreatePrefixDMMeta meta;
+    private CreatePrefixFacts facts;
     
-    public this(ref CreatePrefixDMMeta meta) @safe
+    public this(ref CreatePrefixFacts facts) @safe
     {
-        enforce(meta.userAgent != "", "Please supply a valid user agent");
-        enforce(meta.ipAddress != "", "Please supply a valid ip address");
-        enforce(meta.timestamp > 0, "Please supply a valid timestamp");
+        enforce(facts.userAgent != "", "Please supply a valid user agent");
+        enforce(facts.ipAddress != "", "Please supply a valid ip address");
+        enforce(facts.timestamp > 0, "Please supply a valid timestamp");
 
-        this.meta = meta;
+        this.facts = facts;
     }
 
-    public void execute(EventListInterface eventList) @safe
+    public void issueCommands(EventListInterface eventList) @safe
     {        
-        eventList.append(new CreatePrefixCommand(this.meta), typeid(CreatePrefixCommand));
+        auto command = new CreatePrefixCommand(
+            this.facts.userAgent,
+            this.facts.ipAddress,
+            this.facts.timestamp
+        );
+
+        eventList.append(command, typeid(CreatePrefixCommand));
     }
 }

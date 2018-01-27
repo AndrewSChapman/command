@@ -10,6 +10,7 @@ import mysql;
 import vibe.vibe;
 import vibe.utils.dictionarylist;
 
+import api.handlers.abstracthandler;
 import decisionmakers.decisionmakerinterface;
 import decisionmakers.registeruser;
 import decisionmakers.login;
@@ -29,66 +30,28 @@ import query.factory;
 import container;
 
 import relationaldb.all;
-import directors.all;
+import commandrouter;
 import api.interfaces.all;
 import appconfig;
 
-class AuthHandler : AuthAPI
+class AuthHandler : AbstractHandler,AuthAPI
 {
-	private AppConfig appConfig;
-
     this(AppConfig appConfig) @safe
     {
-		this.appConfig = appConfig;
+        super(appConfig);
     }
-
-	private AuthDirector attachDirector(Container container, ref EventDispatcher dispatcher) @safe
-    {
-		auto director = new AuthDirector(
-			container
-		);
-
-		// Attach any directors that need to listen to these events.
-		dispatcher.attachListener(director);	
-
-		return director;	
-	}
-
-	private AuthDirector executeCommand(Container container, DecisionMakerInterface DecisionMakerInterface) @safe
-	{
-        /*
-		auto eventList = new EventListWithStorage(
-			new MongoEventStore(container.getMongoClient(), this.appConfig.getMongoEventStoreName())
-		); */
-
-		auto eventList = new EventListWithStorage(
-			container.getEventStore()
-		);        
-
-		DecisionMakerInterface.execute(eventList);
-
-		if (eventList.size == 0) {
-			throw new Exception("Command raised no events - this should never happen");
-		}
-
-		auto dispatcher = new EventDispatcher();
-		auto director = this.attachDirector(container, dispatcher);
-		eventList.dispatch(dispatcher);
-
-		return director;
-	}
 
 	@property Prefix prefix(RequestInfo requestInfo) @safe
 	{
-		Container container = Container.createFromAppConfig(appConfig);
+		// Gather facts for the decision maker
+        CreatePrefixFacts facts;
+		facts.userAgent = requestInfo.headers.get("User-Agent", "");
+		facts.ipAddress = requestInfo.ipAddress;
+		facts.timestamp = Clock.currStdTime();
 
-		CreatePrefixDMMeta meta;
-		meta.userAgent = requestInfo.headers.get("User-Agent", "");
-		meta.ipAddress = requestInfo.ipAddress;
-		meta.timestamp = Clock.currStdTime();
-
-		auto command = new CreatePrefixDM(meta);	
-		auto director = this.executeCommand(container, command);		
+        // Pass the facts to the decision maker
+		auto decisionMaker = new CreatePrefixDM(facts);	
+		auto director = this.executeAndAwaitCommands(this._container, decisionMaker);		
 
 		Prefix prefix;
 		prefix.prefix = director.getEventMessage!string("prefixCode");
@@ -99,17 +62,15 @@ class AuthHandler : AuthAPI
 	@property void register(RegisterUserDMMeta registrationMetadata) @safe
 	{
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
-
-			auto userQuery = new UserQuery(container.getRelationalDb());
-			auto prefixQuery = new PrefixQuery(container.getRelationalDb());
+			auto userQuery = new UserQuery(this._container.getRelationalDb());
+			auto prefixQuery = new PrefixQuery(this._container.getRelationalDb());
 
 			// Determine the factors that the command needs in order to make decisions.
 			RegisterNewUserFactors factors;
 			factors.userExists = userQuery.userExistsByEmail(registrationMetadata.email);
 
 			auto command = new RegisterUserDM(registrationMetadata, factors);
-			this.executeCommand(container, command);	
+			this.executeCommands(this._container, command);	
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -120,9 +81,8 @@ class AuthHandler : AuthAPI
 		Token token;
 
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
-			auto userQuery = new UserQuery(container.getRelationalDb());
-			auto prefixQuery = new PrefixQuery(container.getRelationalDb());
+			auto userQuery = new UserQuery(this._container.getRelationalDb());
+			auto prefixQuery = new PrefixQuery(this._container.getRelationalDb());
 
 			// Determine the factors that the command needs in order to make decisions.
 			LoginDMMeta LoginDMMeta;
@@ -154,7 +114,7 @@ class AuthHandler : AuthAPI
 			LoginDMMeta.ipAddress = requestInfo.ipAddress;
 
 			auto command = new LoginDM(LoginDMMeta, factors);		
-			auto director = this.executeCommand(container, command);	
+			auto director = this.executeAndAwaitCommands(this._container, command);	
 
 			token = director.getEventMessage!Token("token");
 		} catch (Exception exception) {
@@ -167,11 +127,10 @@ class AuthHandler : AuthAPI
 	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest) @safe
 	{
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
 			PasswordResetInitiateDMMeta commandMeta;
 			PasswordResetInitiateFactors factors;
 
-			auto userQuery = new UserQuery(container.getRelationalDb());
+			auto userQuery = new UserQuery(this._container.getRelationalDb());
 			factors.userExists = userQuery.userExistsByEmail(passwordResetRequest.emailAddress);
 
 			if (factors.userExists) {
@@ -189,7 +148,7 @@ class AuthHandler : AuthAPI
 			}
 			
 			auto command = new PasswordResetInitiateDM(commandMeta, factors);		
-			auto director = this.executeCommand(container, command);			
+			auto router = this.executeAndAwaitCommands(this._container, command);			
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		
@@ -198,11 +157,10 @@ class AuthHandler : AuthAPI
 	@property void passwordResetComplete(PasswordResetCompleteRequestMeta passwordResetCompleteRequest) @safe
 	{
 		try {
-			Container container = Container.createFromAppConfig(appConfig);
 			PasswordResetCompleteDMMeta commandMeta;
 			PasswordResetCompleteFactors factors;
 
-			auto userQuery = new UserQuery(container.getRelationalDb());
+			auto userQuery = new UserQuery(this._container.getRelationalDb());
 			factors.userExists = userQuery.userExistsByEmail(passwordResetCompleteRequest.emailAddress);
 
 			if (factors.userExists) {
@@ -216,9 +174,9 @@ class AuthHandler : AuthAPI
 			}
 			
 			auto command = new PasswordResetCompleteDM(commandMeta, factors);		
-			this.executeCommand(container, command);			
+			this.executeCommands(this._container, command);			
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		
-	}	
+	}    
 }
