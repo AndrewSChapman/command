@@ -6,7 +6,7 @@ import std.datetime;
 import core.time;
 
 import relationaldb.all;
-import decisionmakers.login;
+import commands.login;
 import helpers.helperfactory;
 import entity.token;
 
@@ -14,14 +14,14 @@ class LoginProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private LoginDMMeta meta;
+    private LoginCommandMetadata meta;
     private HelperFactory helperFactory;
     private const uint tokenTimeoutInSeconds = 3600;
 
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        LoginDMMeta meta
+        LoginCommandMetadata meta
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;

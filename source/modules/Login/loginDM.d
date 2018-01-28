@@ -12,54 +12,51 @@ import commands.login;
 import commands.assignprefix;
 import helpers.testhelper;
 
-struct LoginDMMeta
-{
-    ulong usrId;
-    string userAgent;
-    string ipAddress;
-    string prefix;
-}
-
-struct LoginFactors
+struct LoginFacts
 {
     bool userExists;
     bool passwordCorrect;
     bool prefixExists;
     bool prefixAssignedToUser;
     bool prefixNotAssigned;
+    ulong usrId;
+    string userAgent;
+    string ipAddress;
+    string prefix;    
 }
 
 class LoginDM : DecisionMakerInterface
 {
-    private LoginDMMeta meta;
-    private LoginFactors factors;
+    private LoginFacts facts;
     
-    public this(ref LoginDMMeta meta, ref LoginFactors factors) @safe
+    public this(ref LoginFacts facts) @safe
     {
-        enforce(factors.userExists, "Sorry, a user account with the specified email address does not exist.");
-        enforce(factors.passwordCorrect, "Sorry, the supplied password was incorrect.");            
-        enforce(factors.prefixExists, "Sorry, the prefix code you supplied was invalid.");
-        enforce(factors.prefixNotAssigned || factors.prefixAssignedToUser, "The supplied prefix is already assigned to a user or is not assigned to you.  Please generate a new prefix to complete this operation.");
-        enforce(meta.usrId > 0, "Please supply a valid user Id.");
-        enforce(meta.userAgent != "", "Please supply a user agent string.");
-        enforce(meta.ipAddress != "", "Please supply an IP address.");
-        enforce(meta.prefix != "", "Please supply a valid prefix code.");        
+        enforce(facts.userExists, "Sorry, a user account with the specified email address does not exist.");
+        enforce(facts.passwordCorrect, "Sorry, the supplied password was incorrect.");            
+        enforce(facts.prefixExists, "Sorry, the prefix code you supplied was invalid.");
+        enforce(facts.prefixNotAssigned || facts.prefixAssignedToUser, "The supplied prefix is already assigned to a user or is not assigned to you.  Please generate a new prefix to complete this operation.");
+        enforce(facts.usrId > 0, "Please supply a valid user Id.");
+        enforce(facts.userAgent != "", "Please supply a user agent string.");
+        enforce(facts.ipAddress != "", "Please supply an IP address.");
+        enforce(facts.prefix != "", "Please supply a valid prefix code.");        
 
-        this.meta = meta;
-        this.factors = factors;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {
-        if (factors.prefixNotAssigned) {
-            AssignPrefixMeta assignPrefixMeta;
-            assignPrefixMeta.usrId = meta.usrId;
-            assignPrefixMeta.prefix = meta.prefix;
-
-            eventList.append(new AssignPrefixCommand(assignPrefixMeta), typeid(AssignPrefixCommand));
+        if (facts.prefixNotAssigned) {
+            eventList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
         }
+
+        auto command = new LoginCommand(
+            facts.usrId,
+            facts.userAgent,
+            facts.ipAddress,
+            facts.prefix
+        );
         
-        eventList.append(new LoginCommand(this.meta), typeid(LoginCommand));
+        eventList.append(command, typeid(LoginCommand));
     }
 }
 
@@ -70,71 +67,71 @@ unittest {
     meta.ipAddress = "192.168.1.100";
     meta.prefix = "ABCDE";
 
-    // Test passing factors
+    // Test passing facts
     function (ref LoginDMMeta meta) {
-        LoginFactors factors;
-        factors.userExists = true;
-        factors.passwordCorrect = true;
-        factors.prefixExists = true;
-        factors.prefixAssignedToUser = true;
-        factors.prefixNotAssigned = false;
+        Loginfacts facts;
+        facts.userExists = true;
+        facts.passwordCorrect = true;
+        facts.prefixExists = true;
+        facts.prefixAssignedToUser = true;
+        facts.prefixNotAssigned = false;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, LoginFactors)(meta, factors, 1, false);
+        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 1, false);
     }(meta);
 
     function (ref LoginDMMeta meta) {
-        LoginFactors factors;
-        factors.userExists = true;
-        factors.passwordCorrect = true;
-        factors.prefixExists = true;
-        factors.prefixAssignedToUser = false;
-        factors.prefixNotAssigned = true;
+        Loginfacts facts;
+        facts.userExists = true;
+        facts.passwordCorrect = true;
+        facts.prefixExists = true;
+        facts.prefixAssignedToUser = false;
+        facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, LoginFactors)(meta, factors, 2, false);
+        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 2, false);
     }(meta);
 
-    // Test failing factors
+    // Test failing facts
     function (ref LoginDMMeta meta) {
-        LoginFactors factors;
-        factors.userExists = false;
-        factors.passwordCorrect = true;
-        factors.prefixExists = true;
-        factors.prefixAssignedToUser = false;
-        factors.prefixNotAssigned = true;
+        Loginfacts facts;
+        facts.userExists = false;
+        facts.passwordCorrect = true;
+        facts.prefixExists = true;
+        facts.prefixAssignedToUser = false;
+        facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, LoginFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
     }(meta);
 
     function (ref LoginDMMeta meta) {
-        LoginFactors factors;
-        factors.userExists = true;
-        factors.passwordCorrect = false;
-        factors.prefixExists = true;
-        factors.prefixAssignedToUser = false;
-        factors.prefixNotAssigned = true;
+        Loginfacts facts;
+        facts.userExists = true;
+        facts.passwordCorrect = false;
+        facts.prefixExists = true;
+        facts.prefixAssignedToUser = false;
+        facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, LoginFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
     }(meta);    
 
     function (ref LoginDMMeta meta) {
-        LoginFactors factors;
-        factors.userExists = true;
-        factors.passwordCorrect = true;
-        factors.prefixExists = false;
-        factors.prefixAssignedToUser = false;
-        factors.prefixNotAssigned = true;
+        Loginfacts facts;
+        facts.userExists = true;
+        facts.passwordCorrect = true;
+        facts.prefixExists = false;
+        facts.prefixAssignedToUser = false;
+        facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, LoginFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
     }(meta);
 
     function (ref LoginDMMeta meta) {
-        LoginFactors factors;
-        factors.userExists = true;
-        factors.passwordCorrect = true;
-        factors.prefixExists = true;
-        factors.prefixAssignedToUser = false;
-        factors.prefixNotAssigned = false;
+        Loginfacts facts;
+        facts.userExists = true;
+        facts.passwordCorrect = true;
+        facts.prefixExists = true;
+        facts.prefixAssignedToUser = false;
+        facts.prefixNotAssigned = false;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, LoginFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
     }(meta);        
 }

@@ -89,35 +89,34 @@ class AuthHandler : AbstractHandler,AuthAPI
 			auto prefixQuery = new PrefixQuery(this._container.getRelationalDb());
 
 			// Determine the factors that the command needs in order to make decisions.
-			LoginDMMeta LoginDMMeta;
-			LoginFactors factors;
-			factors.prefixExists = prefixQuery.exists(meta.prefix);
-			factors.userExists = userQuery.userExistsByEmail(meta.email);
+			LoginFacts facts;
+			facts.prefixExists = prefixQuery.exists(meta.prefix);
+			facts.userExists = userQuery.userExistsByEmail(meta.email);
 
-			if (factors.prefixExists) {
+			if (facts.prefixExists) {
 				Prefix prefix = prefixQuery.getPrefix(meta.prefix);
-				LoginDMMeta.prefix = prefix.prefix;
-				if ((prefix.usrId > 0) && (factors.userExists)) {
+				facts.prefix = prefix.prefix;
+				if ((prefix.usrId > 0) && (facts.userExists)) {
 					auto user = userQuery.getUserByEmail(meta.email);
 					if (user.usrId == prefix.usrId) {
-						factors.prefixAssignedToUser = true;
+						facts.prefixAssignedToUser = true;
 					}
 				} else {
-					factors.prefixNotAssigned = true;
+					facts.prefixNotAssigned = true;
 				}	
 			}
 
-			if (factors.userExists) {
+			if (facts.userExists) {
 				auto user = userQuery.getUserByEmail(meta.email);
 				auto passwordHelper = new PasswordHelper();
-				factors.passwordCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, meta.password);
-				LoginDMMeta.usrId = user.usrId;
+				facts.passwordCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, meta.password);
+				facts.usrId = user.usrId;
 			}
 
-			LoginDMMeta.userAgent = requestInfo.headers.get("User-Agent", "");
-			LoginDMMeta.ipAddress = requestInfo.ipAddress;
+			facts.userAgent = requestInfo.headers.get("User-Agent", "");
+			facts.ipAddress = requestInfo.ipAddress;
 
-			auto command = new LoginDM(LoginDMMeta, factors);		
+			auto command = new LoginDM(facts);
 			auto director = this.executeAndAwaitCommands(this._container, command);	
 
 			token = director.getEventMessage!Token("token");

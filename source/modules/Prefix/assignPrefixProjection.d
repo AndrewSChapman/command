@@ -11,11 +11,11 @@ class AssignPrefixProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private AssignPrefixMeta meta;
+    private AssignPrefixCommandMetadata meta;
 
     this(
         RelationalDBInterface relationalDb,
-        AssignPrefixMeta meta
+        AssignPrefixCommandMetadata meta
     ) {
         this.relationalDb = relationalDb;
         this.meta = meta;

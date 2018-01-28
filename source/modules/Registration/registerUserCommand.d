@@ -1,9 +1,6 @@
 module commands.registeruser;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-import decisionmakers.registeruser;
+import commandlib.abstractcommand;
 
 struct RegisterNewUserCommandMetadata
 {
@@ -13,7 +10,7 @@ struct RegisterNewUserCommandMetadata
     string password;    
 }
 
-class RegisterUserCommand : AbstractEvent!RegisterNewUserCommandMetadata,StorableEvent
+class RegisterUserCommand : AbstractCommand!RegisterNewUserCommandMetadata
 {
     this(
         ref string userFirstName,
@@ -28,14 +25,5 @@ class RegisterUserCommand : AbstractEvent!RegisterNewUserCommandMetadata,Storabl
         meta.password = password;
 
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto commandMetadata = *metadata.peek!(RegisterNewUserCommandMetadata);
-        return new StorageEvent(typeid(this), lifecycle, commandMetadata.serializeToJson());       
     }
 }

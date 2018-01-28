@@ -1,9 +1,6 @@
 module commands.createprefix;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-import decisionmakers.createprefix;
+import commandlib.abstractcommand;
 
 struct CreatePrefixCommandMetadata
 {
@@ -12,7 +9,7 @@ struct CreatePrefixCommandMetadata
     ulong timestamp;
 }
 
-class CreatePrefixCommand : AbstractEvent!CreatePrefixCommandMetadata,StorableEvent
+class CreatePrefixCommand : AbstractCommand!CreatePrefixCommandMetadata
 {
     this(in ref string userAgent, in ref string ipAddress, in ref ulong timestamp) @safe
     {
@@ -22,11 +19,5 @@ class CreatePrefixCommand : AbstractEvent!CreatePrefixCommandMetadata,StorableEv
         data.timestamp = timestamp;        
         
         super(data);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto metadata = *this.getMetadata().peek!(CreatePrefixCommandMetadata);
-        return new StorageEvent(typeid(this), this.getLifecycle(), metadata.serializeToJson());       
     }
 }

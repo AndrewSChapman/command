@@ -1,22 +1,29 @@
 module commands.login;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-import decisionmakers.login;
+import commandlib.abstractcommand;
 
-class LoginCommand : AbstractEvent!LoginDMMeta,StorableEvent
+struct LoginCommandMetadata
 {
-    this(LoginDMMeta meta) @safe
-    {
+    ulong usrId;
+    string userAgent;
+    string ipAddress;
+    string prefix;
+}
+
+class LoginCommand : AbstractCommand!LoginCommandMetadata
+{
+    this(
+        ulong usrId,
+        string userAgent,
+        string ipAddress,
+        string prefix
+    ) @safe {
+        LoginCommandMetadata meta;
+        meta.usrId = usrId;
+        meta.userAgent = userAgent;
+        meta.ipAddress = ipAddress;
+        meta.prefix = prefix;
+        
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto LoginDMMeta = *metadata.peek!(LoginDMMeta);
-        return new StorageEvent(typeid(this), lifecycle, LoginDMMeta.serializeToJson());       
     }
 }

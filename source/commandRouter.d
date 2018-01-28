@@ -88,7 +88,7 @@ class CommandRouter : EventListenerInterface
 
         // ASSIGN PREFIX COMMAND
         commandHandlers[typeid(AssignPrefixCommand)] = {
-            auto const meta = *metaVariant.peek!(AssignPrefixMeta);
+            auto const meta = *metaVariant.peek!(AssignPrefixCommandMetadata);
             auto handler = new AssignPrefixProjection(this.relationalDb, meta);
             return;       
         }; 
@@ -119,7 +119,7 @@ class CommandRouter : EventListenerInterface
 
         // LOGIN
         commandHandlers[typeid(LoginCommand)] = {
-            auto const meta = *metaVariant.peek!(LoginDMMeta);
+            auto const meta = *metaVariant.peek!(LoginCommandMetadata);
             auto handler = new LoginProjection(this.relationalDb, this.helperFactory, meta);
             handler.handleEvent(this.eventMessages); 
             return;       
