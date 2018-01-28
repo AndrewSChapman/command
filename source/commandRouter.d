@@ -11,7 +11,7 @@ import entity.smtpsettings;
 import container;
 
 // AUTH
-import decisionmakers.registeruser;
+//import decisionmakers.registeruser;
 import decisionmakers.login;
 import decisionmakers.passwordresetinitiate;
 import decisionmakers.passwordresetcomplete;
@@ -143,7 +143,7 @@ class CommandRouter : EventListenerInterface
 
         // REGISTER USER
         commandHandlers[typeid(RegisterUserCommand)] = {
-            RegisterUserDMMeta meta = *metaVariant.peek!(RegisterUserDMMeta);
+            RegisterNewUserCommandMetadata meta = *metaVariant.peek!(RegisterNewUserCommandMetadata);
             auto handler = new RegisterUserProjection(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
             handler.handleEvent();
             return;       

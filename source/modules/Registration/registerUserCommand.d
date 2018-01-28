@@ -5,10 +5,28 @@ import eventmanager.all;
 import eventstore.all;
 import decisionmakers.registeruser;
 
-class RegisterUserCommand : AbstractEvent!RegisterUserDMMeta,StorableEvent
+struct RegisterNewUserCommandMetadata
 {
-    this(RegisterUserDMMeta meta) @safe
-    {
+    string userFirstName;
+    string userLastName;
+    string email;
+    string password;    
+}
+
+class RegisterUserCommand : AbstractEvent!RegisterNewUserCommandMetadata,StorableEvent
+{
+    this(
+        ref string userFirstName,
+        ref string userLastName,
+        ref string email,
+        ref string password
+    ) @safe {
+        RegisterNewUserCommandMetadata meta;
+        meta.userFirstName = userFirstName;
+        meta.userLastName = userLastName;
+        meta.email = email;
+        meta.password = password;
+
         super(meta);
     }
 
@@ -17,7 +35,7 @@ class RegisterUserCommand : AbstractEvent!RegisterUserDMMeta,StorableEvent
         auto lifecycle = this.getLifecycle();
         auto metadata = this.getMetadata();
 
-        auto RegisterUserDMMeta = *metadata.peek!(RegisterUserDMMeta);
-        return new StorageEvent(typeid(this), lifecycle, RegisterUserDMMeta.serializeToJson());       
+        auto commandMetadata = *metadata.peek!(RegisterNewUserCommandMetadata);
+        return new StorageEvent(typeid(this), lifecycle, commandMetadata.serializeToJson());       
     }
 }

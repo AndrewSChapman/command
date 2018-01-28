@@ -33,6 +33,7 @@ import relationaldb.all;
 import commandrouter;
 import api.interfaces.all;
 import appconfig;
+import api.requestMetadata;
 
 class AuthHandler : AbstractHandler,AuthAPI
 {
@@ -51,32 +52,35 @@ class AuthHandler : AbstractHandler,AuthAPI
 
         // Pass the facts to the decision maker
 		auto decisionMaker = new CreatePrefixDM(facts);	
-		auto director = this.executeAndAwaitCommands(this._container, decisionMaker);		
+		auto router = this.executeAndAwaitCommands(this._container, decisionMaker);		
 
 		Prefix prefix;
-		prefix.prefix = director.getEventMessage!string("prefixCode");
-
+		prefix.prefix = router.getEventMessage!string("prefixCode");
 		return prefix;
 	}
 
-	@property void register(RegisterUserDMMeta registrationMetadata) @safe
+	@property void register(RegisterNewUserRequestMetadata requestMetadata) @safe
 	{
 		try {
 			auto userQuery = new UserQuery(this._container.getRelationalDb());
 			auto prefixQuery = new PrefixQuery(this._container.getRelationalDb());
 
 			// Determine the factors that the command needs in order to make decisions.
-			RegisterNewUserFactors factors;
-			factors.userExists = userQuery.userExistsByEmail(registrationMetadata.email);
+			RegisterNewUserFacts facts;
+			facts.userAlreadyExists = userQuery.userExistsByEmail(requestMetadata.email);
+            facts.userFirstName = requestMetadata.userFirstName;
+            facts.userLastName = requestMetadata.userLastName;
+            facts.email = requestMetadata.email;
+            facts.password = requestMetadata.password;
 
-			auto command = new RegisterUserDM(registrationMetadata, factors);
-			this.executeCommands(this._container, command);	
+			auto decisionMaker = new RegisterUserDM(facts);
+			this.executeCommands(this._container, decisionMaker);
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
 	}
 
-	@property Token login(LoginRequestMeta meta, RequestInfo requestInfo) @safe
+	@property Token login(LoginRequestMetadata meta, RequestInfo requestInfo) @safe
 	{	
 		Token token;
 

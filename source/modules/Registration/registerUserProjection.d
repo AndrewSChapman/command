@@ -4,7 +4,7 @@ import std.stdio;
 import std.variant;
 
 import relationaldb.all;
-import decisionmakers.registeruser;
+import commands.registeruser;
 import helpers.helperfactory;
 import entity.smtpsettings;
 import email.registernewuser;
@@ -13,14 +13,14 @@ class RegisterUserProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private RegisterUserDMMeta meta;
+    private RegisterNewUserCommandMetadata meta;
     private HelperFactory helperFactory;
     private SMTPSettings smtpSettings;
 
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        RegisterUserDMMeta meta,
+        RegisterNewUserCommandMetadata meta,
         ref in SMTPSettings smtpSettings
     ) {
         this.relationalDb = relationalDb;

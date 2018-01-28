@@ -4,7 +4,7 @@ import api.requestinterface.common;
 import container;
 
 import entity.all;
-
+import api.requestMetadata;
 import decisionmakers.registeruser;
 import decisionmakers.login;
 import decisionmakers.passwordresetinitiate;
@@ -17,11 +17,11 @@ interface AuthAPI
 	@property Prefix prefix(RequestInfo requestInfo) @safe;
 
 	@method(HTTPMethod.POST)
-	@property void register(RegisterUserDMMeta register) @safe;	
+	@property void register(RegisterNewUserRequestMetadata register) @safe;	
 
 	@method(HTTPMethod.POST)
 	@before!getRequestInfo("requestInfo")
-	@property Token login(LoginRequestMeta login, RequestInfo requestInfo) @safe;
+	@property Token login(LoginRequestMetadata login, RequestInfo requestInfo) @safe;
 
 	@method(HTTPMethod.POST)
 	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest) @safe;

@@ -12,13 +12,6 @@ import commands.login;
 import commands.assignprefix;
 import helpers.testhelper;
 
-struct LoginRequestMeta
-{
-    string email;
-    string password;
-    string prefix;
-}
-
 struct LoginDMMeta
 {
     ulong usrId;

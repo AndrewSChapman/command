@@ -7,53 +7,56 @@ import decisionmakers.decisionmakerinterface;
 import eventmanager.all;
 import commands.registeruser;
 
-struct RegisterUserDMMeta
+struct RegisterNewUserFacts
 {
+    bool userAlreadyExists;
     string userFirstName;
     string userLastName;
     string email;
-    string password;
-}
-
-struct RegisterNewUserFactors
-{
-    bool userExists;
+    string password;    
 }
 
 class RegisterUserDM : DecisionMakerInterface
 {
-    private RegisterUserDMMeta meta;
+    private RegisterNewUserFacts facts;
     
-    public this(RegisterUserDMMeta meta, ref RegisterNewUserFactors factors) @safe
+    public this(ref RegisterNewUserFacts facts) @safe
     {
-        enforce(meta.userFirstName != "", "Please supply a user first name");
-        enforce(meta.userLastName != "", "Please supply a user last name");
-        enforce(meta.email != "", "Please supply a user email address");
-        enforce(meta.password.length >= 8, "Please supply a password that is at least 8 characters long");
-        enforce(!factors.userExists, "A user already exists with this email address.");
+        enforce(facts.userFirstName != "", "Please supply a user first name");
+        enforce(facts.userLastName != "", "Please supply a user last name");
+        enforce(facts.email != "", "Please supply a user email address");
+        enforce(facts.password.length >= 8, "Please supply a password that is at least 8 characters long");
+        enforce(!facts.userAlreadyExists, "A user already exists with this email address.");
 
-        this.meta = meta;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {
-        eventList.append(new RegisterUserCommand(this.meta), typeid(RegisterUserCommand));
+        auto command = new RegisterUserCommand(
+            this.facts.userFirstName,
+            this.facts.userLastName,
+            this.facts.email,
+            this.facts.password
+        );
+
+        eventList.append(command, typeid(RegisterUserCommand));
     }
 }
 
 unittest {
-    RegisterUserDMMeta meta;
-    meta.userFirstName = "Joe";
-    meta.userLastName = "Bloggs";
-    meta.email = "job.blogs@chapmandigital.co.uk";
-    meta.password = "FishF1shFish";
+    RegisterNewUserFacts facts;
+    facts.userFirstName = "Joe";
+    facts.userLastName = "Bloggs";
+    facts.email = "job.blogs@chapmandigital.co.uk";
+    facts.password = "FishF1shFish";
 
-    void testHappyPath(ref RegisterUserDMMeta meta) {
+    void testHappyPath(ref RegisterNewUserFacts facts) {
         // Test the happy path
-        RegisterNewUserFactors factors;
-        factors.userExists = false;
+        RegisterNewUserFacts facts;
+        facts.userAlreadyExists = false;
 
-        auto command = new RegisterUserDM(meta, factors);
+        auto command = new RegisterUserDM(facts, facts);
         auto eventList = new EventList();
         command.issueCommands(eventList);
 
@@ -61,16 +64,16 @@ unittest {
         assert(eventList.size() == 1);
     }
 
-    void testUserAlreadyExists(ref RegisterUserDMMeta meta) {
+    void testUserAlreadyExists(ref RegisterNewUserFacts facts) {
         // Test the happy path
-        RegisterNewUserFactors factors;
-        factors.userExists = true;
+        RegisterNewUserFacts facts;
+        facts.userAlreadyExists = true;
 
         auto eventList = new EventList();
         bool errorThrown = false;
 
         try {
-            auto command = new RegisterUserDM(meta, factors);
+            auto command = new RegisterUserDM(facts, facts);
             command.issueCommands(eventList);
         } catch(Exception e) {
             errorThrown = true;
@@ -84,6 +87,6 @@ unittest {
     }
 
 
-    testHappyPath(meta);
-    testUserAlreadyExists(meta);
+    testHappyPath(facts);
+    testUserAlreadyExists(facts);
 }
