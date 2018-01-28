@@ -11,6 +11,7 @@ import mysql;
 import vibe.vibe;
 
 import api.handlers.abstracthandler;
+import api.requestMetadata;
 import appconfig;
 import container;
 import entity.all;
@@ -42,15 +43,13 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		try {
 			this.checkToken(this._container, requestInfo);
 
-			UpdateUserFactors factors;
-			factors.userLoggedIn = true;
+			UpdateUserFacts facts;
+			facts.userLoggedIn = true;
+			facts.usrId = requestInfo.usrId;
+			facts.firstName = updateProfile.firstName;
+			facts.lastName = updateProfile.lastName;
 
-			UpdateUserMeta updateUserMeta;
-			updateUserMeta.usrId = requestInfo.usrId;
-			updateUserMeta.firstName = updateProfile.firstName;
-			updateUserMeta.lastName = updateProfile.lastName;
-
-			auto decisionMaker = new UpdateUserDM(updateUserMeta, factors);		
+			auto decisionMaker = new UpdateUserDM(facts);		
 			this.executeCommands(this._container, decisionMaker);		
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);

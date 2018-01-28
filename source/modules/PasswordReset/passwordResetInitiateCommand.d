@@ -1,23 +1,32 @@
 module commands.passwordresetinitiate;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-import decisionmakers.passwordresetinitiate;
+import commandlib.abstractcommand;
 
-class PasswordResetInitiateCommand : AbstractEvent!PasswordResetInitiateDMMeta,StorableEvent
+struct PasswordResetInitiateCommandMetadata
 {
-    this(PasswordResetInitiateDMMeta meta) @safe
-    {
+    ulong usrId;
+    string userFirstName;
+    string userLastName;
+    string userEmail;
+    string newPassword;
+}
+
+class PasswordResetInitiateCommand : AbstractCommand!PasswordResetInitiateCommandMetadata
+{
+    this(
+        ulong usrId,
+        string userFirstName,
+        string userLastName,
+        string userEmail,
+        string newPassword
+    ) @safe {
+        PasswordResetInitiateCommandMetadata meta;
+        meta.usrId = usrId;
+        meta.userFirstName = userFirstName;
+        meta.userLastName = userLastName;
+        meta.userEmail = userEmail;
+        meta.newPassword = newPassword;
+
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto commandMeta = *metadata.peek!(PasswordResetInitiateDMMeta);
-        return new StorageEvent(typeid(this), lifecycle, commandMeta.serializeToJson());       
     }
 }

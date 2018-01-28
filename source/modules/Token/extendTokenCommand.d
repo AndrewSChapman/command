@@ -1,9 +1,6 @@
 module commands.extendtoken;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-import decisionmakers.extendtoken;
+import commandlib.abstractcommand;
 
 struct ExtendTokenCommandMeta
 {
@@ -14,19 +11,21 @@ struct ExtendTokenCommandMeta
     ulong usrId;
 }
 
-class ExtendTokenCommand : AbstractEvent!ExtendTokenCommandMeta,StorableEvent
+class ExtendTokenCommand : AbstractCommand!ExtendTokenCommandMeta
 {
-    this(ExtendTokenCommandMeta meta) @safe
-    {
+    this(
+        in ref string tokenCode,
+        in ref string userAgent,
+        in ref string ipAddress,
+        in ref string prefix,
+        in ulong usrId  
+    ) @safe {
+        ExtendTokenCommandMeta meta;
+        meta.tokenCode = tokenCode;
+        meta.userAgent = userAgent;
+        meta.ipAddress = ipAddress;
+        meta.usrId = usrId;
+
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto storageMeta = *metadata.peek!(ExtendTokenCommandMeta);
-        return new StorageEvent(typeid(this), lifecycle, storageMeta.serializeToJson());       
     }
 }

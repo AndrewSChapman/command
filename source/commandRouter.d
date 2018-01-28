@@ -127,7 +127,7 @@ class CommandRouter : EventListenerInterface
 
         // PASSWORD RESET COMPLETE
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {
-            auto const meta = *metaVariant.peek!(PasswordResetCompleteDMMeta);
+            auto const meta = *metaVariant.peek!(PasswordResetCompleteCommandMetadata);
             auto handler = new PasswordResetCompleteProjection(this.relationalDb, this.helperFactory, meta);
             handler.handleEvent();
             return;       
@@ -135,7 +135,7 @@ class CommandRouter : EventListenerInterface
 
         // PASSWORD RESET INITIATE
         commandHandlers[typeid(PasswordResetInitiateCommand)] = {
-            auto const meta = *metaVariant.peek!(PasswordResetInitiateDMMeta);
+            auto const meta = *metaVariant.peek!(PasswordResetInitiateCommandMetadata);
             auto handler = new PasswordResetInitiateProjection(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
             handler.handleEvent();
             return;       
@@ -151,7 +151,7 @@ class CommandRouter : EventListenerInterface
 
         // UPDATE USER
         commandHandlers[typeid(UpdateUserCommand)] = {
-            auto meta = *metaVariant.peek!(UpdateUserMeta);
+            auto meta = *metaVariant.peek!(UpdateUserCommandMetadata);
             auto handler = new UpdateUserProjection(this.relationalDb, meta);
             handler.handleEvent();
             return;       

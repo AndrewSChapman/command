@@ -18,7 +18,13 @@ class AbstractCommand(T) : AbstractEvent!T,StorableEvent
 
     public StorageEvent toStorageEvent() @trusted
     {
+        ulong usrId = 0;
         auto metadata = this.getMetadataStruct();
-        return new StorageEvent(typeid(this), this.getLifecycle(), metadata.serializeToJson());
+
+        static if(__traits(hasMember, T, "usrId")) {
+            usrId = metadata.usrId;
+        }
+
+        return new StorageEvent(typeid(this), this.getLifecycle(), metadata.serializeToJson(), usrId);
     }
 }

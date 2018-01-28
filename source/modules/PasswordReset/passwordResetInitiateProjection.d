@@ -7,7 +7,7 @@ import std.conv;
 import std.string;
 
 import relationaldb.all;
-import decisionmakers.passwordresetinitiate;
+import commands.passwordresetinitiate;
 import helpers.helperfactory;
 import entity.smtpsettings;
 import email.passwordreset;
@@ -16,14 +16,14 @@ class PasswordResetInitiateProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private PasswordResetInitiateDMMeta meta;
+    private PasswordResetInitiateCommandMetadata meta;
     private HelperFactory helperFactory;
     private SMTPSettings smtpSettings;
 
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        ref in PasswordResetInitiateDMMeta meta,
+        ref in PasswordResetInitiateCommandMetadata meta,
         ref in SMTPSettings smtpSettings
     ) {
         this.relationalDb = relationalDb;

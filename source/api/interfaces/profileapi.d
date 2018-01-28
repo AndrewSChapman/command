@@ -1,6 +1,7 @@
 module api.interfaces.profileapi;
 
 import api.requestinterface.common;
+import api.requestMetadata;
 import decisionmakers.updateuser;
 import decisionmakers.changepassword;
 import decisionmakers.changeemail;

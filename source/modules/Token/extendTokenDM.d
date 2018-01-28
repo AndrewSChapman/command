@@ -11,38 +11,49 @@ import entity.token;
 import commands.extendtoken;
 import helpers.testhelper;
 
-struct ExtendTokenFactors
+struct ExtendTokenFacts
 {
     bool tokenExists;
     ulong tokenExpiry;
     string tokenUserAgent;
     string tokenIPAddress;
+    string tokenCode;
+    string userAgent;
+    string ipAddress;
+    string prefix;
+    ulong usrId;    
 }
 
 class ExtendTokenDM : DecisionMakerInterface
 {
-    private ExtendTokenCommandMeta meta;
-    private ExtendTokenFactors factors;
+    private ExtendTokenFacts facts;
     
-    public this(ref ExtendTokenCommandMeta meta, ref ExtendTokenFactors factors) @safe
+    public this(in ref ExtendTokenFacts facts) @safe
     {
-        enforce(factors.tokenExists, "Sorry, your login token is invalid.");
-        enforce(factors.tokenExpiry > Clock.currTime().toUnixTime(), "Sorry, your login token has expired.");
-        enforce(meta.tokenCode != "", "Please supply a valid tokenCode.");
-        enforce(meta.userAgent != "", "Please supply a valid userAgent.");
-        enforce(meta.ipAddress != "", "Please supply a valid ipAddress.");
-        enforce(meta.userAgent == factors.tokenUserAgent, "Sorry, your login token has an invalid user agent.");
-        enforce(meta.ipAddress == factors.tokenIPAddress, "Sorry, your login token has an invalid IP address.");
-        enforce(meta.prefix != "", "Prefix may not be blank.");
-        enforce(meta.usrId > 0, "UsrId must be > 0");
+        enforce(facts.tokenExists, "Sorry, your login token is invalid.");
+        enforce(facts.tokenExpiry > Clock.currTime().toUnixTime(), "Sorry, your login token has expired.");
+        enforce(facts.tokenCode != "", "Please supply a valid tokenCode.");
+        enforce(facts.userAgent != "", "Please supply a valid userAgent.");
+        enforce(facts.ipAddress != "", "Please supply a valid ipAddress.");
+        enforce(facts.userAgent == facts.tokenUserAgent, "Sorry, your login token has an invalid user agent.");
+        enforce(facts.ipAddress == facts.tokenIPAddress, "Sorry, your login token has an invalid IP address.");
+        enforce(facts.prefix != "", "Prefix may not be blank.");
+        enforce(facts.usrId > 0, "UsrId must be > 0");
 
-        this.meta = meta;
-        this.factors = factors;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {        
-        eventList.append(new ExtendTokenCommand(this.meta), typeid(ExtendTokenCommand));
+        auto command = new ExtendTokenCommand(
+            this.facts.tokenCode,
+            this.facts.userAgent,
+            this.facts.ipAddress,
+            this.facts.prefix,
+            this.facts.usrId
+        );
+
+        eventList.append(command, typeid(ExtendTokenCommand));
     }
 }
 

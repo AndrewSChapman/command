@@ -1,29 +1,25 @@
 module commands.updateuser;
+import commandlib.abstractcommand;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-
-struct UpdateUserMeta
+struct UpdateUserCommandMetadata
 {
     long usrId;
     string firstName;
     string lastName;
 }
 
-class UpdateUserCommand : AbstractEvent!UpdateUserMeta,StorableEvent
+class UpdateUserCommand : AbstractCommand!UpdateUserCommandMetadata
 {
-    this(UpdateUserMeta meta) @safe
-    {
+    this(
+        ref ulong usrId,
+        ref string firstName,
+        ref string lastName
+    ) @safe {
+        UpdateUserCommandMetadata meta;
+        meta.usrId = usrId;
+        meta.firstName = firstName;
+        meta.lastName = lastName;
+
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto updateUserMeta = *metadata.peek!(UpdateUserMeta);
-        return new StorageEvent(typeid(this), lifecycle, updateUserMeta.serializeToJson());       
     }
 }

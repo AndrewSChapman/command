@@ -44,12 +44,10 @@ abstract class AbstractHandler
 		
 		auto eventList = new EventListWithStorage(container.getEventStore());
 
-		ExtendTokenFactors extendTokenFactors;
-
-		ExtendTokenCommandMeta ExtendTokenCommandMeta;
-		ExtendTokenCommandMeta.tokenCode = requestInfo.tokenCode;
-		ExtendTokenCommandMeta.userAgent = requestInfo.userAgent;
-		ExtendTokenCommandMeta.ipAddress = requestInfo.ipAddress;		
+		ExtendTokenFacts facts;
+		facts.tokenCode = requestInfo.tokenCode;
+		facts.userAgent = requestInfo.userAgent;
+		facts.ipAddress = requestInfo.ipAddress;		
 
 		// See if the token is in redis.  If it is, use the details directly from redis.
 		auto redisDatabase = container.getRedisDatabase();
@@ -57,10 +55,10 @@ abstract class AbstractHandler
 			Json sessionInfoJson = parseJsonString(redisDatabase.get(requestInfo.tokenCode));
 			const SessionInfo sessionInfo = deserializeJson!SessionInfo(sessionInfoJson);
 
-			extendTokenFactors.tokenExists = true;
-			extendTokenFactors.tokenExpiry = sessionInfo.expiresAt;
-			extendTokenFactors.tokenUserAgent = sessionInfo.userAgent;
-			extendTokenFactors.tokenIPAddress = sessionInfo.ipAddress;
+			facts.tokenExists = true;
+			facts.tokenExpiry = sessionInfo.expiresAt;
+			facts.tokenUserAgent = sessionInfo.userAgent;
+			facts.tokenIPAddress = sessionInfo.ipAddress;
 
 			requestInfo.prefix = sessionInfo.prefix;
 			requestInfo.usrId = sessionInfo.usrId;			
@@ -68,32 +66,24 @@ abstract class AbstractHandler
 			// Grab the token from MySQL
 			auto tokenQuery = container.getQueryFactory().createTokenQuery();
 			
-			extendTokenFactors.tokenExists = tokenQuery.existsByCode(requestInfo.tokenCode);
+			facts.tokenExists = tokenQuery.existsByCode(requestInfo.tokenCode);
 
-			if (extendTokenFactors.tokenExists) {
+			if (facts.tokenExists) {
 				const auto token = tokenQuery.getByCode(requestInfo.tokenCode);
-				extendTokenFactors.tokenExpiry = token.expiresAt;
-				extendTokenFactors.tokenUserAgent = token.userAgent;
-				extendTokenFactors.tokenIPAddress = token.ipAddress;
+				facts.tokenExpiry = token.expiresAt;
+				facts.tokenUserAgent = token.userAgent;
+				facts.tokenIPAddress = token.ipAddress;
 
 				requestInfo.prefix = token.prefix;
 				requestInfo.usrId = token.usrId;
 			}
 		}
 
-		ExtendTokenCommandMeta.prefix = requestInfo.prefix;
-		ExtendTokenCommandMeta.usrId = requestInfo.usrId;
+		facts.prefix = requestInfo.prefix;
+		facts.usrId = requestInfo.usrId;
 
-		auto ExtendTokenDM = new ExtendTokenDM(ExtendTokenCommandMeta, extendTokenFactors);
-		ExtendTokenDM.issueCommands(eventList);
-
-		if (eventList.size == 0) {
-			throw new Exception("Error - ExtendTokenDM raised no events");
-		}
-
-		auto dispatcher = new EventDispatcher();
-		auto director = this.attachCommandRouter(container, dispatcher);
-		eventList.dispatch(dispatcher);			
+		auto decisionMaker = new ExtendTokenDM(facts);
+        this.executeAndAwaitCommands(this._container, decisionMaker);
 	}
 
 	protected CommandRouter attachCommandRouter(Container container, ref EventDispatcher dispatcher) @safe

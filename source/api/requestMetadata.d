@@ -14,3 +14,22 @@ struct LoginRequestMetadata
     string password;
     string prefix;
 }
+
+struct PasswordResetRequestMeta
+{
+    string emailAddress;
+    string newPassword;
+    string newPasswordRepeated;
+}
+
+struct PasswordResetCompleteRequestMeta
+{
+    string emailAddress;
+    ulong newPasswordPin;
+}
+
+struct UpdateUserRequestMeta
+{
+    string firstName;
+    string lastName;
+}

@@ -32,8 +32,9 @@ import container;
 import relationaldb.all;
 import commandrouter;
 import api.interfaces.all;
-import appconfig;
 import api.requestMetadata;
+import appconfig;
+
 
 class AuthHandler : AbstractHandler,AuthAPI
 {
@@ -52,6 +53,8 @@ class AuthHandler : AbstractHandler,AuthAPI
 
         // Pass the facts to the decision maker
 		auto decisionMaker = new CreatePrefixDM(facts);	
+
+        // Ask the decision maker to create the commands and then excecute them.
 		auto router = this.executeAndAwaitCommands(this._container, decisionMaker);		
 
 		Prefix prefix;
@@ -130,28 +133,27 @@ class AuthHandler : AbstractHandler,AuthAPI
 	@property void passwordReset(PasswordResetRequestMeta passwordResetRequest) @safe
 	{
 		try {
-			PasswordResetInitiateDMMeta commandMeta;
-			PasswordResetInitiateFactors factors;
+			PasswordResetInitiateFacts facts;
 
 			auto userQuery = new UserQuery(this._container.getRelationalDb());
-			factors.userExists = userQuery.userExistsByEmail(passwordResetRequest.emailAddress);
+			facts.userExists = userQuery.userExistsByEmail(passwordResetRequest.emailAddress);
 
-			if (factors.userExists) {
+			if (facts.userExists) {
 				auto user = userQuery.getUserByEmail(passwordResetRequest.emailAddress);
-				commandMeta.usrId = user.usrId;
-				commandMeta.userFirstName = user.firstName;
-				commandMeta.userLastName = user.lastName;
-				commandMeta.userEmail = user.email;
-				commandMeta.newPassword = passwordResetRequest.newPassword;
+				facts.usrId = user.usrId;
+				facts.userFirstName = user.firstName;
+				facts.userLastName = user.lastName;
+				facts.userEmail = user.email;
+				facts.newPassword = passwordResetRequest.newPassword;
 
 				auto passwordHelper = new PasswordHelper();
-				factors.newPasswordValidated = 
+				facts.newPasswordValidated = 
 					((passwordResetRequest.newPassword == passwordResetRequest.newPasswordRepeated) &&
 					passwordHelper.passwordPassesSecurityPolicy(passwordResetRequest.newPassword));
 			}
 			
-			auto command = new PasswordResetInitiateDM(commandMeta, factors);		
-			auto router = this.executeAndAwaitCommands(this._container, command);			
+			auto decisionMaker = new PasswordResetInitiateDM(facts);		
+			auto router = this.executeAndAwaitCommands(this._container, decisionMaker);
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		
@@ -160,24 +162,23 @@ class AuthHandler : AbstractHandler,AuthAPI
 	@property void passwordResetComplete(PasswordResetCompleteRequestMeta passwordResetCompleteRequest) @safe
 	{
 		try {
-			PasswordResetCompleteDMMeta commandMeta;
-			PasswordResetCompleteFactors factors;
+			PasswordResetCompleteFacts facts;
 
 			auto userQuery = new UserQuery(this._container.getRelationalDb());
-			factors.userExists = userQuery.userExistsByEmail(passwordResetCompleteRequest.emailAddress);
+			facts.userExists = userQuery.userExistsByEmail(passwordResetCompleteRequest.emailAddress);
 
-			if (factors.userExists) {
+			if (facts.userExists) {
 				auto const user = userQuery.getUserByEmail(passwordResetCompleteRequest.emailAddress);
-				commandMeta.usrId = user.usrId;
+				facts.usrId = user.usrId;
 
-				factors.newPasswordPinValidated = (passwordResetCompleteRequest.newPasswordPin == user.newPasswordPin);
+				facts.newPasswordPinValidated = (passwordResetCompleteRequest.newPasswordPin == user.newPasswordPin);
 
 				// @todo - Implement pin expiry
-				factors.pinHasNotExpired = true;
+				facts.pinHasNotExpired = true;
 			}
 			
-			auto command = new PasswordResetCompleteDM(commandMeta, factors);		
-			this.executeCommands(this._container, command);			
+			auto decisionMaker = new PasswordResetCompleteDM(facts);
+			this.executeCommands(this._container, decisionMaker);			
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		

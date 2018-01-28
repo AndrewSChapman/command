@@ -9,43 +9,32 @@ import eventmanager.all;
 import commands.passwordresetcomplete;
 import helpers.testhelper;
 
-struct PasswordResetCompleteFactors
+struct PasswordResetCompleteFacts
 {
     bool userExists;
     bool newPasswordPinValidated;
     bool pinHasNotExpired;
-}
-
-struct PasswordResetCompleteRequestMeta
-{
-    string emailAddress;
-    ulong newPasswordPin;
-}
-
-struct PasswordResetCompleteDMMeta
-{
     ulong usrId;
 }
 
 class PasswordResetCompleteDM : DecisionMakerInterface
 {
-    private PasswordResetCompleteDMMeta meta;
-    private PasswordResetCompleteFactors factors;
+    private PasswordResetCompleteFacts facts;
     
-    public this(ref PasswordResetCompleteDMMeta meta, ref PasswordResetCompleteFactors factors) @safe
+    public this(ref PasswordResetCompleteFacts facts) @safe
     {
-        enforce(meta.usrId > 0, "Sorry, we could not find your user account.");
-        enforce(factors.userExists, "Sorry, a user account with the specified email address does not exist.");
-        enforce(factors.pinHasNotExpired, "Sorry, the password reset pin that you provided has expired.");
-        enforce(factors.newPasswordPinValidated, "Sorry, the password reset pin that you provided was invalid.");
+        enforce(facts.usrId > 0, "Sorry, we could not find your user account.");
+        enforce(facts.userExists, "Sorry, a user account with the specified email address does not exist.");
+        enforce(facts.pinHasNotExpired, "Sorry, the password reset pin that you provided has expired.");
+        enforce(facts.newPasswordPinValidated, "Sorry, the password reset pin that you provided was invalid.");
 
-        this.meta = meta;
-        this.factors = factors;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {
-        eventList.append(new PasswordResetCompleteCommand(this.meta), typeid(PasswordResetCompleteCommand));
+        auto command = new PasswordResetCompleteCommand(this.facts.usrId);
+        eventList.append(command, typeid(PasswordResetCompleteCommand));
     }
 }
 
@@ -53,41 +42,41 @@ unittest {
     PasswordResetCompleteDMMeta meta;
     meta.usrId = 1;
 
-    // Test passing factors
+    // Test passing facts
     function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompleteFactors factors;
-        factors.userExists = true;
-        factors.newPasswordPinValidated = true;
-        factors.pinHasNotExpired = true; 
+        PasswordResetCompletefacts facts;
+        facts.userExists = true;
+        facts.newPasswordPinValidated = true;
+        facts.pinHasNotExpired = true; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompleteFactors)(meta, factors, 1, false);
+        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 1, false);
     }(meta);    
 
-    // Test failing factors
+    // Test failing facts
     function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompleteFactors factors;
-        factors.userExists = false;
-        factors.newPasswordPinValidated = true;
-        factors.pinHasNotExpired = true; 
+        PasswordResetCompletefacts facts;
+        facts.userExists = false;
+        facts.newPasswordPinValidated = true;
+        facts.pinHasNotExpired = true; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompleteFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 0, true);
     }(meta);
 
     function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompleteFactors factors;
-        factors.userExists = true;
-        factors.newPasswordPinValidated = false;
-        factors.pinHasNotExpired = true; 
+        PasswordResetCompletefacts facts;
+        facts.userExists = true;
+        facts.newPasswordPinValidated = false;
+        facts.pinHasNotExpired = true; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompleteFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 0, true);
     }(meta);
 
     function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompleteFactors factors;
-        factors.userExists = true;
-        factors.newPasswordPinValidated = true;
-        factors.pinHasNotExpired = false; 
+        PasswordResetCompletefacts facts;
+        facts.userExists = true;
+        facts.newPasswordPinValidated = true;
+        facts.pinHasNotExpired = false; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompleteFactors)(meta, factors, 0, true);
+        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 0, true);
     }(meta);        
 }

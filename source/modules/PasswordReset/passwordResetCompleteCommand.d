@@ -1,23 +1,19 @@
 module commands.passwordresetcomplete;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
-import decisionmakers.passwordresetcomplete;
+import commandlib.abstractcommand;
 
-class PasswordResetCompleteCommand : AbstractEvent!PasswordResetCompleteDMMeta,StorableEvent
+struct PasswordResetCompleteCommandMetadata
 {
-    this(PasswordResetCompleteDMMeta meta) @safe
+    ulong usrId;
+}
+
+class PasswordResetCompleteCommand : AbstractCommand!PasswordResetCompleteCommandMetadata
+{
+    this(ulong usrId) @safe
     {
+        PasswordResetCompleteCommandMetadata meta;
+        meta.usrId = usrId;
+        
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto commandMeta = *metadata.peek!(PasswordResetCompleteDMMeta);
-        return new StorageEvent(typeid(this), lifecycle, commandMeta.serializeToJson());       
     }
 }

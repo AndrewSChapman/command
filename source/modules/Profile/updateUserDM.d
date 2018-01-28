@@ -9,36 +9,37 @@ import eventmanager.all;
 import commands.updateuser;
 import helpers.testhelper;
 
-struct UpdateUserRequestMeta
-{
-    string firstName;
-    string lastName;
-}
-
-struct UpdateUserFactors
+struct UpdateUserFacts
 {
     bool userLoggedIn;
+    ulong usrId;
+    string firstName;
+    string lastName;    
 }
 
 class UpdateUserDM : DecisionMakerInterface
 {
-    private UpdateUserMeta meta;
-    private UpdateUserFactors factors;
+    private UpdateUserFacts facts;
     
-    public this(ref UpdateUserMeta meta, ref UpdateUserFactors factors) @safe
+    public this(ref UpdateUserFacts facts) @safe
     {
-        enforce(factors.userLoggedIn, "Sorry, you must be logged in to perform this action.");
-        enforce(meta.usrId > 0, "Please supply a valid user Id.");
-        enforce(meta.firstName != "", "First name may not be blank.");
-        enforce(meta.lastName != "", "Last name may not be lbank.");
+        enforce(facts.userLoggedIn, "Sorry, you must be logged in to perform this action.");
+        enforce(facts.usrId > 0, "Please supply a valid user Id.");
+        enforce(facts.firstName != "", "First name may not be blank.");
+        enforce(facts.lastName != "", "Last name may not be lbank.");
                 
-        this.meta = meta;
-        this.factors = factors;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {        
-        eventList.append(new UpdateUserCommand(this.meta), typeid(UpdateUserCommand));
+        auto command = new UpdateUserCommand(
+            this.facts.usrId,
+            this.facts.firstName,
+            this.facts.lastName
+        );
+
+        eventList.append(command, typeid(UpdateUserCommand));
     }
 }
 

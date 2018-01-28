@@ -4,20 +4,20 @@ import std.stdio;
 import std.variant;
 
 import relationaldb.all;
-import decisionmakers.passwordresetcomplete;
+import commands.passwordresetcomplete;
 import helpers.helperfactory;
 
 class PasswordResetCompleteProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private PasswordResetCompleteDMMeta meta;
+    private PasswordResetCompleteCommandMetadata meta;
     private HelperFactory helperFactory;
 
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        ref in PasswordResetCompleteDMMeta meta
+        ref in PasswordResetCompleteCommandMetadata meta
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;

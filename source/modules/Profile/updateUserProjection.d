@@ -11,11 +11,11 @@ class UpdateUserProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private UpdateUserMeta meta;
+    private UpdateUserCommandMetadata meta;
 
     this(
         RelationalDBInterface relationalDb,
-        UpdateUserMeta meta
+        UpdateUserCommandMetadata meta
     ) {
         this.relationalDb = relationalDb;
         this.meta = meta;
