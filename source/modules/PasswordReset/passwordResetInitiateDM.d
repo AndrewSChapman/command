@@ -53,38 +53,36 @@ class PasswordResetInitiateDM : DecisionMakerInterface
     }
 }
 
+
 unittest {
-    PasswordResetInitiateDMMeta meta;
-    meta.usrId = 1;
-    meta.newPassword = "ABC1234";
-    meta.userFirstName = "Homer";
-    meta.userLastName = "Simpson";
-    meta.userEmail = "homer@chapmandigital.co.uk";
+    PasswordResetInitiateFacts facts;
+    facts.usrId = 1;
+    facts.newPassword = "ABC1234";
+    facts.userFirstName = "Homer";
+    facts.userLastName = "Simpson";
+    facts.userEmail = "homer@chapmandigital.co.uk";
 
     // Test passing facts
-    function (ref PasswordResetInitiateDMMeta meta) {
-        PasswordResetInitiatefacts facts;
+    function (ref PasswordResetInitiateFacts facts) {
         facts.userExists = true;
         facts.newPasswordValidated = true;
 
-        TestHelper.testGenericCommand!(PasswordResetInitiateDM, PasswordResetInitiateDMMeta, PasswordResetInitiatefacts)(meta, facts, 1, false);
-    }(meta);
+        TestHelper.testDecisionMaker!(PasswordResetInitiateDM, PasswordResetInitiateFacts)(facts, 1, false);
+    }(facts);
 
 
     // Test failing facts
-    function (ref PasswordResetInitiateDMMeta meta) {
-        PasswordResetInitiatefacts facts;
+    function (ref PasswordResetInitiateFacts facts) {
         facts.userExists = false;
         facts.newPasswordValidated = false;
 
-        TestHelper.testGenericCommand!(PasswordResetInitiateDM, PasswordResetInitiateDMMeta, PasswordResetInitiatefacts)(meta, facts, 0, true);
-    }(meta);
+        TestHelper.testDecisionMaker!(PasswordResetInitiateDM, PasswordResetInitiateFacts)(facts, 0, true);
+    }(facts);
 
-    function (ref PasswordResetInitiateDMMeta meta) {
-        PasswordResetInitiatefacts facts;
+    function (ref PasswordResetInitiateFacts facts) {
         facts.userExists = true;
         facts.newPasswordValidated = false;
 
-        TestHelper.testGenericCommand!(PasswordResetInitiateDM, PasswordResetInitiateDMMeta, PasswordResetInitiatefacts)(meta, facts, 0, true);
-    }(meta);      
+        TestHelper.testDecisionMaker!(PasswordResetInitiateDM, PasswordResetInitiateFacts)(facts, 0, true);
+    }(facts);      
 }

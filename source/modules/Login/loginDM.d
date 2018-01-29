@@ -61,77 +61,71 @@ class LoginDM : DecisionMakerInterface
 }
 
 unittest {
-    LoginDMMeta meta;
-    meta.usrId = 1;
-    meta.userAgent = "TESTAGENT";
-    meta.ipAddress = "192.168.1.100";
-    meta.prefix = "ABCDE";
+    LoginFacts facts;
+    facts.usrId = 1;
+    facts.userAgent = "TESTAGENT";
+    facts.ipAddress = "192.168.1.100";
+    facts.prefix = "ABCDE";
 
     // Test passing facts
-    function (ref LoginDMMeta meta) {
-        Loginfacts facts;
+    function (ref LoginFacts facts) {
         facts.userExists = true;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = true;
         facts.prefixNotAssigned = false;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 1, false);
-    }(meta);
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 1, false);
+    }(facts);
 
-    function (ref LoginDMMeta meta) {
-        Loginfacts facts;
+    function (ref LoginFacts facts) {
         facts.userExists = true;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 2, false);
-    }(meta);
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 2, false);
+    }(facts);
 
     // Test failing facts
-    function (ref LoginDMMeta meta) {
-        Loginfacts facts;
+    function (ref LoginFacts facts) {
         facts.userExists = false;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
-    }(meta);
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 0, true);
+    }(facts);
 
-    function (ref LoginDMMeta meta) {
-        Loginfacts facts;
+    function (ref LoginFacts facts) {
         facts.userExists = true;
         facts.passwordCorrect = false;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
-    }(meta);    
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 0, true);
+    }(facts);    
 
-    function (ref LoginDMMeta meta) {
-        Loginfacts facts;
+    function (ref LoginFacts facts) {
         facts.userExists = true;
         facts.passwordCorrect = true;
         facts.prefixExists = false;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = true;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
-    }(meta);
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 0, true);
+    }(facts);
 
-    function (ref LoginDMMeta meta) {
-        Loginfacts facts;
+    function (ref LoginFacts facts) {
         facts.userExists = true;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = false;
 
-        TestHelper.testGenericCommand!(LoginDM, LoginDMMeta, Loginfacts)(meta, facts, 0, true);
-    }(meta);        
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 0, true);
+    }(facts);        
 }

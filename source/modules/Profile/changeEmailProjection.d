@@ -11,11 +11,11 @@ class ChangeEmailProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private ChangeEmailMeta meta;
+    private ChangeEmailCommandMeta meta;
 
     this(
         RelationalDBInterface relationalDb,
-        ChangeEmailMeta meta
+        ChangeEmailCommandMeta meta
     ) {
         this.relationalDb = relationalDb;
         this.meta = meta;

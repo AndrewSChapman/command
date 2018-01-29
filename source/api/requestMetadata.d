@@ -40,3 +40,8 @@ struct ChangePasswordRequestMeta
     string newPassword;
     string newPasswordRepeated;
 }
+
+struct ChangeEmailRequestMeta
+{
+    string emailAddress;
+}

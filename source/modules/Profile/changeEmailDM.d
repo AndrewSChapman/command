@@ -9,120 +9,108 @@ import eventmanager.all;
 import commands.changeemail;
 import helpers.testhelper;
 
-struct ChangeEmailRequestMeta
-{
-    string emailAddress;
-}
-
-struct ChangeEmailFactors
+struct ChangeEmailFacts
 {
     bool userLoggedIn;
     bool emailAddressLooksValid; 
     bool emailAddressIsDifferentToCurrent;
     bool emailAddressIsUnique;
+    ulong usrId;
+    string emailAddress;    
 }
 
 class ChangeEmailDM : DecisionMakerInterface
 {
-    private ChangeEmailMeta meta;
-    private ChangeEmailFactors factors;
+    private ChangeEmailFacts facts;
     
-    public this(ref ChangeEmailMeta meta, ref ChangeEmailFactors factors) @safe
+    public this(in ref ChangeEmailFacts facts) @safe
     {
-        enforce(factors.userLoggedIn, "Sorry, you must be logged in to perform this action.");
-        enforce(factors.emailAddressLooksValid, "Sorry, the proposed email address seems to be invalid.");
-        enforce(factors.emailAddressIsDifferentToCurrent, "The proposed email address is not different to the current one.");
-        enforce(factors.emailAddressIsUnique, "Sorry, another user account is using this email address.  Please choose another.");
-        enforce(meta.emailAddress != "", "Email address may not be blank.");
-        enforce(meta.usrId > 0, "Please supply a valid user id");
+        enforce(facts.userLoggedIn, "Sorry, you must be logged in to perform this action.");
+        enforce(facts.emailAddressLooksValid, "Sorry, the proposed email address seems to be invalid.");
+        enforce(facts.emailAddressIsDifferentToCurrent, "The proposed email address is not different to the current one.");
+        enforce(facts.emailAddressIsUnique, "Sorry, another user account is using this email address.  Please choose another.");
+        enforce(facts.emailAddress != "", "Email address may not be blank.");
+        enforce(facts.usrId > 0, "Please supply a valid user id");
                 
-        this.meta = meta;
-        this.factors = factors;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {        
-        eventList.append(new ChangeEmailCommand(this.meta), typeid(ChangeEmailCommand));
+        auto command = new ChangeEmailCommand(
+            this.facts.usrId,
+            this.facts.emailAddress
+        );
+
+        eventList.append(command, typeid(ChangeEmailCommand));
     }
 }
 
+
 unittest {
-    ChangeEmailMeta meta;
-    meta.usrId = 1;
-    meta.emailAddress = "andy@andychapman.net";
+    ChangeEmailFacts facts;
+    facts.usrId = 1;
+    facts.emailAddress = "andy@andychapman.net";
 
-    // Test passing factors
-    function (ref ChangeEmailMeta meta) {
-        ChangeEmailFactors factors;
-        factors.userLoggedIn = true;
-        factors.emailAddressLooksValid = true;
-        factors.emailAddressIsDifferentToCurrent = true;
-        factors.emailAddressIsUnique = true;
+    // Test passing facts
+    function (ref ChangeEmailFacts facts) {
+        facts.userLoggedIn = true;
+        facts.emailAddressLooksValid = true;
+        facts.emailAddressIsDifferentToCurrent = true;
+        facts.emailAddressIsUnique = true;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             ChangeEmailDM,
-            ChangeEmailMeta,
-            ChangeEmailFactors
-        )(meta, factors, 1, false);
-    }(meta);
+            ChangeEmailFacts
+        )(facts, 1, false);
+    }(facts);
 
-    // Test failing factors
-    function (ref ChangeEmailMeta meta) {
-        ChangeEmailFactors factors;
-        factors.userLoggedIn = false;
-        factors.emailAddressLooksValid = true;
-        factors.emailAddressIsDifferentToCurrent = true;
-        factors.emailAddressIsUnique = true;
+    // Test failing facts
+    function (ref ChangeEmailFacts facts) {
+        facts.userLoggedIn = false;
+        facts.emailAddressLooksValid = true;
+        facts.emailAddressIsDifferentToCurrent = true;
+        facts.emailAddressIsUnique = true;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             ChangeEmailDM,
-            ChangeEmailMeta,
-            ChangeEmailFactors
-        )(meta, factors, 0, true);
-    }(meta);  
+            ChangeEmailFacts
+        )(facts, 0, true);
+    }(facts);  
 
-    // Test failing factors
-    function (ref ChangeEmailMeta meta) {
-        ChangeEmailFactors factors;
-        factors.userLoggedIn = true;
-        factors.emailAddressLooksValid = false;
-        factors.emailAddressIsDifferentToCurrent = true;
-        factors.emailAddressIsUnique = true;
+    function (ref ChangeEmailFacts facts) {
+        facts.userLoggedIn = true;
+        facts.emailAddressLooksValid = false;
+        facts.emailAddressIsDifferentToCurrent = true;
+        facts.emailAddressIsUnique = true;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             ChangeEmailDM,
-            ChangeEmailMeta,
-            ChangeEmailFactors
-        )(meta, factors, 0, true);
-    }(meta);
+            ChangeEmailFacts
+        )(facts, 0, true);
+    }(facts);
 
-    // Test failing factors
-    function (ref ChangeEmailMeta meta) {
-        ChangeEmailFactors factors;
-        factors.userLoggedIn = true;
-        factors.emailAddressLooksValid = true;
-        factors.emailAddressIsDifferentToCurrent = false;
-        factors.emailAddressIsUnique = true;
+    function (ref ChangeEmailFacts facts) {
+        facts.userLoggedIn = true;
+        facts.emailAddressLooksValid = true;
+        facts.emailAddressIsDifferentToCurrent = false;
+        facts.emailAddressIsUnique = true;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             ChangeEmailDM,
-            ChangeEmailMeta,
-            ChangeEmailFactors
-        )(meta, factors, 0, true);
-    }(meta);
+            ChangeEmailFacts
+        )(facts, 0, true);
+    }(facts);
 
-    // Test failing factors
-    function (ref ChangeEmailMeta meta) {
-        ChangeEmailFactors factors;
-        factors.userLoggedIn = true;
-        factors.emailAddressLooksValid = true;
-        factors.emailAddressIsDifferentToCurrent = true;
-        factors.emailAddressIsUnique = false;
+    function (ref ChangeEmailFacts facts) {
+        facts.userLoggedIn = true;
+        facts.emailAddressLooksValid = true;
+        facts.emailAddressIsDifferentToCurrent = true;
+        facts.emailAddressIsUnique = false;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             ChangeEmailDM,
-            ChangeEmailMeta,
-            ChangeEmailFactors
-        )(meta, factors, 0, true);
-    }(meta);        
-}	
+            ChangeEmailFacts
+        )(facts, 0, true);
+    }(facts);        
+}

@@ -6,6 +6,7 @@ import std.stdio;
 import eventmanager.all;
 import decisionmakers.decisionmakerinterface;
 import commands.createprefix;
+import helpers.testhelper;
 
 struct CreatePrefixFacts
 {
@@ -37,4 +38,42 @@ class CreatePrefixDM : DecisionMakerInterface
 
         eventList.append(command, typeid(CreatePrefixCommand));
     }
+}
+
+unittest {
+    CreatePrefixFacts facts;
+
+    // Test passing facts
+    function (ref CreatePrefixFacts facts) {
+        facts.userAgent = "testy/mctestface";
+        facts.ipAddress = "127.0.0.1";
+        facts.timestamp = 1517261473; 
+
+        TestHelper.testDecisionMaker!(CreatePrefixDM, CreatePrefixFacts)(facts, 1, false);
+    }(facts);    
+
+    // Test failing facts
+    function (ref CreatePrefixFacts facts) {
+        facts.userAgent = "";
+        facts.ipAddress = "127.0.0.1";
+        facts.timestamp = 1517261473; 
+
+        TestHelper.testDecisionMaker!(CreatePrefixDM, CreatePrefixFacts)(facts, 0, true);
+    }(facts);
+
+    function (ref CreatePrefixFacts facts) {
+        facts.userAgent = "testy/mctestface";
+        facts.ipAddress = "";
+        facts.timestamp = 1517261473; 
+
+        TestHelper.testDecisionMaker!(CreatePrefixDM, CreatePrefixFacts)(facts, 0, true);
+    }(facts);
+
+    function (ref CreatePrefixFacts facts) {
+        facts.userAgent = "testy/mctestface";
+        facts.ipAddress = "127.0.0.1";
+        facts.timestamp = 0;
+
+        TestHelper.testDecisionMaker!(CreatePrefixDM, CreatePrefixFacts)(facts, 0, true);
+    }(facts);        
 }

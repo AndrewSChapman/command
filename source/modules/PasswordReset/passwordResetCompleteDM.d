@@ -38,45 +38,42 @@ class PasswordResetCompleteDM : DecisionMakerInterface
     }
 }
 
+
 unittest {
-    PasswordResetCompleteDMMeta meta;
-    meta.usrId = 1;
+    PasswordResetCompleteFacts facts;
+    facts.usrId = 1;
 
     // Test passing facts
-    function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompletefacts facts;
+    function (ref PasswordResetCompleteFacts facts) {
         facts.userExists = true;
         facts.newPasswordPinValidated = true;
         facts.pinHasNotExpired = true; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 1, false);
-    }(meta);    
+        TestHelper.testDecisionMaker!(PasswordResetCompleteDM, PasswordResetCompleteFacts)(facts, 1, false);
+    }(facts);    
 
     // Test failing facts
-    function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompletefacts facts;
+    function (ref PasswordResetCompleteFacts facts) {
         facts.userExists = false;
         facts.newPasswordPinValidated = true;
         facts.pinHasNotExpired = true; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 0, true);
-    }(meta);
+        TestHelper.testDecisionMaker!(PasswordResetCompleteDM, PasswordResetCompleteFacts)(facts, 0, true);
+    }(facts);
 
-    function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompletefacts facts;
+    function (ref PasswordResetCompleteFacts facts) {
         facts.userExists = true;
         facts.newPasswordPinValidated = false;
         facts.pinHasNotExpired = true; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 0, true);
-    }(meta);
+        TestHelper.testDecisionMaker!(PasswordResetCompleteDM, PasswordResetCompleteFacts)(facts, 0, true);
+    }(facts);
 
-    function (ref PasswordResetCompleteDMMeta meta) {
-        PasswordResetCompletefacts facts;
+    function (ref PasswordResetCompleteFacts facts) {
         facts.userExists = true;
         facts.newPasswordPinValidated = true;
         facts.pinHasNotExpired = false; 
 
-        TestHelper.testGenericCommand!(PasswordResetCompleteDM, PasswordResetCompleteDMMeta, PasswordResetCompletefacts)(meta, facts, 0, true);
-    }(meta);        
+        TestHelper.testDecisionMaker!(PasswordResetCompleteDM, PasswordResetCompleteFacts)(facts, 0, true);
+    }(facts);        
 }

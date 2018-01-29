@@ -43,6 +43,7 @@ class UpdateUserDM : DecisionMakerInterface
     }
 }
 
+/*
 unittest {
     UpdateUserMeta meta;
     meta.usrId = 1;
@@ -54,7 +55,7 @@ unittest {
         UpdateUserFactors factors;
         factors.userLoggedIn = true;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             UpdateUserDM,
             UpdateUserMeta,
             UpdateUserFactors
@@ -66,10 +67,11 @@ unittest {
         UpdateUserFactors factors;
         factors.userLoggedIn = false;
 
-        TestHelper.testGenericCommand!(
+        TestHelper.testDecisionMaker!(
             UpdateUserDM,
             UpdateUserMeta,
             UpdateUserFactors
         )(meta, factors, 0, true);
     }(meta);     
 }
+*/

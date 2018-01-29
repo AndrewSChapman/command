@@ -4,20 +4,20 @@ import eventmanager.all;
 
 class TestHelper
 {
-    public static void testGenericCommand(T, U, V)(ref U meta, V factors, uint numEvents, bool exceptionExpected)
+    public static void testDecisionMaker(T, V)(V facts, uint numberOfExpectedCommands, bool exceptionExpected)
     {
         bool exceptionThrown = false;
 
-        auto eventList = new EventList();
+        auto commandList = new EventList();
         
         try {
-            auto command = new T(meta, factors);
-            command.execute(eventList);
+            auto decisionMaker = new T(facts);
+            decisionMaker.issueCommands(commandList);
         } catch(Exception e) {
             exceptionThrown = true;
         }
 
-        assert(eventList.size() == numEvents);        
+        assert(commandList.size() == numberOfExpectedCommands);        
         assert(exceptionExpected == exceptionThrown);
     }
 }

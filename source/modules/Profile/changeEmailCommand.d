@@ -1,28 +1,21 @@
 module commands.changeemail;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
+import commandlib.abstractcommand;
 
-struct ChangeEmailMeta
+struct ChangeEmailCommandMeta
 {
-    long usrId;
+    ulong usrId;
     string emailAddress;
 }
 
-class ChangeEmailCommand : AbstractEvent!ChangeEmailMeta,StorableEvent
+class ChangeEmailCommand : AbstractCommand!ChangeEmailCommandMeta
 {
-    this(ChangeEmailMeta meta) @safe
+    this(in ref ulong usrId, in ref string emailAddress) @safe
     {
+        ChangeEmailCommandMeta meta;
+        meta.usrId = usrId;
+        meta.emailAddress = emailAddress;
+        
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto meta = *metadata.peek!(ChangeEmailMeta);
-        return new StorageEvent(typeid(this), lifecycle, meta.serializeToJson());       
     }
 }

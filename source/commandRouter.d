@@ -95,7 +95,7 @@ class CommandRouter : EventListenerInterface
 
         // CHANGE EMAIL
         commandHandlers[typeid(ChangeEmailCommand)] = {
-            auto meta = *metaVariant.peek!(ChangeEmailMeta);
+            auto meta = *metaVariant.peek!(ChangeEmailCommandMeta);
             auto handler = new ChangeEmailProjection(this.relationalDb, meta);
             handler.handleEvent(); 
             return;       

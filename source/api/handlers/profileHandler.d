@@ -107,8 +107,8 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			this.checkToken(this._container, requestInfo);
 
 			// If we get this far user has logged in and the id is in the requestInfo
-			ChangeEmailFactors factors;
-			factors.userLoggedIn = true;
+			ChangeEmailFacts facts;
+			facts.userLoggedIn = true;
 			
 			// Get the helpers and queries we need.
 			auto validatorHelper = this._container.getHelperFactory().createValidatorHelper();
@@ -126,16 +126,13 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			}
 			
 			const auto user = userQuery.getUserById(requestInfo.usrId);
-			factors.emailAddressIsDifferentToCurrent = user.email.toLower() != changeEmail.emailAddress.toLower();
-			factors.emailAddressLooksValid = validatorHelper.validateEmailAddress(changeEmail.emailAddress);
-			factors.emailAddressIsUnique = (userQuery.userExistsByEmail(changeEmail.emailAddress) == false);
+			facts.emailAddressIsDifferentToCurrent = user.email.toLower() != changeEmail.emailAddress.toLower();
+			facts.emailAddressLooksValid = validatorHelper.validateEmailAddress(changeEmail.emailAddress);
+			facts.emailAddressIsUnique = (userQuery.userExistsByEmail(changeEmail.emailAddress) == false);
+			facts.emailAddress = changeEmail.emailAddress;	
+			facts.usrId = requestInfo.usrId;		
 
-			// Pass in the data the command needs to do its thing.
-			ChangeEmailMeta changeEmailMeta;
-			changeEmailMeta.emailAddress = changeEmail.emailAddress;	
-			changeEmailMeta.usrId = requestInfo.usrId;		
-
-			auto decisionMaker = new ChangeEmailDM(changeEmailMeta, factors);		
+			auto decisionMaker = new ChangeEmailDM(facts);		
 			this.executeCommands(this._container, decisionMaker);	
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
