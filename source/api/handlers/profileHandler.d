@@ -63,8 +63,8 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			this.checkToken(this._container, requestInfo);
 
 			// If we get this far user has logged in and the id is in the requestInfo
-			ChangePasswordFactors factors;
-			factors.userLoggedIn = true;
+			ChangePasswordFacts facts;
+			facts.userLoggedIn = true;
 			
 			// Get the helpers and queries we need.
 			auto validatorHelper = this._container.getHelperFactory().createValidatorHelper();
@@ -83,18 +83,17 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			
 			// Load the used ensure the existing password entered by the client matches the existing password we have on required.
 			const auto user = userQuery.getUserById(requestInfo.usrId);
-			factors.existingPasswordIsCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, changePassword.existingPassword);
+			facts.existingPasswordIsCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, changePassword.existingPassword);
 			
 			// Ensure supplied new passwords match each other
-			factors.repeatedPasswordMatches = changePassword.newPassword == changePassword.newPasswordRepeated;
-			factors.newPasswordIsStrong = passwordHelper.passwordPassesSecurityPolicy(changePassword.newPassword);
+			facts.repeatedPasswordMatches = changePassword.newPassword == changePassword.newPasswordRepeated;
+			facts.newPasswordIsStrong = passwordHelper.passwordPassesSecurityPolicy(changePassword.newPassword);
 
 			// Pass in the data the command needs to do its thing.
-			ChangePasswordMeta changePasswordMeta;
-			changePasswordMeta.usrId = requestInfo.usrId;			
-			changePasswordMeta.password = changePassword.newPassword;
+			facts.usrId = requestInfo.usrId;			
+			facts.password = changePassword.newPassword;
 
-			auto decisionMaker = new ChangePasswordDM(changePasswordMeta, factors);		
+			auto decisionMaker = new ChangePasswordDM(facts);		
 			this.executeCommands(this._container, decisionMaker);	
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);

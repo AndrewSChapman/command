@@ -9,42 +9,41 @@ import eventmanager.all;
 import commands.changepassword;
 import helpers.testhelper;
 
-struct ChangePasswordRequestMeta
-{
-    string existingPassword;
-    string newPassword;
-    string newPasswordRepeated;
-}
 
-struct ChangePasswordFactors
+struct ChangePasswordFacts
 {
     bool userLoggedIn;
     bool repeatedPasswordMatches;
     bool existingPasswordIsCorrect;
     bool newPasswordIsStrong;
+    ulong usrId;
+    string password;
 }
 
 class ChangePasswordDM : DecisionMakerInterface
 {
-    private ChangePasswordMeta meta;
-    private ChangePasswordFactors factors;
+    private ChangePasswordFacts facts;
     
-    public this(ref ChangePasswordMeta meta, ref ChangePasswordFactors factors) @safe
+    public this(ref ChangePasswordFacts facts) @safe
     {
-        enforce(factors.userLoggedIn, "Sorry, you must be logged in to perform this action.");
-        enforce(factors.repeatedPasswordMatches, "Sorry, your repeated password does not match the new password.");
-        enforce(factors.existingPasswordIsCorrect, "Sorry, your current password doesn't match what you've entered as your existing password.");
-        enforce(factors.newPasswordIsStrong, "Sorry, your new password does not match our security policy.  Please enter a stronger password.");
-        enforce(meta.usrId > 0, "Please supply a valid user Id.");
-        enforce(meta.password != "", "Password may not be blank.");
+        enforce(facts.userLoggedIn, "Sorry, you must be logged in to perform this action.");
+        enforce(facts.repeatedPasswordMatches, "Sorry, your repeated password does not match the new password.");
+        enforce(facts.existingPasswordIsCorrect, "Sorry, your current password doesn't match what you've entered as your existing password.");
+        enforce(facts.newPasswordIsStrong, "Sorry, your new password does not match our security policy.  Please enter a stronger password.");
+        enforce(facts.usrId > 0, "Please supply a valid user Id.");
+        enforce(facts.password != "", "Password may not be blank.");
                 
-        this.meta = meta;
-        this.factors = factors;
+        this.facts = facts;
     }
 
     public void issueCommands(EventListInterface eventList) @safe
     {        
-        eventList.append(new ChangePasswordCommand(this.meta), typeid(ChangePasswordCommand));
+        auto command = new ChangePasswordCommand(
+            this.facts.usrId,
+            this.facts.password
+        );
+
+        eventList.append(command, typeid(ChangePasswordCommand));
     }
 }
 

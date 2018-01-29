@@ -1,28 +1,23 @@
 module commands.changepassword;
 
-import vibe.vibe;
-import eventmanager.all;
-import eventstore.all;
+import commandlib.abstractcommand;
 
-struct ChangePasswordMeta
+struct ChangePasswordCommandMetadata
 {
     long usrId;
     string password;
 }
 
-class ChangePasswordCommand : AbstractEvent!ChangePasswordMeta,StorableEvent
+class ChangePasswordCommand : AbstractCommand!ChangePasswordCommandMetadata
 {
-    this(ChangePasswordMeta meta) @safe
-    {
+    this(
+        in ref ulong usrId,
+        in ref string password
+    ) @safe {
+        ChangePasswordCommandMetadata meta;
+        meta.usrId = usrId;
+        meta.password = password;
+
         super(meta);
-    }
-
-    public StorageEvent toStorageEvent() @trusted
-    {
-        auto lifecycle = this.getLifecycle();
-        auto metadata = this.getMetadata();
-
-        auto meta = *metadata.peek!(ChangePasswordMeta);
-        return new StorageEvent(typeid(this), lifecycle, meta.serializeToJson());       
     }
 }

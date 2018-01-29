@@ -11,13 +11,13 @@ class ChangePasswordProjection
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
-    private ChangePasswordMeta meta;
+    private ChangePasswordCommandMetadata meta;
     private HelperFactory helperFactory;
 
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        ChangePasswordMeta meta
+        ChangePasswordCommandMetadata meta
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;

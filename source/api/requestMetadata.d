@@ -33,3 +33,10 @@ struct UpdateUserRequestMeta
     string firstName;
     string lastName;
 }
+
+struct ChangePasswordRequestMeta
+{
+    string existingPassword;
+    string newPassword;
+    string newPasswordRepeated;
+}

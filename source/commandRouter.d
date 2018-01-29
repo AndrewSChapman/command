@@ -103,7 +103,7 @@ class CommandRouter : EventListenerInterface
 
         // CHANGE PASSWORD
         commandHandlers[typeid(ChangePasswordCommand)] = {
-            auto meta = *metaVariant.peek!(ChangePasswordMeta);
+            auto meta = *metaVariant.peek!(ChangePasswordCommandMetadata);
             auto handler = new ChangePasswordProjection(this.relationalDb, this.helperFactory, meta);
             handler.handleEvent();
             return;       
