@@ -6,6 +6,7 @@ import vibe.vibe;
 import decisionmakers.decisionmakerinterface;
 import eventmanager.all;
 import commands.registeruser;
+import helpers.testhelper;
 
 struct RegisterNewUserFacts
 {
@@ -44,51 +45,24 @@ class RegisterUserDM : DecisionMakerInterface
     }
 }
 
-/*
 unittest {
-    RegisterNewUserFacts facts;
-    facts.userFirstName = "Joe";
-    facts.userLastName = "Bloggs";
-    facts.email = "job.blogs@chapmandigital.co.uk";
-    facts.password = "FishF1shFish";
+    // Test passing facts
+    RegisterNewUserFacts[] passingFactsArray;
+    passingFactsArray ~= RegisterNewUserFacts(false, "Harry", "Potter", "harry@potter.com", "PassW0rd");
 
-    void testHappyPath(ref RegisterNewUserFacts facts) {
-        // Test the happy path
-        RegisterNewUserFacts facts;
-        facts.userAlreadyExists = false;
-
-        auto command = new RegisterUserDM(facts);
-        auto eventList = new EventList();
-        command.issueCommands(eventList);
-
-        // Ensure an event was created by the command
-        assert(eventList.size() == 1);
+    foreach(facts; passingFactsArray) {
+        TestHelper.testDecisionMaker!(RegisterUserDM, RegisterNewUserFacts)(facts, 1, false);
     }
 
-    void testUserAlreadyExists(ref RegisterNewUserFacts facts) {
-        // Test the happy path
-        RegisterNewUserFacts facts;
-        facts.userAlreadyExists = true;
+    // Test failing facts
+    RegisterNewUserFacts[] failingFactsArray;
+    failingFactsArray ~= RegisterNewUserFacts(true, "Harry", "Potter", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, "", "Potter", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, "Harry", "", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, "Harry", "Potter", "", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, "Harry", "Potter", "harry@potter.com", "");
 
-        auto eventList = new EventList();
-        bool errorThrown = false;
-
-        try {
-            auto command = new RegisterUserDM(facts);
-            command.issueCommands(eventList);
-        } catch(Exception e) {
-            errorThrown = true;
-        }
-
-        // An exception should have been thrown.
-        assert(errorThrown == true);
-
-        // Ensure an event was NOT created
-        assert(eventList.size() == 0);   
+    foreach(facts; failingFactsArray) {
+        TestHelper.testDecisionMaker!(RegisterUserDM, RegisterNewUserFacts)(facts, 0, true);    
     }
-
-
-    testHappyPath(facts);
-    testUserAlreadyExists(facts);
 }
-*/

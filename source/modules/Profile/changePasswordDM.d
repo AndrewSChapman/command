@@ -47,85 +47,73 @@ class ChangePasswordDM : DecisionMakerInterface
     }
 }
 
-/*
 unittest {
-    ChangePasswordMeta meta;
-    meta.usrId = 1;
-    meta.password = "MyNewCrazyPassword";
+    ChangePasswordFacts facts;
+    facts.usrId = 1;
+    facts.password = "MyNewCrazyPassword";
 
-    // Test passing factors
-    function (ref ChangePasswordMeta meta) {
-        ChangePasswordFactors factors;
-        factors.userLoggedIn = true;
-        factors.repeatedPasswordMatches = true;
-        factors.existingPasswordIsCorrect = true;
-        factors.newPasswordIsStrong = true;
-
-        TestHelper.testDecisionMaker!(
-            ChangePasswordDM,
-            ChangePasswordMeta,
-            ChangePasswordFactors
-        )(meta, factors, 1, false);
-    }(meta);
-
-    // Test failing factors
-    function (ref ChangePasswordMeta meta) {
-        ChangePasswordFactors factors;
-        factors.userLoggedIn = false;
-        factors.repeatedPasswordMatches = true;
-        factors.existingPasswordIsCorrect = true;
-        factors.newPasswordIsStrong = true;
+    // Test passing facts
+    function (ref ChangePasswordFacts facts) {
+        facts.userLoggedIn = true;
+        facts.repeatedPasswordMatches = true;
+        facts.existingPasswordIsCorrect = true;
+        facts.newPasswordIsStrong = true;
 
         TestHelper.testDecisionMaker!(
             ChangePasswordDM,
-            ChangePasswordMeta,
-            ChangePasswordFactors
-        )(meta, factors, 0, true);
-    }(meta);  
+            ChangePasswordFacts,
+        )(facts, 1, false);
+    }(facts);
 
-    // Test failing factors
-    function (ref ChangePasswordMeta meta) {
-        ChangePasswordFactors factors;
-        factors.userLoggedIn = true;
-        factors.repeatedPasswordMatches = false;
-        factors.existingPasswordIsCorrect = true;
-        factors.newPasswordIsStrong = true;
+    // Test failing facts
+    function (ref ChangePasswordFacts facts) {
+        facts.userLoggedIn = false;
+        facts.repeatedPasswordMatches = true;
+        facts.existingPasswordIsCorrect = true;
+        facts.newPasswordIsStrong = true;
 
         TestHelper.testDecisionMaker!(
             ChangePasswordDM,
-            ChangePasswordMeta,
-            ChangePasswordFactors
-        )(meta, factors, 0, true);
-    }(meta);
+            ChangePasswordFacts
+        )(facts, 0, true);
+    }(facts);  
 
-    // Test failing factors
-    function (ref ChangePasswordMeta meta) {
-        ChangePasswordFactors factors;
-        factors.userLoggedIn = true;
-        factors.repeatedPasswordMatches = true;
-        factors.existingPasswordIsCorrect = false;
-        factors.newPasswordIsStrong = true;
+    // Test failing facts
+    function (ref ChangePasswordFacts facts) {
+        facts.userLoggedIn = true;
+        facts.repeatedPasswordMatches = false;
+        facts.existingPasswordIsCorrect = true;
+        facts.newPasswordIsStrong = true;
 
         TestHelper.testDecisionMaker!(
             ChangePasswordDM,
-            ChangePasswordMeta,
-            ChangePasswordFactors
-        )(meta, factors, 0, true);
-    }(meta);
+            ChangePasswordFacts
+        )(facts, 0, true);
+    }(facts);
 
-    // Test failing factors
-    function (ref ChangePasswordMeta meta) {
-        ChangePasswordFactors factors;
-        factors.userLoggedIn = true;
-        factors.repeatedPasswordMatches = true;
-        factors.existingPasswordIsCorrect = true;
-        factors.newPasswordIsStrong = false;
+    // Test failing facts
+    function (ref ChangePasswordFacts facts) {
+        facts.userLoggedIn = true;
+        facts.repeatedPasswordMatches = true;
+        facts.existingPasswordIsCorrect = false;
+        facts.newPasswordIsStrong = true;
 
         TestHelper.testDecisionMaker!(
             ChangePasswordDM,
-            ChangePasswordMeta,
-            ChangePasswordFactors
-        )(meta, factors, 0, true);
-    }(meta);        
+            ChangePasswordFacts
+        )(facts, 0, true);
+    }(facts);
+
+    // Test failing facts
+    function (ref ChangePasswordFacts facts) {
+        facts.userLoggedIn = true;
+        facts.repeatedPasswordMatches = true;
+        facts.existingPasswordIsCorrect = true;
+        facts.newPasswordIsStrong = false;
+
+        TestHelper.testDecisionMaker!(
+            ChangePasswordDM,
+            ChangePasswordFacts
+        )(facts, 0, true);
+    }(facts);        
 }
-*/

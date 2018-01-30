@@ -43,35 +43,23 @@ class UpdateUserDM : DecisionMakerInterface
     }
 }
 
-/*
 unittest {
-    UpdateUserMeta meta;
-    meta.usrId = 1;
-    meta.firstName = "Harry";
-    meta.lastName = "Potter";
+    // Test passing facts
+    UpdateUserFacts[] passingFactsArray;
+    passingFactsArray ~= UpdateUserFacts(true, 1, "Harry", "Potter");
 
-    // Test passing factors
-    function (ref UpdateUserMeta meta) {
-        UpdateUserFactors factors;
-        factors.userLoggedIn = true;
+    foreach(facts; passingFactsArray) {
+        TestHelper.testDecisionMaker!(UpdateUserDM,UpdateUserFacts)(facts, 1, false);
+    }
 
-        TestHelper.testDecisionMaker!(
-            UpdateUserDM,
-            UpdateUserMeta,
-            UpdateUserFactors
-        )(meta, factors, 1, false);
-    }(meta);
+    // Test failing facts
+    UpdateUserFacts[] failingFactsArray;
+    failingFactsArray ~= UpdateUserFacts(false, 1, "Harry", "Potter");
+    failingFactsArray ~= UpdateUserFacts(true, 0, "Harry", "Potter");
+    failingFactsArray ~= UpdateUserFacts(true, 1, "", "Potter");
+    failingFactsArray ~= UpdateUserFacts(true, 1, "Harry", "");
 
-    // Test failing factors
-    function (ref UpdateUserMeta meta) {
-        UpdateUserFactors factors;
-        factors.userLoggedIn = false;
-
-        TestHelper.testDecisionMaker!(
-            UpdateUserDM,
-            UpdateUserMeta,
-            UpdateUserFactors
-        )(meta, factors, 0, true);
-    }(meta);     
+    foreach(facts; failingFactsArray) {
+        TestHelper.testDecisionMaker!(UpdateUserDM,UpdateUserFacts)(facts, 0, true);    
+    }
 }
-*/

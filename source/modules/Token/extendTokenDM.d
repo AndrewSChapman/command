@@ -57,85 +57,30 @@ class ExtendTokenDM : DecisionMakerInterface
     }
 }
 
-/*
 unittest {
-    ExtendTokenCommandMeta meta;
-    meta.tokenCode = "12345";
-    meta.userAgent = "ChapZilla";
-    meta.ipAddress = "192.168.1.0";
-    meta.prefix = "12345";
-    meta.usrId = 1;
+    // Test passing facts
+    ExtendTokenFacts[] passingFactsArray;
+    passingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "127.0.0.1", "MyPrefix", 1);
 
-    // Test passing factors
-    function (ref ExtendTokenCommandMeta meta) {
-        ExtendTokenFactors factors;
-        factors.tokenExists = true;
-        factors.tokenExpiry = Clock.currTime().toUnixTime() + 86400;
-        factors.tokenUserAgent = "ChapZilla";
-        factors.tokenIPAddress = "192.168.1.0";
+    foreach(facts; passingFactsArray) {
+        TestHelper.testDecisionMaker!(ExtendTokenDM, ExtendTokenFacts)(facts, 1, false);
+    }
 
-        TestHelper.testDecisionMaker!(
-            ExtendTokenDM,
-            ExtendTokenCommandMeta,
-            ExtendTokenFactors
-        )(meta, factors, 1, false);
-    }(meta);
+    // Test failing facts
+    ExtendTokenFacts[] failingFactsArray;
+    failingFactsArray ~= ExtendTokenFacts(false, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() - 10, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "", "127.0.0.1", "MyTokenCode", "test.useragent", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "", "MyTokenCode", "test.useragent", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "", "test.useragent", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "127.0.0.1", "", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "127.0.0.1", "MyPrefix", 0);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "different.useragent", "127.0.0.1", "MyPrefix", 1);
+    failingFactsArray ~= ExtendTokenFacts(true, Clock.currTime().toUnixTime() + 99999999, "test.useragent", "127.0.0.1", "MyTokenCode", "test.useragent", "129.0.0.1", "MyPrefix", 1);
 
-    // Test failing factors
-    function (ref ExtendTokenCommandMeta meta) {
-        ExtendTokenFactors factors;
-        factors.tokenExists = false;
-        factors.tokenExpiry = Clock.currTime().toUnixTime() + 86400;
-        factors.tokenUserAgent = "ChapZilla";
-        factors.tokenIPAddress = "192.168.1.0";
-
-        TestHelper.testDecisionMaker!(
-            ExtendTokenDM,
-            ExtendTokenCommandMeta,
-            ExtendTokenFactors
-        )(meta, factors, 0, true);
-    }(meta);
-
-    function (ref ExtendTokenCommandMeta meta) {
-        ExtendTokenFactors factors;
-        factors.tokenExists = true;
-        factors.tokenExpiry = Clock.currTime().toUnixTime() - 86400;
-        factors.tokenUserAgent = "ChapZilla";
-        factors.tokenIPAddress = "192.168.1.0";
-
-        TestHelper.testDecisionMaker!(
-            ExtendTokenDM,
-            ExtendTokenCommandMeta,
-            ExtendTokenFactors
-        )(meta, factors, 0, true);
-    }(meta);
-
-    function (ref ExtendTokenCommandMeta meta) {
-        ExtendTokenFactors factors;
-        factors.tokenExists = true;
-        factors.tokenExpiry = Clock.currTime().toUnixTime() + 86400;
-        factors.tokenUserAgent = "Wrong";
-        factors.tokenIPAddress = "192.168.1.0";
-
-        TestHelper.testDecisionMaker!(
-            ExtendTokenDM,
-            ExtendTokenCommandMeta,
-            ExtendTokenFactors
-        )(meta, factors, 0, true);
-    }(meta);
-
-    function (ref ExtendTokenCommandMeta meta) {
-        ExtendTokenFactors factors;
-        factors.tokenExists = true;
-        factors.tokenExpiry = Clock.currTime().toUnixTime() + 86400;
-        factors.tokenUserAgent = "ChapZilla";
-        factors.tokenIPAddress = "192.168.0.0";
-
-        TestHelper.testDecisionMaker!(
-            ExtendTokenDM,
-            ExtendTokenCommandMeta,
-            ExtendTokenFactors
-        )(meta, factors, 0, true);
-    }(meta);    
+    foreach(facts; failingFactsArray) {
+        TestHelper.testDecisionMaker!(ExtendTokenDM, ExtendTokenFacts)(facts, 0, true);    
+    }
 }
-*/
