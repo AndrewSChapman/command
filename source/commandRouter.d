@@ -23,21 +23,21 @@ import commands.createprefix;
 import commands.passwordresetinitiate;
 import commands.passwordresetcomplete;
 
-import projections.auth.registeruser;
-import projections.auth.assignprefix;
-import projections.auth.login;
-import projections.auth.createprefix;
-import projections.auth.passwordresetinitiate;
-import projections.auth.passwordresetcomplete;
+import executors.auth.registeruser;
+import executors.auth.assignprefix;
+import executors.auth.login;
+import executors.auth.createprefix;
+import executors.auth.passwordresetinitiate;
+import executors.auth.passwordresetcomplete;
 
 // PROFILE
 import commands.updateuser;
 import commands.changeemail;
 import commands.changepassword;
 
-import projections.profile.updateuser;
-import projections.profile.changeemail;
-import projections.profile.changepassword;
+import executors.profile.updateuser;
+import executors.profile.changeemail;
+import executors.profile.changepassword;
 
 alias CommandHandler = void delegate();
 
