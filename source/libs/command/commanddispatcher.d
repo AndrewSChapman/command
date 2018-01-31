@@ -23,7 +23,7 @@ class CommandDispatcher : CommandDispatcherInterface
     public void attachListener(CommandListenerInterface listener) @safe
     {
         auto listenerType = typeid(listener);
-        auto interestedCommands = listener.getInterestedCommands();
+        auto interestedCommands = listener.getRegisteredCommands();
 
         foreach (commandType; interestedCommands) {
             if (!(commandType in this.listenerMap)) {

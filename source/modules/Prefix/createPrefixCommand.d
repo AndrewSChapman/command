@@ -1,6 +1,6 @@
 module commands.createprefix;
 
-import command.abstractcommand;
+import command.all;
 
 struct CreatePrefixCommandMetadata
 {
@@ -19,5 +19,10 @@ class CreatePrefixCommand : AbstractCommand!CreatePrefixCommandMetadata
         data.timestamp = timestamp;        
         
         super(data);
+    }
+
+    public static register(CommandListenerInterface listener)
+    {
+        listener.registerCommand(typeid(CreatePrefixCommand));
     }
 }

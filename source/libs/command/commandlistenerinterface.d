@@ -5,6 +5,7 @@ import command.eventlist;
 
 interface CommandListenerInterface
 {
-    public TypeInfo[] getInterestedCommands() @safe;
+    public TypeInfo[] getRegisteredCommands() @safe;
     public CommandBusInterface executeCommand(CommandInterface event, TypeInfo commandType) @safe;
+    public void registerCommand(TypeInfo commandType);
 }

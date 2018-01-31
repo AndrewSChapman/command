@@ -55,7 +55,7 @@ class CommandRouter : CommandListenerInterface
         this.smtpSettings = container.getSMTPSettings();
     }
     
-    public TypeInfo[] getInterestedCommands() @safe
+    public TypeInfo[] getRegisteredCommands() @safe
     {
         return [
             // AUTH
@@ -71,6 +71,11 @@ class CommandRouter : CommandListenerInterface
             typeid(UpdateUserCommand),
             typeid(ChangePasswordCommand)            
         ];
+    }
+
+    public void registerCommand(TypeInfo commandType)
+    {
+        writeln("Received register: ", commandType);
     }
 
     public CommandBusInterface executeCommand(CommandInterface event, TypeInfo commandType) @trusted
@@ -89,71 +94,71 @@ class CommandRouter : CommandListenerInterface
         // ASSIGN PREFIX COMMAND
         commandHandlers[typeid(AssignPrefixCommand)] = {
             auto const meta = *metaVariant.peek!(AssignPrefixCommandMetadata);
-            auto handler = new AssignPrefixExecutor(this.relationalDb, meta);
+            auto executor = new AssignPrefixExecutor(this.relationalDb, meta);
             return;       
         }; 
 
         // CHANGE EMAIL
         commandHandlers[typeid(ChangeEmailCommand)] = {
             auto meta = *metaVariant.peek!(ChangeEmailCommandMeta);
-            auto handler = new ChangeEmailExecutor(this.relationalDb, meta);
-            handler.executeCommand(); 
+            auto executor = new ChangeEmailExecutor(this.relationalDb, meta);
+            executor.executeCommand(); 
             return;       
         };  
 
         // CHANGE PASSWORD
         commandHandlers[typeid(ChangePasswordCommand)] = {
             auto meta = *metaVariant.peek!(ChangePasswordCommandMetadata);
-            auto handler = new ChangePasswordExecutor(this.relationalDb, this.helperFactory, meta);
-            handler.executeCommand();
+            auto executor = new ChangePasswordExecutor(this.relationalDb, this.helperFactory, meta);
+            executor.executeCommand();
             return;       
         };                              
 
         // CREATE PREFIX
         commandHandlers[typeid(CreatePrefixCommand)] = {
             auto const meta = *metaVariant.peek!(CreatePrefixCommandMetadata);
-            auto projection = new CreatePrefixExecutor(this.relationalDb, meta);
-            projection.executeCommand(this.eventMessages);
+            auto executor = new CreatePrefixExecutor(this.relationalDb, meta);
+            executor.executeCommand(this.eventMessages);
             return;       
         };
 
         // LOGIN
         commandHandlers[typeid(LoginCommand)] = {
             auto const meta = *metaVariant.peek!(LoginCommandMetadata);
-            auto handler = new LoginExecutor(this.relationalDb, this.helperFactory, meta);
-            handler.executeCommand(this.eventMessages); 
+            auto executor = new LoginExecutor(this.relationalDb, this.helperFactory, meta);
+            executor.executeCommand(this.eventMessages); 
             return;       
         };
 
         // PASSWORD RESET COMPLETE
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {
             auto const meta = *metaVariant.peek!(PasswordResetCompleteCommandMetadata);
-            auto handler = new PasswordResetCompleteExecutor(this.relationalDb, this.helperFactory, meta);
-            handler.executeCommand();
+            auto executor = new PasswordResetCompleteExecutor(this.relationalDb, this.helperFactory, meta);
+            executor.executeCommand();
             return;       
         };          
 
         // PASSWORD RESET INITIATE
         commandHandlers[typeid(PasswordResetInitiateCommand)] = {
             auto const meta = *metaVariant.peek!(PasswordResetInitiateCommandMetadata);
-            auto handler = new PasswordResetInitiateExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
-            handler.executeCommand();
+            auto executor = new PasswordResetInitiateExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
+            executor.executeCommand();
             return;       
         };            
 
         // REGISTER USER
         commandHandlers[typeid(RegisterUserCommand)] = {
             RegisterNewUserCommandMetadata meta = *metaVariant.peek!(RegisterNewUserCommandMetadata);
-            auto handler = new RegisterUserExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
-            handler.executeCommand();
+            auto executor = new RegisterUserExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
+            executor.executeCommand();
             return;       
         };
 
         // UPDATE USER
         commandHandlers[typeid(UpdateUserCommand)] = {
             auto meta = *metaVariant.peek!(UpdateUserCommandMetadata);
-            auto handler = new UpdateUserExecutor(this.relationalDb, meta);
-            handler.executeCommand();
+            auto executor = new UpdateUserExecutor(this.relationalDb, meta);
+            executor.executeCommand();
             return;       
         };        
 
