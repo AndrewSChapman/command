@@ -89,14 +89,14 @@ class CommandRouter : EventListenerInterface
         // ASSIGN PREFIX COMMAND
         commandHandlers[typeid(AssignPrefixCommand)] = {
             auto const meta = *metaVariant.peek!(AssignPrefixCommandMetadata);
-            auto handler = new AssignPrefixProjection(this.relationalDb, meta);
+            auto handler = new AssignPrefixExecutor(this.relationalDb, meta);
             return;       
         }; 
 
         // CHANGE EMAIL
         commandHandlers[typeid(ChangeEmailCommand)] = {
             auto meta = *metaVariant.peek!(ChangeEmailCommandMeta);
-            auto handler = new ChangeEmailProjection(this.relationalDb, meta);
+            auto handler = new ChangeEmailExecutor(this.relationalDb, meta);
             handler.handleEvent(); 
             return;       
         };  
@@ -104,7 +104,7 @@ class CommandRouter : EventListenerInterface
         // CHANGE PASSWORD
         commandHandlers[typeid(ChangePasswordCommand)] = {
             auto meta = *metaVariant.peek!(ChangePasswordCommandMetadata);
-            auto handler = new ChangePasswordProjection(this.relationalDb, this.helperFactory, meta);
+            auto handler = new ChangePasswordExecutor(this.relationalDb, this.helperFactory, meta);
             handler.handleEvent();
             return;       
         };                              
@@ -112,7 +112,7 @@ class CommandRouter : EventListenerInterface
         // CREATE PREFIX
         commandHandlers[typeid(CreatePrefixCommand)] = {
             auto const meta = *metaVariant.peek!(CreatePrefixCommandMetadata);
-            auto projection = new CreatePrefixProjection(this.relationalDb, meta);
+            auto projection = new CreatePrefixExecutor(this.relationalDb, meta);
             projection.handleEvent(this.eventMessages);     
             return;       
         };
@@ -120,7 +120,7 @@ class CommandRouter : EventListenerInterface
         // LOGIN
         commandHandlers[typeid(LoginCommand)] = {
             auto const meta = *metaVariant.peek!(LoginCommandMetadata);
-            auto handler = new LoginProjection(this.relationalDb, this.helperFactory, meta);
+            auto handler = new LoginExecutor(this.relationalDb, this.helperFactory, meta);
             handler.handleEvent(this.eventMessages); 
             return;       
         };
@@ -128,7 +128,7 @@ class CommandRouter : EventListenerInterface
         // PASSWORD RESET COMPLETE
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {
             auto const meta = *metaVariant.peek!(PasswordResetCompleteCommandMetadata);
-            auto handler = new PasswordResetCompleteProjection(this.relationalDb, this.helperFactory, meta);
+            auto handler = new PasswordResetCompleteExecutor(this.relationalDb, this.helperFactory, meta);
             handler.handleEvent();
             return;       
         };          
@@ -136,7 +136,7 @@ class CommandRouter : EventListenerInterface
         // PASSWORD RESET INITIATE
         commandHandlers[typeid(PasswordResetInitiateCommand)] = {
             auto const meta = *metaVariant.peek!(PasswordResetInitiateCommandMetadata);
-            auto handler = new PasswordResetInitiateProjection(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
+            auto handler = new PasswordResetInitiateExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
             handler.handleEvent();
             return;       
         };            
@@ -144,7 +144,7 @@ class CommandRouter : EventListenerInterface
         // REGISTER USER
         commandHandlers[typeid(RegisterUserCommand)] = {
             RegisterNewUserCommandMetadata meta = *metaVariant.peek!(RegisterNewUserCommandMetadata);
-            auto handler = new RegisterUserProjection(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
+            auto handler = new RegisterUserExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
             handler.handleEvent();
             return;       
         };
@@ -152,7 +152,7 @@ class CommandRouter : EventListenerInterface
         // UPDATE USER
         commandHandlers[typeid(UpdateUserCommand)] = {
             auto meta = *metaVariant.peek!(UpdateUserCommandMetadata);
-            auto handler = new UpdateUserProjection(this.relationalDb, meta);
+            auto handler = new UpdateUserExecutor(this.relationalDb, meta);
             handler.handleEvent();
             return;       
         };        

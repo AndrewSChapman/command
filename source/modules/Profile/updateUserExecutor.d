@@ -7,7 +7,7 @@ import relationaldb.all;
 import helpers.helperfactory;
 import commands.updateuser;
 
-class UpdateUserProjection
+class UpdateUserExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

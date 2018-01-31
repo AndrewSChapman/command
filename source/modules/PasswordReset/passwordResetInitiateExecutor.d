@@ -12,7 +12,7 @@ import helpers.helperfactory;
 import entity.smtpsettings;
 import email.passwordreset;
 
-class PasswordResetInitiateProjection
+class PasswordResetInitiateExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

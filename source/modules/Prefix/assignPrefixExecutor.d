@@ -7,7 +7,7 @@ import relationaldb.all;
 import commands.assignprefix;
 import helpers.helperfactory;
 
-class AssignPrefixProjection
+class AssignPrefixExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

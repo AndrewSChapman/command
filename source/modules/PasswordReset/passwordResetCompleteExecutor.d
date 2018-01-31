@@ -7,7 +7,7 @@ import relationaldb.all;
 import commands.passwordresetcomplete;
 import helpers.helperfactory;
 
-class PasswordResetCompleteProjection
+class PasswordResetCompleteExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

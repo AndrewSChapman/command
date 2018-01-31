@@ -9,7 +9,7 @@ import helpers.helperfactory;
 import entity.smtpsettings;
 import email.registernewuser;
 
-class RegisterUserProjection
+class RegisterUserExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

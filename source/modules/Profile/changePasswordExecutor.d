@@ -7,7 +7,7 @@ import relationaldb.all;
 import helpers.helperfactory;
 import commands.changepassword;
 
-class ChangePasswordProjection
+class ChangePasswordExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

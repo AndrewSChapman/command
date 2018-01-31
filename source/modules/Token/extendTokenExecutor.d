@@ -10,7 +10,7 @@ import entity.sessioninfo;
 import commands.extendtoken;
 import helpers.helperfactory;
 
-class ExtendTokenProjection
+class ExtendTokenExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

@@ -7,7 +7,7 @@ import relationaldb.all;
 import helpers.helperfactory;
 import commands.changeemail;
 
-class ChangeEmailProjection
+class ChangeEmailExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

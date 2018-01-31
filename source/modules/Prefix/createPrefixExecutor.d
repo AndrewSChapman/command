@@ -10,7 +10,7 @@ import commands.assignprefix;
 import helpers.helperfactory;
 import commands.createprefix;
 
-class CreatePrefixProjection
+class CreatePrefixExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;

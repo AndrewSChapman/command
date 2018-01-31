@@ -10,7 +10,7 @@ import commands.login;
 import helpers.helperfactory;
 import entity.token;
 
-class LoginProjection
+class LoginExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
