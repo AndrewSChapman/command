@@ -21,7 +21,7 @@ class UpdateUserExecutor
         this.meta = meta;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         this.updateUser();
     }
 

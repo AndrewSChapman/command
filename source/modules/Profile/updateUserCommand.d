@@ -1,5 +1,5 @@
 module commands.updateuser;
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct UpdateUserCommandMetadata
 {

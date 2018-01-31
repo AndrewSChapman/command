@@ -7,7 +7,7 @@ import vibe.vibe;
 import vibe.vibe;
 
 import decisionmakers.decisionmakerinterface;
-import eventmanager.all;
+import command.all;
 import commands.login;
 import commands.assignprefix;
 import helpers.testhelper;
@@ -43,7 +43,7 @@ class LoginDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(EventListInterface eventList) @safe
+    public void issueCommands(CommandBusInterface eventList) @safe
     {
         if (facts.prefixNotAssigned) {
             eventList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));

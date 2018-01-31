@@ -1,6 +1,6 @@
 module commands.passwordresetcomplete;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct PasswordResetCompleteCommandMetadata
 {

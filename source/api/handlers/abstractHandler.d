@@ -11,7 +11,7 @@ import decisionmakers.decisionmakerinterface;
 import decisionmakers.extendtoken;
 import entity.requestinfo;
 import entity.sessioninfo;
-import eventmanager.all;
+import command.all;
 import eventstore.all;
 
 abstract class AbstractHandler
@@ -86,7 +86,7 @@ abstract class AbstractHandler
         this.executeAndAwaitCommands(this._container, decisionMaker);
 	}
 
-	protected CommandRouter attachCommandRouter(Container container, ref EventDispatcher dispatcher) @safe
+	protected CommandRouter attachCommandRouter(Container container, ref CommandDispatcher dispatcher) @safe
     {
 		auto router = new CommandRouter(
 			container
@@ -113,7 +113,7 @@ abstract class AbstractHandler
 
 			// Dispatch the command on separate task so we're not waiting for the result.
 			auto executeTask = runTask({
-				auto dispatcher = new EventDispatcher();
+				auto dispatcher = new CommandDispatcher();
 				auto director = this.attachCommandRouter(container, dispatcher);
 				eventList.dispatch(dispatcher);
 			});
@@ -121,7 +121,7 @@ abstract class AbstractHandler
 			if (eventList.size > 0) {
 				// Dispatch any commands on separate task so we're not waiting for the result.
 				auto executeTask = runTask({
-					auto dispatcher = new EventDispatcher();
+					auto dispatcher = new CommandDispatcher();
 					auto director = this.attachCommandRouter(container, dispatcher);
 					eventList.dispatch(dispatcher);
 				});				
@@ -141,7 +141,7 @@ abstract class AbstractHandler
 			throw new Exception("Decision maker issued no commands - this should never happen");
 		}
 
-		auto dispatcher = new EventDispatcher();
+		auto dispatcher = new CommandDispatcher();
 		auto director = this.attachCommandRouter(container, dispatcher);
 		eventList.dispatch(dispatcher);
 

@@ -1,6 +1,6 @@
 module commands.assignprefix;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct AssignPrefixCommandMetadata
 {

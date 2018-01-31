@@ -19,16 +19,16 @@ class RelationalEventStore : EventStoreInterface
     public void persist(StorageEvent storageEvent) @trusted
     {
         string sql = "
-                INSERT INTO commandLog (id, eventType, createdDtm, usrId, processingTime, lifecycle, metadata)
+                INSERT INTO commandLog (id, commandType, createdDtm, usrId, processingTime, lifecycle, metadata)
                 VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?, ?);
             ";
 
         auto metadata = storageEvent.metadataJson;
-        this.removeSensitiveInformation(storageEvent.eventType, metadata);
+        this.removeSensitiveInformation(storageEvent.commandType, metadata);
         
         this.relationalDb.execute(sql, variantArray(
             storageEvent._id.toString(),
-            storageEvent.eventType,
+            storageEvent.commandType,
             stdTimeToUnixTime(storageEvent.eventCreated),
             storageEvent.usrId,
             storageEvent.lifecycle.eventProcessingTime,
@@ -37,9 +37,9 @@ class RelationalEventStore : EventStoreInterface
         ));        
     }
 
-    private void removeSensitiveInformation(in string eventType, ref Json metadata) @safe
+    private void removeSensitiveInformation(in string commandType, ref Json metadata) @safe
     {
-        switch (eventType) {
+        switch (commandType) {
             case "commands.registeruser.RegisterUserCommand":
                 metadata["password"] = "******";
                 break;

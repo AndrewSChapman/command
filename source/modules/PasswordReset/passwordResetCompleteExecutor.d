@@ -24,7 +24,7 @@ class PasswordResetCompleteExecutor
         this.meta = meta;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         this.setPasswordFromNewPassword();
     }  
 

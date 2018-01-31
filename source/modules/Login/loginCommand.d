@@ -1,6 +1,6 @@
 module commands.login;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct LoginCommandMetadata
 {

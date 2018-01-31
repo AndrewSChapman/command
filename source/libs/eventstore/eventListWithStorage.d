@@ -5,7 +5,7 @@ import std.variant;
 
 import eventstore.mongoeventstore;
 import eventstore.eventstoreinterface;
-import eventmanager.all;
+import command.all;
 
 // Delete this later
 import commands.registeruser;
@@ -27,7 +27,7 @@ class EventListWithStorage : EventList
     looping until all events have been processed and no new events
     have been created.
     */
-    override public void dispatch(EventDispatcherInterface dispatcher) @trusted
+    override public void dispatch(CommandDispatcherInterface dispatcher) @trusted
     {    
         auto eventList = this.getEventList();
 
@@ -37,7 +37,7 @@ class EventListWithStorage : EventList
             foreach (container; eventList) {
                 // Set the lifecycle time for event received
                 container.event.setEventReceived();
-                newEventList.append(dispatcher.dispatch(container.event, container.eventType));
+                newEventList.append(dispatcher.dispatch(container.event, container.commandType));
 
                 // Set the lifecycle time for event dispatched
                 container.event.setEventDispatched();

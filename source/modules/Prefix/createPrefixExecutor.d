@@ -14,17 +14,27 @@ class CreatePrefixExecutor
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
+    private CreatePrefixCommand command;
     private CreatePrefixCommandMetadata meta;
 
     this(
         RelationalDBInterface relationalDb,
-        CreatePrefixCommandMetadata meta
+        CreatePrefixCommand command
     ) {
         this.relationalDb = relationalDb;
-        this.meta = meta;
+        this.command = command;
+        this.meta = this.command.getMetadataStruct();
     }
 
-    void handleEvent(ref Variant[string] eventMessage) {
+    public void execute(ref Variant[string] commandMessages) {
+        string prefix = this.generatePrefix();
+        this.insertPrefix(prefix);
+
+        Variant prefixCode = prefix;
+        commandMessages["prefixCode"] = prefixCode;
+    }    
+
+    public void executeCommand(ref Variant[string] eventMessage) {
         string prefix = this.generatePrefix();
         this.insertPrefix(prefix);
 

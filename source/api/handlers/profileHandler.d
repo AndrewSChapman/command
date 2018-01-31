@@ -15,7 +15,7 @@ import api.requestMetadata;
 import appconfig;
 import container;
 import entity.all;
-import eventmanager.all;
+import command.all;
 import eventstore.all;
 import helpers.validatorHelper;
 

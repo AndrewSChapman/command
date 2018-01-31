@@ -21,7 +21,7 @@ class ChangeEmailExecutor
         this.meta = meta;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         this.changeEmail();
     }
 

@@ -21,7 +21,7 @@ class AssignPrefixExecutor
         this.meta = meta;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         this.assignUserToPrefix();
     }
 

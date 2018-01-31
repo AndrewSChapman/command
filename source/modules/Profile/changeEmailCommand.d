@@ -1,6 +1,6 @@
 module commands.changeemail;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct ChangeEmailCommandMeta
 {

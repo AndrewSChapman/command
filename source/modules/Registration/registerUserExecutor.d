@@ -29,7 +29,7 @@ class RegisterUserExecutor
         this.smtpSettings = smtpSettings;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         this.sendRegistrationEmail();
         ulong usrId = this.createUser();
     }

@@ -19,7 +19,7 @@ import decisionmakers.passwordresetinitiate;
 import decisionmakers.passwordresetcomplete;
 
 import entity.all;
-import eventmanager.all;
+import command.all;
 import eventstore.all;
 import helpers.stringsHelper;
 import helpers.helperfactory;

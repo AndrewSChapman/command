@@ -1,6 +1,6 @@
 module commands.changepassword;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct ChangePasswordCommandMetadata
 {

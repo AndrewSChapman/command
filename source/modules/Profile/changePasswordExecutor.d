@@ -24,7 +24,7 @@ class ChangePasswordExecutor
         this.meta = meta;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         this.changePassword();
     }
 

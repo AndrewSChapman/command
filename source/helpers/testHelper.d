@@ -1,6 +1,6 @@
 module helpers.testhelper;
 
-import eventmanager.all;
+import command.all;
 
 class TestHelper
 {

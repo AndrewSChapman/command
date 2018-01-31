@@ -3,7 +3,7 @@ module decisionmakers.createprefix;
 import std.exception;
 import std.stdio;
 
-import eventmanager.all;
+import command.all;
 import decisionmakers.decisionmakerinterface;
 import commands.createprefix;
 import helpers.testhelper;
@@ -28,7 +28,7 @@ class CreatePrefixDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(EventListInterface eventList) @safe
+    public void issueCommands(CommandBusInterface eventList) @safe
     {        
         auto command = new CreatePrefixCommand(
             this.facts.userAgent,

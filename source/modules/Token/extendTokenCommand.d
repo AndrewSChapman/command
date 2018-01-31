@@ -1,6 +1,6 @@
 module commands.extendtoken;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct ExtendTokenCommandMeta
 {

@@ -28,7 +28,7 @@ class ExtendTokenExecutor
         this.meta = meta;
     }
 
-    void handleEvent() @safe
+    void executeCommand() @safe
     {
         this.extendToken();
     }

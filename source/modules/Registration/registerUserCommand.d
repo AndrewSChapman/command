@@ -1,6 +1,6 @@
 module commands.registeruser;
 
-import commandlib.abstractcommand;
+import command.abstractcommand;
 
 struct RegisterNewUserCommandMetadata
 {

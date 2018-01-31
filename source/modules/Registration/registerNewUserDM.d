@@ -4,7 +4,7 @@ import std.exception;
 import vibe.vibe;
 
 import decisionmakers.decisionmakerinterface;
-import eventmanager.all;
+import command.all;
 import commands.registeruser;
 import helpers.testhelper;
 
@@ -32,7 +32,7 @@ class RegisterUserDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(EventListInterface eventList) @safe
+    public void issueCommands(CommandBusInterface eventList) @safe
     {
         auto command = new RegisterUserCommand(
             this.facts.userFirstName,

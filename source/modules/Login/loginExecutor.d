@@ -28,7 +28,7 @@ class LoginExecutor
         this.meta = meta;
     }
 
-    void handleEvent(ref Variant[string] eventMessage) {
+    void executeCommand(ref Variant[string] eventMessage) {
         string tokenCode = this.generateToken(this.helperFactory.createStringsHelper());
 
         Token token;

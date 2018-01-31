@@ -32,7 +32,7 @@ class PasswordResetInitiateExecutor
         this.smtpSettings = smtpSettings;
     }
 
-    void handleEvent() {
+    void executeCommand() {
         ulong newPasswordPin = uniform(10000000, 99999999);
         auto passwordHelper = this.helperFactory.createPasswordHelper();
         string hashedNewPassword = passwordHelper.HashBcrypt(this.meta.newPassword);

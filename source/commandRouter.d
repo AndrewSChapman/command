@@ -3,7 +3,7 @@ module commandrouter;
 import std.stdio;
 import std.variant;
 
-import eventmanager.all;
+import command.all;
 import relationaldb.all;
 import helpers.helperfactory;
 import helpers.emailHelper;
@@ -41,7 +41,7 @@ import executors.profile.changepassword;
 
 alias CommandHandler = void delegate();
 
-class CommandRouter : EventListenerInterface
+class CommandRouter : CommandListenerInterface
 {
     private RelationalDBInterface relationalDb;
     private HelperFactory helperFactory;
@@ -55,7 +55,7 @@ class CommandRouter : EventListenerInterface
         this.smtpSettings = container.getSMTPSettings();
     }
     
-    public TypeInfo[] getInterestedEvents() @safe
+    public TypeInfo[] getInterestedCommands() @safe
     {
         return [
             // AUTH
@@ -73,12 +73,12 @@ class CommandRouter : EventListenerInterface
         ];
     }
 
-    public EventListInterface handleEvent(EventInterface event, TypeInfo eventType) @trusted
+    public CommandBusInterface executeCommand(CommandInterface event, TypeInfo commandType) @trusted
     {
-        const string eventTypeStr = eventType.toString();
+        const string commandTypeStr = commandType.toString();
 
         debug {
-            writeln("CommandRouter received event: ", eventTypeStr);
+            writeln("CommandRouter received event: ", commandTypeStr);
         }
 
         CommandHandler[TypeInfo] commandHandlers;    
@@ -97,7 +97,7 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(ChangeEmailCommand)] = {
             auto meta = *metaVariant.peek!(ChangeEmailCommandMeta);
             auto handler = new ChangeEmailExecutor(this.relationalDb, meta);
-            handler.handleEvent(); 
+            handler.executeCommand(); 
             return;       
         };  
 
@@ -105,15 +105,14 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(ChangePasswordCommand)] = {
             auto meta = *metaVariant.peek!(ChangePasswordCommandMetadata);
             auto handler = new ChangePasswordExecutor(this.relationalDb, this.helperFactory, meta);
-            handler.handleEvent();
+            handler.executeCommand();
             return;       
         };                              
 
         // CREATE PREFIX
         commandHandlers[typeid(CreatePrefixCommand)] = {
-            auto const meta = *metaVariant.peek!(CreatePrefixCommandMetadata);
-            auto projection = new CreatePrefixExecutor(this.relationalDb, meta);
-            projection.handleEvent(this.eventMessages);     
+            auto projection = new CreatePrefixExecutor(this.relationalDb, event);
+            projection.execute(this.eventMessages);
             return;       
         };
 
@@ -121,7 +120,7 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(LoginCommand)] = {
             auto const meta = *metaVariant.peek!(LoginCommandMetadata);
             auto handler = new LoginExecutor(this.relationalDb, this.helperFactory, meta);
-            handler.handleEvent(this.eventMessages); 
+            handler.executeCommand(this.eventMessages); 
             return;       
         };
 
@@ -129,7 +128,7 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {
             auto const meta = *metaVariant.peek!(PasswordResetCompleteCommandMetadata);
             auto handler = new PasswordResetCompleteExecutor(this.relationalDb, this.helperFactory, meta);
-            handler.handleEvent();
+            handler.executeCommand();
             return;       
         };          
 
@@ -137,7 +136,7 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(PasswordResetInitiateCommand)] = {
             auto const meta = *metaVariant.peek!(PasswordResetInitiateCommandMetadata);
             auto handler = new PasswordResetInitiateExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
-            handler.handleEvent();
+            handler.executeCommand();
             return;       
         };            
 
@@ -145,7 +144,7 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(RegisterUserCommand)] = {
             RegisterNewUserCommandMetadata meta = *metaVariant.peek!(RegisterNewUserCommandMetadata);
             auto handler = new RegisterUserExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
-            handler.handleEvent();
+            handler.executeCommand();
             return;       
         };
 
@@ -153,14 +152,14 @@ class CommandRouter : EventListenerInterface
         commandHandlers[typeid(UpdateUserCommand)] = {
             auto meta = *metaVariant.peek!(UpdateUserCommandMetadata);
             auto handler = new UpdateUserExecutor(this.relationalDb, meta);
-            handler.handleEvent();
+            handler.executeCommand();
             return;       
         };        
 
-        if (eventType in commandHandlers) {
-            commandHandlers[eventType]();
+        if (commandType in commandHandlers) {
+            commandHandlers[commandType]();
         } else {
-            throw new Exception("Invalid eventType: " ~ eventType.toString());
+            throw new Exception("Invalid commandType: " ~ commandType.toString());
         }
 
 
