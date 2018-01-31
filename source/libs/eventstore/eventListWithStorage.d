@@ -10,7 +10,7 @@ import command.all;
 // Delete this later
 import commands.registeruser;
 
-class EventListWithStorage : EventList
+class EventListWithStorage : CommandList
 {
     protected EventStoreInterface eventStoreInterface;
     
@@ -29,15 +29,15 @@ class EventListWithStorage : EventList
     */
     override public void dispatch(CommandDispatcherInterface dispatcher) @trusted
     {    
-        auto eventList = this.getEventList();
+        auto commandList = this.getEventList();
 
         while (true) {
-            auto newEventList = new EventList();
+            auto newCommandList = new CommandList();
 
-            foreach (container; eventList) {
+            foreach (container; commandList) {
                 // Set the lifecycle time for event received
                 container.event.setEventReceived();
-                newEventList.append(dispatcher.dispatch(container.event, container.commandType));
+                newCommandList.append(dispatcher.dispatch(container.event, container.commandType));
 
                 // Set the lifecycle time for event dispatched
                 container.event.setEventDispatched();
@@ -48,13 +48,13 @@ class EventListWithStorage : EventList
             }
 
             // If no new events were created, terminate the loop.
-            if (newEventList.size() == 0) {
+            if (newCommandList.size() == 0) {
                 break;
             }
 
             // Use the "new event list" as the basis of the loop
             // for the next interation.
-            eventList = newEventList.getEventList();
+            commandList = newCommandList.getEventList();
         }
     }    
 }

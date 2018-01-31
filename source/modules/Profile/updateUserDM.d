@@ -31,7 +31,7 @@ class UpdateUserDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {        
         auto command = new UpdateUserCommand(
             this.facts.usrId,
@@ -39,7 +39,7 @@ class UpdateUserDM : DecisionMakerInterface
             this.facts.lastName
         );
 
-        eventList.append(command, typeid(UpdateUserCommand));
+        commandList.append(command, typeid(UpdateUserCommand));
     }
 }
 

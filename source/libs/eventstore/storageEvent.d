@@ -9,10 +9,10 @@ class StorageEvent
     public string commandType;
     public long eventCreated;
     public ulong usrId;
-    public EventLifecycle lifecycle;
+    public CommandLifecycle lifecycle;
     public Json metadataJson;
 
-    this(TypeInfo commandType, EventLifecycle lifecycle, Json metadataJson, ulong usrId = 0) {
+    this(TypeInfo commandType, CommandLifecycle lifecycle, Json metadataJson, ulong usrId = 0) {
         this._id = BsonObjectID.generate();
         this.commandType = commandType.toString();
         this.eventCreated = lifecycle.eventCreated;

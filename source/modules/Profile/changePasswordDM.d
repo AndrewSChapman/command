@@ -36,14 +36,14 @@ class ChangePasswordDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {        
         auto command = new ChangePasswordCommand(
             this.facts.usrId,
             this.facts.password
         );
 
-        eventList.append(command, typeid(ChangePasswordCommand));
+        commandList.append(command, typeid(ChangePasswordCommand));
     }
 }
 

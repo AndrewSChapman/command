@@ -28,7 +28,7 @@ class CreatePrefixDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {        
         auto command = new CreatePrefixCommand(
             this.facts.userAgent,
@@ -36,7 +36,7 @@ class CreatePrefixDM : DecisionMakerInterface
             this.facts.timestamp
         );
 
-        eventList.append(command, typeid(CreatePrefixCommand));
+        commandList.append(command, typeid(CreatePrefixCommand));
     }
 }
 

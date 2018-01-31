@@ -36,10 +36,10 @@ class CommandDispatcher : CommandDispatcherInterface
 
     public CommandBusInterface dispatch(CommandInterface event, TypeInfo commandType) @safe
     {
-        auto eventList = new EventList();
+        auto commandList = new CommandList();
         
         if(this.noListenersInterestedInThisEvent(commandType)) {
-            return eventList;
+            return commandList;
         }
 
         event.setEventReceived();
@@ -47,12 +47,12 @@ class CommandDispatcher : CommandDispatcherInterface
         auto interestedListeners = this.listenerMap[commandType];
 
         foreach (listener; interestedListeners) {
-            eventList.append(listener.executeCommand(event, commandType));
+            commandList.append(listener.executeCommand(event, commandType));
         }
 
         event.setEventDispatched();
 
-        return eventList;
+        return commandList;
     }    
 
     private bool noListenersInterestedInThisEvent(TypeInfo commandType) @safe {

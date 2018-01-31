@@ -9,7 +9,7 @@ import vibe.vibe;
 import command.CommandInterface;
 import eventstore.all;
 
-struct EventLifecycle
+struct CommandLifecycle
 {
     long eventCreated;
     long eventReceived;
@@ -19,7 +19,7 @@ struct EventLifecycle
 
 abstract class AbstractCommand(T) : CommandInterface,StorableEvent
 {
-    protected EventLifecycle lifecycle;
+    protected CommandLifecycle lifecycle;
     protected T metadata;
 
     this(T metadata) @safe {
@@ -28,7 +28,7 @@ abstract class AbstractCommand(T) : CommandInterface,StorableEvent
         this.metadata = metadata;
     }
 
-    public EventLifecycle getLifecycle() @safe
+    public CommandLifecycle getLifecycle() @safe
     {
         return this.lifecycle;
     }

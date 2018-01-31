@@ -22,12 +22,12 @@ interface CommandBusInterface {
     public ulong size() @safe;
 }
 
-class EventList : CommandBusInterface
+class CommandList : CommandBusInterface
 {
-    private DList!CommandContainer eventList;
+    private DList!CommandContainer commandList;
 
     this() @safe {
-        this.eventList = DList!CommandContainer();
+        this.commandList = DList!CommandContainer();
     }  
 
     public void append(CommandInterface event, TypeInfo commandType) @safe
@@ -36,12 +36,12 @@ class EventList : CommandBusInterface
         container.commandType = commandType;
         container.event = event;
 
-        this.eventList.insertBack(container);
+        this.commandList.insertBack(container);
     }
 
     // Allow appending from one event list into another.
-    public void append(CommandBusInterface newEventList) @safe {
-        foreach (container; newEventList.getEventList()) {
+    public void append(CommandBusInterface newCommandList) @safe {
+        foreach (container; newCommandList.getEventList()) {
             this.append(container.event, container.commandType);
         }
     }
@@ -54,36 +54,36 @@ class EventList : CommandBusInterface
     */
     public void dispatch(CommandDispatcherInterface dispatcher) @safe
     {
-        auto eventList = this.eventList;
+        auto commandList = this.commandList;
 
         while (true) {
-            auto newEventList = new EventList();
+            auto newCommandList = new CommandList();
 
-            foreach (container; eventList) {
-                newEventList.append(dispatcher.dispatch(container.event, container.commandType));
+            foreach (container; commandList) {
+                newCommandList.append(dispatcher.dispatch(container.event, container.commandType));
             }
 
             // If no new events were created, terminate the loop.
-            if (newEventList.size() == 0) {
+            if (newCommandList.size() == 0) {
                 break;
             }
 
             // Use the "new event list" as the basis of the loop
             // for the next interation.
-            eventList = newEventList.getEventList();
+            commandList = newCommandList.getEventList();
         }
     }
 
     public DList!CommandContainer getEventList() @safe
     {
-        return this.eventList;
+        return this.commandList;
     } 
 
     public ulong size() @safe
     {
         ulong count = 0;
 
-        foreach (container; this.eventList) {
+        foreach (container; this.commandList) {
             ++count;
         }
 

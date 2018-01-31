@@ -8,7 +8,7 @@ class TestHelper
     {
         bool exceptionThrown = false;
 
-        auto commandList = new EventList();
+        auto commandList = new CommandList();
         
         try {
             auto decisionMaker = new T(facts);

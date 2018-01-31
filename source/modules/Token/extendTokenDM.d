@@ -43,7 +43,7 @@ class ExtendTokenDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {        
         auto command = new ExtendTokenCommand(
             this.facts.tokenCode,
@@ -53,7 +53,7 @@ class ExtendTokenDM : DecisionMakerInterface
             this.facts.usrId
         );
 
-        eventList.append(command, typeid(ExtendTokenCommand));
+        commandList.append(command, typeid(ExtendTokenCommand));
     }
 }
 

@@ -43,10 +43,10 @@ class LoginDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {
         if (facts.prefixNotAssigned) {
-            eventList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
+            commandList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
         }
 
         auto command = new LoginCommand(
@@ -56,7 +56,7 @@ class LoginDM : DecisionMakerInterface
             facts.prefix
         );
         
-        eventList.append(command, typeid(LoginCommand));
+        commandList.append(command, typeid(LoginCommand));
     }
 }
 

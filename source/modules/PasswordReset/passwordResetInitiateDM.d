@@ -39,7 +39,7 @@ class PasswordResetInitiateDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {
         auto command = new PasswordResetInitiateCommand(
             facts.usrId,
@@ -49,7 +49,7 @@ class PasswordResetInitiateDM : DecisionMakerInterface
             facts.newPassword
         );
 
-        eventList.append(command, typeid(PasswordResetInitiateCommand));
+        commandList.append(command, typeid(PasswordResetInitiateCommand));
     }
 }
 

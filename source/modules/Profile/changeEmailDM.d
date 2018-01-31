@@ -35,14 +35,14 @@ class ChangeEmailDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {        
         auto command = new ChangeEmailCommand(
             this.facts.usrId,
             this.facts.emailAddress
         );
 
-        eventList.append(command, typeid(ChangeEmailCommand));
+        commandList.append(command, typeid(ChangeEmailCommand));
     }
 }
 

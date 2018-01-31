@@ -83,7 +83,7 @@ class CommandRouter : CommandListenerInterface
 
         CommandHandler[TypeInfo] commandHandlers;    
 
-        auto eventList = new EventList();
+        auto commandList = new CommandList();
         auto metaVariant = event.getMetadata();    
 
         // ASSIGN PREFIX COMMAND
@@ -111,8 +111,9 @@ class CommandRouter : CommandListenerInterface
 
         // CREATE PREFIX
         commandHandlers[typeid(CreatePrefixCommand)] = {
-            auto projection = new CreatePrefixExecutor(this.relationalDb, event);
-            projection.execute(this.eventMessages);
+            auto const meta = *metaVariant.peek!(CreatePrefixCommandMetadata);
+            auto projection = new CreatePrefixExecutor(this.relationalDb, meta);
+            projection.executeCommand(this.eventMessages);
             return;       
         };
 
@@ -163,7 +164,7 @@ class CommandRouter : CommandListenerInterface
         }
 
 
-        return eventList;
+        return commandList;
     }
 
     public T getEventMessage(T)(string key) @trusted

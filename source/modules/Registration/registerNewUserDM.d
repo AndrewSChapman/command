@@ -32,7 +32,7 @@ class RegisterUserDM : DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface eventList) @safe
+    public void issueCommands(CommandBusInterface commandList) @safe
     {
         auto command = new RegisterUserCommand(
             this.facts.userFirstName,
@@ -41,7 +41,7 @@ class RegisterUserDM : DecisionMakerInterface
             this.facts.password
         );
 
-        eventList.append(command, typeid(RegisterUserCommand));
+        commandList.append(command, typeid(RegisterUserCommand));
     }
 }
 
