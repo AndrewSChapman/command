@@ -5,12 +5,13 @@ import std.variant;
 import std.conv;
 import std.digest.crc;
 
+import command.all;
 import relationaldb.all;
 import commands.assignprefix;
 import helpers.helperfactory;
 import commands.createprefix;
 
-class CreatePrefixExecutor
+class CreatePrefixExecutor : AbstractExecutor!(CreatePrefixCommand,CreatePrefixCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -18,19 +19,11 @@ class CreatePrefixExecutor
 
     this(
         RelationalDBInterface relationalDb,
-        CreatePrefixCommandMetadata meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
-        this.meta = meta;
-    }
-
-    public void execute(ref Variant[string] commandMessages) {
-        string prefix = this.generatePrefix();
-        this.insertPrefix(prefix);
-
-        Variant prefixCode = prefix;
-        commandMessages["prefixCode"] = prefixCode;
-    }    
+        this.meta = this.getMetadataFromCommandInterface(command);
+    }  
 
     public void executeCommand(ref Variant[string] eventMessage) {
         string prefix = this.generatePrefix();

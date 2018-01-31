@@ -116,8 +116,7 @@ class CommandRouter : CommandListenerInterface
 
         // CREATE PREFIX
         commandHandlers[typeid(CreatePrefixCommand)] = {
-            auto const meta = *metaVariant.peek!(CreatePrefixCommandMetadata);
-            auto executor = new CreatePrefixExecutor(this.relationalDb, meta);
+            auto executor = new CreatePrefixExecutor(this.relationalDb, command);
             executor.executeCommand(this.eventMessages);
             return;       
         };
