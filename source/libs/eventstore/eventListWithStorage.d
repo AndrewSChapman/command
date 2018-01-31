@@ -22,7 +22,7 @@ class EventListWithStorage : CommandList
     }    
     
     /**
-    Process all of the events in this event list.  Each event may
+    Process all of the events in this command list.  Each command may
     in turn create new events which must also be processed.  Keep
     looping until all events have been processed and no new events
     have been created.
@@ -35,15 +35,15 @@ class EventListWithStorage : CommandList
             auto newCommandList = new CommandList();
 
             foreach (container; commandList) {
-                // Set the lifecycle time for event received
-                container.event.setEventReceived();
-                newCommandList.append(dispatcher.dispatch(container.event, container.commandType));
+                // Set the lifecycle time for command received
+                container.command.setEventReceived();
+                newCommandList.append(dispatcher.dispatch(container.command, container.commandType));
 
-                // Set the lifecycle time for event dispatched
-                container.event.setEventDispatched();
+                // Set the lifecycle time for command dispatched
+                container.command.setEventDispatched();
 
-                // Store the event in Mongo
-                auto storageEvent = (cast(StorableEvent)container.event).toStorageEvent();
+                // Store the command in Mongo
+                auto storageEvent = (cast(StorableEvent)container.command).toStorageEvent();
                 this.eventStoreInterface.persist(storageEvent);
             }
 
@@ -52,7 +52,7 @@ class EventListWithStorage : CommandList
                 break;
             }
 
-            // Use the "new event list" as the basis of the loop
+            // Use the "new command list" as the basis of the loop
             // for the next interation.
             commandList = newCommandList.getEventList();
         }

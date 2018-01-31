@@ -11,7 +11,7 @@ import command.eventlist;
 interface CommandDispatcherInterface
 {
     public void attachListener(CommandListenerInterface listener) @safe;
-    public CommandBusInterface dispatch(CommandInterface event, TypeInfo commandType) @safe;
+    public CommandBusInterface dispatch(CommandInterface command, TypeInfo commandType) @safe;
 }
 
 class CommandDispatcher : CommandDispatcherInterface
@@ -34,7 +34,7 @@ class CommandDispatcher : CommandDispatcherInterface
         }
     }
 
-    public CommandBusInterface dispatch(CommandInterface event, TypeInfo commandType) @safe
+    public CommandBusInterface dispatch(CommandInterface command, TypeInfo commandType) @safe
     {
         auto commandList = new CommandList();
         
@@ -42,15 +42,15 @@ class CommandDispatcher : CommandDispatcherInterface
             return commandList;
         }
 
-        event.setEventReceived();
+        command.setEventReceived();
 
         auto interestedListeners = this.listenerMap[commandType];
 
         foreach (listener; interestedListeners) {
-            commandList.append(listener.executeCommand(event, commandType));
+            commandList.append(listener.executeCommand(command, commandType));
         }
 
-        event.setEventDispatched();
+        command.setEventDispatched();
 
         return commandList;
     }    

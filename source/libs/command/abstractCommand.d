@@ -14,7 +14,7 @@ struct CommandLifecycle
     long eventCreated;
     long eventReceived;
     long eventDispatched;
-    long eventProcessingTime;   // How long the event took to be fully processed.
+    long eventProcessingTime;   // How long the command took to be fully processed.
 }
 
 abstract class AbstractCommand(T) : CommandInterface,StorableEvent
@@ -87,14 +87,14 @@ unittest {
     metadata.id = 1;
     metadata.name = "Jane Doe";
     
-    // Test instantiating an event
+    // Test instantiating an command
     auto testEvent = new TestEvent(metadata);
 
     // Ensure the lifecycle created time has been set
     auto lifeCycle = testEvent.getLifecycle();
     assert(lifeCycle.eventCreated > 0);
 
-    // Ensure we can get the event metadata back correctly
+    // Ensure we can get the command metadata back correctly
     auto meta = testEvent.getMetadata();
     assert(meta.type == typeid(EventTestMetadata));
     EventTestMetadata metaEventTest = *meta.peek!(EventTestMetadata);

@@ -78,18 +78,18 @@ class CommandRouter : CommandListenerInterface
         writeln("Received register: ", commandType);
     }
 
-    public CommandBusInterface executeCommand(CommandInterface event, TypeInfo commandType) @trusted
+    public CommandBusInterface executeCommand(CommandInterface command, TypeInfo commandType) @trusted
     {
         const string commandTypeStr = commandType.toString();
 
         debug {
-            writeln("CommandRouter received event: ", commandTypeStr);
+            writeln("CommandRouter received command: ", commandTypeStr);
         }
 
         CommandHandler[TypeInfo] commandHandlers;    
 
         auto commandList = new CommandList();
-        auto metaVariant = event.getMetadata();    
+        auto metaVariant = command.getMetadata();    
 
         // ASSIGN PREFIX COMMAND
         commandHandlers[typeid(AssignPrefixCommand)] = {
