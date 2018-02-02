@@ -93,23 +93,21 @@ class CommandRouter : CommandListenerInterface
 
         // ASSIGN PREFIX COMMAND
         commandHandlers[typeid(AssignPrefixCommand)] = {
-            auto const meta = *metaVariant.peek!(AssignPrefixCommandMetadata);
-            auto executor = new AssignPrefixExecutor(this.relationalDb, meta);
+            auto executor = new AssignPrefixExecutor(this.relationalDb, command);
+            executor.executeCommand();
             return;       
         }; 
 
         // CHANGE EMAIL
         commandHandlers[typeid(ChangeEmailCommand)] = {
-            auto meta = *metaVariant.peek!(ChangeEmailCommandMeta);
-            auto executor = new ChangeEmailExecutor(this.relationalDb, meta);
+            auto executor = new ChangeEmailExecutor(this.relationalDb, command);
             executor.executeCommand(); 
             return;       
         };  
 
         // CHANGE PASSWORD
         commandHandlers[typeid(ChangePasswordCommand)] = {
-            auto meta = *metaVariant.peek!(ChangePasswordCommandMetadata);
-            auto executor = new ChangePasswordExecutor(this.relationalDb, this.helperFactory, meta);
+            auto executor = new ChangePasswordExecutor(this.relationalDb, this.helperFactory, command);
             executor.executeCommand();
             return;       
         };                              
@@ -123,40 +121,35 @@ class CommandRouter : CommandListenerInterface
 
         // LOGIN
         commandHandlers[typeid(LoginCommand)] = {
-            auto const meta = *metaVariant.peek!(LoginCommandMetadata);
-            auto executor = new LoginExecutor(this.relationalDb, this.helperFactory, meta);
+            auto executor = new LoginExecutor(this.relationalDb, this.helperFactory, command);
             executor.executeCommand(this.eventMessages); 
             return;       
         };
 
         // PASSWORD RESET COMPLETE
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {
-            auto const meta = *metaVariant.peek!(PasswordResetCompleteCommandMetadata);
-            auto executor = new PasswordResetCompleteExecutor(this.relationalDb, this.helperFactory, meta);
+            auto executor = new PasswordResetCompleteExecutor(this.relationalDb, this.helperFactory, command);
             executor.executeCommand();
             return;       
         };          
 
         // PASSWORD RESET INITIATE
         commandHandlers[typeid(PasswordResetInitiateCommand)] = {
-            auto const meta = *metaVariant.peek!(PasswordResetInitiateCommandMetadata);
-            auto executor = new PasswordResetInitiateExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
+            auto executor = new PasswordResetInitiateExecutor(this.relationalDb, this.helperFactory, command, this.smtpSettings);
             executor.executeCommand();
             return;       
         };            
 
         // REGISTER USER
         commandHandlers[typeid(RegisterUserCommand)] = {
-            RegisterNewUserCommandMetadata meta = *metaVariant.peek!(RegisterNewUserCommandMetadata);
-            auto executor = new RegisterUserExecutor(this.relationalDb, this.helperFactory, meta, this.smtpSettings);
+            auto executor = new RegisterUserExecutor(this.relationalDb, this.helperFactory, command, this.smtpSettings);
             executor.executeCommand();
             return;       
         };
 
         // UPDATE USER
         commandHandlers[typeid(UpdateUserCommand)] = {
-            auto meta = *metaVariant.peek!(UpdateUserCommandMetadata);
-            auto executor = new UpdateUserExecutor(this.relationalDb, meta);
+            auto executor = new UpdateUserExecutor(this.relationalDb, command);
             executor.executeCommand();
             return;       
         };        

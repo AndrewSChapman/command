@@ -3,11 +3,12 @@ module executors.profile.changeemail;
 import std.stdio;
 import std.variant;
 
+import command.all;
 import relationaldb.all;
 import helpers.helperfactory;
 import commands.changeemail;
 
-class ChangeEmailExecutor
+class ChangeEmailExecutor : AbstractExecutor!(ChangeEmailCommand,ChangeEmailCommandMeta)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -15,10 +16,10 @@ class ChangeEmailExecutor
 
     this(
         RelationalDBInterface relationalDb,
-        ChangeEmailCommandMeta meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand() {

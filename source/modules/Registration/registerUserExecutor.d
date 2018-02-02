@@ -3,13 +3,14 @@ module executors.auth.registeruser;
 import std.stdio;
 import std.variant;
 
+import command.all;
 import relationaldb.all;
 import commands.registeruser;
 import helpers.helperfactory;
 import entity.smtpsettings;
 import email.registernewuser;
 
-class RegisterUserExecutor
+class RegisterUserExecutor : AbstractExecutor!(RegisterUserCommand,RegisterNewUserCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -20,12 +21,12 @@ class RegisterUserExecutor
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        RegisterNewUserCommandMetadata meta,
+        CommandInterface command,
         ref in SMTPSettings smtpSettings
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
         this.smtpSettings = smtpSettings;
     }
 

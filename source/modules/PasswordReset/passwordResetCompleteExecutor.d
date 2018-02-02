@@ -3,11 +3,12 @@ module executors.auth.passwordresetcomplete;
 import std.stdio;
 import std.variant;
 
+import command.all;
 import relationaldb.all;
 import commands.passwordresetcomplete;
 import helpers.helperfactory;
 
-class PasswordResetCompleteExecutor
+class PasswordResetCompleteExecutor : AbstractExecutor!(PasswordResetCompleteCommand,PasswordResetCompleteCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -17,11 +18,11 @@ class PasswordResetCompleteExecutor
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        ref in PasswordResetCompleteCommandMetadata meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand() {

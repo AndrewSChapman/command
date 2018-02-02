@@ -9,8 +9,9 @@ import relationaldb.all;
 import commands.login;
 import helpers.helperfactory;
 import entity.token;
+import command.all;
 
-class LoginExecutor
+class LoginExecutor : AbstractExecutor!(LoginCommand,LoginCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -21,11 +22,11 @@ class LoginExecutor
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        LoginCommandMetadata meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand(ref Variant[string] eventMessage) {

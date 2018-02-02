@@ -3,11 +3,12 @@ module executors.profile.updateuser;
 import std.stdio;
 import std.variant;
 
+import command.all;
 import relationaldb.all;
 import helpers.helperfactory;
 import commands.updateuser;
 
-class UpdateUserExecutor
+class UpdateUserExecutor : AbstractExecutor!(UpdateUserCommand,UpdateUserCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -15,10 +16,10 @@ class UpdateUserExecutor
 
     this(
         RelationalDBInterface relationalDb,
-        UpdateUserCommandMetadata meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand() {

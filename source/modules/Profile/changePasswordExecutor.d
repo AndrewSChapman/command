@@ -3,11 +3,12 @@ module executors.profile.changepassword;
 import std.stdio;
 import std.variant;
 
+import command.all;
 import relationaldb.all;
 import helpers.helperfactory;
 import commands.changepassword;
 
-class ChangePasswordExecutor
+class ChangePasswordExecutor : AbstractExecutor!(ChangePasswordCommand,ChangePasswordCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -17,11 +18,11 @@ class ChangePasswordExecutor
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        ChangePasswordCommandMetadata meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand() {

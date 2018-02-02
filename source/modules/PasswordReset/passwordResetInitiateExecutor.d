@@ -6,13 +6,14 @@ import std.random;
 import std.conv;
 import std.string;
 
+import command.all;
 import relationaldb.all;
 import commands.passwordresetinitiate;
 import helpers.helperfactory;
 import entity.smtpsettings;
 import email.passwordreset;
 
-class PasswordResetInitiateExecutor
+class PasswordResetInitiateExecutor : AbstractExecutor!(PasswordResetInitiateCommand,PasswordResetInitiateCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -23,12 +24,12 @@ class PasswordResetInitiateExecutor
     this(
         RelationalDBInterface relationalDb,
         HelperFactory helperFactory,
-        ref in PasswordResetInitiateCommandMetadata meta,
+        CommandInterface command,
         ref in SMTPSettings smtpSettings
     ) {
         this.relationalDb = relationalDb;
         this.helperFactory = helperFactory;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
         this.smtpSettings = smtpSettings;
     }
 

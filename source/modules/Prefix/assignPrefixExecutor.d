@@ -3,11 +3,12 @@ module executors.auth.assignprefix;
 import std.stdio;
 import std.variant;
 
+import command.all;
 import relationaldb.all;
 import commands.assignprefix;
 import helpers.helperfactory;
 
-class AssignPrefixExecutor
+class AssignPrefixExecutor : AbstractExecutor!(AssignPrefixCommand,AssignPrefixCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
@@ -15,10 +16,10 @@ class AssignPrefixExecutor
 
     this(
         RelationalDBInterface relationalDb,
-        AssignPrefixCommandMetadata meta
+        CommandInterface command
     ) {
         this.relationalDb = relationalDb;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand() {
