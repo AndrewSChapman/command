@@ -4,6 +4,7 @@ import std.exception;
 import std.stdio;
 import vibe.vibe;
 
+import validators.all;
 import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.updateuser;
@@ -24,9 +25,10 @@ class UpdateUserDM : DecisionMakerInterface
     public this(ref UpdateUserFacts facts) @safe
     {
         enforce(facts.userLoggedIn, "Sorry, you must be logged in to perform this action.");
-        enforce(facts.usrId > 0, "Please supply a valid user Id.");
-        enforce(facts.firstName != "", "First name may not be blank.");
-        enforce(facts.lastName != "", "Last name may not be lbank.");
+
+        (new Varchar255Required(facts.firstName, "firstName"));
+        (new Varchar255Required(facts.lastName, "lastName"));
+        (new PositiveNumber!ulong(facts.usrId, "usrId"));        
                 
         this.facts = facts;
     }

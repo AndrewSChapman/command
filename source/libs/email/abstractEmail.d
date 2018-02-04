@@ -37,5 +37,5 @@ class AbstractEmail
     public string getHtmlEmail()
     {
         return this.htmlEmail;
-    }    
+    }
 }

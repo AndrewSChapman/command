@@ -3,6 +3,7 @@ module decisionmakers.createprefix;
 import std.exception;
 import std.stdio;
 
+import validators.all;
 import command.all;
 import decisionmakers.decisionmakerinterface;
 import commands.createprefix;
@@ -22,8 +23,9 @@ class CreatePrefixDM : DecisionMakerInterface
     public this(ref CreatePrefixFacts facts) @safe
     {
         enforce(facts.userAgent != "", "Please supply a valid user agent");
-        enforce(facts.ipAddress != "", "Please supply a valid ip address");
         enforce(facts.timestamp > 0, "Please supply a valid timestamp");
+
+        (new Varchar255Required(facts.ipAddress, "ipAddress"));
 
         this.facts = facts;
     }

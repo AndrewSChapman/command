@@ -87,7 +87,6 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			
 			// Ensure supplied new passwords match each other
 			facts.repeatedPasswordMatches = changePassword.newPassword == changePassword.newPasswordRepeated;
-			facts.newPasswordIsStrong = passwordHelper.passwordPassesSecurityPolicy(changePassword.newPassword);
 
 			// Pass in the data the command needs to do its thing.
 			facts.usrId = requestInfo.usrId;			

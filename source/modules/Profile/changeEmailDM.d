@@ -4,6 +4,7 @@ import std.exception;
 import std.stdio;
 import vibe.vibe;
 
+import validators.all;
 import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.changeemail;
@@ -29,8 +30,9 @@ class ChangeEmailDM : DecisionMakerInterface
         enforce(facts.emailAddressLooksValid, "Sorry, the proposed email address seems to be invalid.");
         enforce(facts.emailAddressIsDifferentToCurrent, "The proposed email address is not different to the current one.");
         enforce(facts.emailAddressIsUnique, "Sorry, another user account is using this email address.  Please choose another.");
-        enforce(facts.emailAddress != "", "Email address may not be blank.");
-        enforce(facts.usrId > 0, "Please supply a valid user id");
+
+        (new EmailAddressRequired(facts.emailAddress, "emailAddress"));
+        (new PositiveNumber!ulong(facts.usrId, "usrId"));
                 
         this.facts = facts;
     }

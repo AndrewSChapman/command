@@ -61,7 +61,7 @@ class PasswordResetInitiateDM : DecisionMakerInterface
 unittest {
     PasswordResetInitiateFacts facts;
     facts.usrId = 1;
-    facts.newPassword = "ABC1234";
+    facts.newPassword = "PassW0rd*£2017";
     facts.userFirstName = "Homer";
     facts.userLastName = "Simpson";
     facts.userEmail = "homer@chapmandigital.co.uk";

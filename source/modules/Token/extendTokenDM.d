@@ -5,6 +5,7 @@ import std.stdio;
 
 import vibe.vibe;
 
+import validators.all;
 import decisionmakers.decisionmakerinterface;
 import command.all;
 import entity.token;
@@ -34,11 +35,12 @@ class ExtendTokenDM : DecisionMakerInterface
         enforce(facts.tokenExpiry > Clock.currTime().toUnixTime(), "Sorry, your login token has expired.");
         enforce(facts.tokenCode != "", "Please supply a valid tokenCode.");
         enforce(facts.userAgent != "", "Please supply a valid userAgent.");
-        enforce(facts.ipAddress != "", "Please supply a valid ipAddress.");
         enforce(facts.userAgent == facts.tokenUserAgent, "Sorry, your login token has an invalid user agent.");
         enforce(facts.ipAddress == facts.tokenIPAddress, "Sorry, your login token has an invalid IP address.");
         enforce(facts.prefix != "", "Prefix may not be blank.");
-        enforce(facts.usrId > 0, "UsrId must be > 0");
+
+        (new Varchar255Required(facts.ipAddress, "ipAddress"));
+        (new PositiveNumber!ulong(facts.usrId, "usrId"));            
 
         this.facts = facts;
     }

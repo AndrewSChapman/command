@@ -57,7 +57,7 @@ class RegisterUserDM : DecisionMakerInterface
 unittest {
     // Test passing facts
     RegisterNewUserFacts[] passingFactsArray;
-    passingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd");
+    passingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
 
     foreach(facts; passingFactsArray) {
         TestHelper.testDecisionMaker!(RegisterUserDM, RegisterNewUserFacts)(facts, 1, false);
@@ -65,12 +65,12 @@ unittest {
 
     // Test failing facts
     RegisterNewUserFacts[] failingFactsArray;
-    failingFactsArray ~= RegisterNewUserFacts(true, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, true, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, false, "", "Harry", "Potter", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "", "Potter", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(true, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= RegisterNewUserFacts(false, true, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "", "PassW0rd*£2017");
     failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "");
 
     foreach(facts; failingFactsArray) {

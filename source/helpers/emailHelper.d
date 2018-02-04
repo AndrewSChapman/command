@@ -60,8 +60,6 @@ class EmailHelper
         email.headers["Sender"] = sender.getName();
         email.headers["From"] = sender.getNameAndEmail();
 
-        writeln("*" ~ this.messageHTML ~ "*");
-
         if ((this.messagePlainText != "") && (this.messageHTML != "")) {
             email.setContent(
                 mailMixed(
