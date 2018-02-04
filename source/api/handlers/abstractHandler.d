@@ -14,8 +14,7 @@ import entity.requestinfo;
 import entity.sessioninfo;
 import command.all;
 import eventstore.all;
-
-enum UsrType { GENERAL, ADMIN };
+public import entity.user;
 
 abstract class AbstractHandler
 {
@@ -41,7 +40,7 @@ abstract class AbstractHandler
         return this.container;
     } 
     
-    protected void checkToken(Container container, ref RequestInfo requestInfo, uint[] allowedUserTypes = [0, 1]) @safe
+    protected void checkToken(Container container, ref RequestInfo requestInfo, uint[] allowedUserTypes = [UserType.GENERAL, UserType.ADMIN]) @safe
 	{
 		enforce(requestInfo.tokenCode, "Missing or Invalid 'Token-Code' header - A valid Token Code must be supplied as a HTTP Header for this request");
 		

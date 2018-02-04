@@ -29,7 +29,7 @@ struct PasswordResetCompleteRequestMeta
     ulong newPasswordPin;
 }
 
-struct UpdateUserRequestMeta
+struct UpdateProfileRequestMeta
 {
     string firstName;
     string lastName;
@@ -55,4 +55,12 @@ struct AddNewUserRequestMetadata
     string userLastName;
     string email;
     string password;
+}
+
+struct UpdateUserRequestMeta
+{
+    ulong usrId;
+    string firstName;
+    string lastName;
+    uint usrType;
 }

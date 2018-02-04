@@ -44,7 +44,7 @@ class ProfileHandler : AbstractHandler,ProfileAPI
     }
 
 	// POST Update Profile
-	@property void profile(UpdateUserRequestMeta updateProfile, RequestInfo requestInfo) @safe
+	@property void profile(UpdateProfileRequestMeta updateProfile, RequestInfo requestInfo) @safe
 	{	
 		try {
 			this.checkToken(this._container, requestInfo);
@@ -52,6 +52,7 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			UpdateUserFacts facts;
 			facts.userLoggedIn = true;
 			facts.usrId = requestInfo.usrId;
+            facts.usrType = cast(UserType)requestInfo.usrType;
 			facts.firstName = updateProfile.firstName;
 			facts.lastName = updateProfile.lastName;
 
@@ -153,6 +154,7 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		return userQuery.getProfileByUserId(requestInfo.usrId);
 	}
 
+    // GET profile By Email
 	@property Profile profileByEmail(RequestInfo requestInfo, string email) @safe
 	{
 		this.checkToken(this._container, requestInfo);
@@ -180,9 +182,10 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		return profile;
     }
 
+    // GET profile By Id
 	@property Profile userById(RequestInfo requestInfo, uint id) @safe
 	{
-		this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
+		this.checkToken(this._container, requestInfo, [UserType.ADMIN]);
 
 		auto userQuery = this._container.getQueryFactory().createUserQuery();
 
@@ -197,9 +200,10 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		return profile;
 	}
 
+    // GET List / Search for Users
     Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "") @safe
     {
-        this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
+        this.checkToken(this._container, requestInfo, [UserType.ADMIN]);
 
         auto userQuery = this._container.getQueryFactory().createUserQuery();
 
@@ -208,11 +212,11 @@ class ProfileHandler : AbstractHandler,ProfileAPI
         return results;
     }
 
-    // ADD USER (ADMIN)
-    @property Profile profile(AddNewUserRequestMetadata userDetails, RequestInfo requestInfo) @safe
+    // POST ADD USER (ADMIN)
+    @property Profile user(AddNewUserRequestMetadata userDetails, RequestInfo requestInfo) @safe
     {   
         try {
-            this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
+            this.checkToken(this._container, requestInfo, [UserType.ADMIN]);
 
 			auto userQuery = new UserQuery(this._container.getRelationalDb());
 			auto prefixQuery = new PrefixQuery(this._container.getRelationalDb());
@@ -237,5 +241,25 @@ class ProfileHandler : AbstractHandler,ProfileAPI
         } catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
+    }
+
+    // PUT Update user
+    @property void updateUser(UpdateUserRequestMeta userDetails, RequestInfo requestInfo) @safe
+    {
+		try {
+			this.checkToken(this._container, requestInfo, [UserType.ADMIN]);
+
+			UpdateUserFacts facts;
+			facts.userLoggedIn = true;
+			facts.usrId = userDetails.usrId;
+            facts.usrType = cast(UserType)userDetails.usrType;
+			facts.firstName = userDetails.firstName;
+			facts.lastName = userDetails.lastName;
+
+			auto decisionMaker = new UpdateUserDM(facts);		
+			this.executeCommands(this._container, decisionMaker);		
+		} catch (Exception exception) {
+			throw new HTTPStatusException(400, exception.msg);
+		}        
     }
 }

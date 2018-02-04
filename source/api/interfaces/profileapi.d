@@ -11,7 +11,7 @@ interface ProfileAPI
 	// Update Profile (General User)
 	@method(HTTPMethod.POST)
 	@before!getRequestInfo("requestInfo")
-	@property void profile(UpdateUserRequestMeta updateProfile, RequestInfo requestInfo) @safe;
+	@property void profile(UpdateProfileRequestMeta updateProfile, RequestInfo requestInfo) @safe;
 
 	// Change Password
 	@method(HTTPMethod.POST)
@@ -44,7 +44,12 @@ interface ProfileAPI
 	Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "") @safe;
 
 	// Add new user
+	@method(HTTPMethod.POST)
+	@before!getRequestInfo("requestInfo")
+	@property Profile user(AddNewUserRequestMetadata userDetails, RequestInfo requestInfo) @safe;
+
+	// Update user
 	@method(HTTPMethod.PUT)
 	@before!getRequestInfo("requestInfo")
-	@property Profile profile(AddNewUserRequestMetadata userDetails, RequestInfo requestInfo) @safe;            
+	@property void updateUser(UpdateUserRequestMeta userDetails, RequestInfo requestInfo) @safe;
 }

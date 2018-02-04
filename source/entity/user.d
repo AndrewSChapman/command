@@ -1,5 +1,7 @@
 module entity.user;
 
+enum UserType { GENERAL, ADMIN };
+
 struct User
 {
     ulong usrId;
