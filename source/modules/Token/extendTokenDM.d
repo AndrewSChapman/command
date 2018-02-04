@@ -22,7 +22,8 @@ struct ExtendTokenFacts
     string userAgent;
     string ipAddress;
     string prefix;
-    ulong usrId;    
+    ulong usrId;
+    uint usrType;
 }
 
 class ExtendTokenDM : DecisionMakerInterface
@@ -52,7 +53,8 @@ class ExtendTokenDM : DecisionMakerInterface
             this.facts.userAgent,
             this.facts.ipAddress,
             this.facts.prefix,
-            this.facts.usrId
+            this.facts.usrId,
+            this.facts.usrType
         );
 
         commandList.append(command, typeid(ExtendTokenCommand));

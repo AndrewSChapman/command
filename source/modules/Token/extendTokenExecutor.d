@@ -66,8 +66,9 @@ class ExtendTokenExecutor
         } else {
 			sessionInfo.prefix = this.meta.prefix;
 			sessionInfo.usrId = this.meta.usrId;
+            sessionInfo.usrType = this.meta.usrType;
             sessionInfo.userAgent = this.meta.userAgent;
-            sessionInfo.ipAddress = this.meta.ipAddress;  
+            sessionInfo.ipAddress = this.meta.ipAddress;
         }
 
         sessionInfo.expiresAt = newExpiryTime;

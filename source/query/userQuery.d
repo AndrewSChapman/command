@@ -106,7 +106,7 @@ class UserQuery
     {
         enforce(username != "", "Please supply a valid username");
 
-        string sql = "
+        string sql = `
                 SELECT
                     u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
@@ -114,7 +114,7 @@ class UserQuery
                 WHERE
                     u.username = ?
                     AND u.deleted = 0
-            ";
+            `;
 
         auto user = this.relationalDb.loadRow!User(
             sql,
@@ -128,14 +128,14 @@ class UserQuery
     {
         assert(usrId > 0, "Please supply a valid usrId");
         
-        string sql = "
+        string sql = `
                 SELECT
                     u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
                     usr u
                 WHERE
                     u.usrId = ?
-            ";
+            `;
 
         auto user = this.relationalDb.loadRow!User(
             sql,
@@ -149,14 +149,14 @@ class UserQuery
     {
         assert(usrId > 0, "Please supply a valid usrId");
         
-        string sql = "
+        string sql = `
                 SELECT
-                    u.email, u.firstName, u.lastName
+                    u.email, u.firstName, u.lastName, u.usrType
                 FROM
                     usr u
                 WHERE
                     u.usrId = ?
-            ";
+            `;
 
         auto profile = this.relationalDb.loadRow!Profile(
             sql,

@@ -26,7 +26,12 @@ interface ProfileAPI
 	// Get Profile
 	@method(HTTPMethod.GET)
 	@before!getRequestInfo("requestInfo")
-	@property Profile profile(RequestInfo requestInfo) @safe;	
+	@property Profile profile(RequestInfo requestInfo) @safe;
+
+	// Find Profile By Id
+	@method(HTTPMethod.GET)
+	@before!getRequestInfo("requestInfo")
+	@property Profile findUserById(RequestInfo requestInfo, uint id) @safe;    	
 
 	// Find Profile By Email
 	@method(HTTPMethod.GET)

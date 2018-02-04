@@ -15,4 +15,5 @@ struct RequestInfo {
 	// Populated by checkToken method
 	string prefix;
 	ulong usrId;
+    uint usrType;
 }

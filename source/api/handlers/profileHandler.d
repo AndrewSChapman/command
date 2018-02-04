@@ -167,9 +167,32 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			profile.email = user.email;
 			profile.firstName = user.firstName;
 			profile.lastName = user.lastName;
+            profile.usrType = user.usrType;
 		}
 
 		// No matching user, return a blank profile
 		return profile;
-	}		
+    }
+
+	@property Profile findUserById(RequestInfo requestInfo, uint id) @safe
+	{
+		this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
+
+		auto userQuery = this._container.getQueryFactory().createUserQuery();
+
+		Profile profile;
+
+		// If a user with this email address exists, return the profile information.
+		if (userQuery.userExistsById(id)) {
+			auto user = userQuery.getUserById(id);
+
+			profile.email = user.email;
+			profile.firstName = user.firstName;
+			profile.lastName = user.lastName;
+            profile.usrType = user.usrType;
+		}
+
+		// No matching user, return a blank profile
+		return profile;
+	}    	
 }
