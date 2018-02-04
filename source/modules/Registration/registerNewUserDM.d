@@ -3,6 +3,8 @@ module decisionmakers.registeruser;
 import std.exception;
 import vibe.vibe;
 
+import validators.all;
+import dcorelib;
 import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.registeruser;
@@ -10,7 +12,9 @@ import helpers.testhelper;
 
 struct RegisterNewUserFacts
 {
-    bool userAlreadyExists;
+    bool usernameAlreadyExists;
+    bool emailAlreadyExists;
+    string username;
     string userFirstName;
     string userLastName;
     string email;
@@ -23,18 +27,23 @@ class RegisterUserDM : DecisionMakerInterface
     
     public this(ref RegisterNewUserFacts facts) @safe
     {
-        enforce(facts.userFirstName != "", "Please supply a user first name");
-        enforce(facts.userLastName != "", "Please supply a user last name");
-        enforce(facts.email != "", "Please supply a user email address");
-        enforce(facts.password.length >= 8, "Please supply a password that is at least 8 characters long");
-        enforce(!facts.userAlreadyExists, "A user already exists with this email address.");
+        enforce(!facts.usernameAlreadyExists, "A user already exists with this username.");
+        enforce(!facts.emailAlreadyExists, "A user already exists with this email address.");
 
+        // Enforce value correctness
+        (new Varchar255Required(facts.username, "username"));
+        (new Varchar255Required(facts.userFirstName, "userFirstName"));
+        (new Varchar255Required(facts.userLastName, "userLastName"));
+        (new EmailAddressRequired(facts.email, "email"));
+        (new Password(facts.password, "password"));
+        
         this.facts = facts;
     }
 
     public void issueCommands(CommandBusInterface commandList) @safe
     {
         auto command = new RegisterUserCommand(
+            this.facts.username,
             this.facts.userFirstName,
             this.facts.userLastName,
             this.facts.email,
@@ -48,7 +57,7 @@ class RegisterUserDM : DecisionMakerInterface
 unittest {
     // Test passing facts
     RegisterNewUserFacts[] passingFactsArray;
-    passingFactsArray ~= RegisterNewUserFacts(false, "Harry", "Potter", "harry@potter.com", "PassW0rd");
+    passingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd");
 
     foreach(facts; passingFactsArray) {
         TestHelper.testDecisionMaker!(RegisterUserDM, RegisterNewUserFacts)(facts, 1, false);
@@ -56,11 +65,13 @@ unittest {
 
     // Test failing facts
     RegisterNewUserFacts[] failingFactsArray;
-    failingFactsArray ~= RegisterNewUserFacts(true, "Harry", "Potter", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, "", "Potter", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, "Harry", "", "harry@potter.com", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, "Harry", "Potter", "", "PassW0rd");
-    failingFactsArray ~= RegisterNewUserFacts(false, "Harry", "Potter", "harry@potter.com", "");
+    failingFactsArray ~= RegisterNewUserFacts(true, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, true, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "", "Harry", "Potter", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "", "Potter", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "", "harry@potter.com", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "", "PassW0rd");
+    failingFactsArray ~= RegisterNewUserFacts(false, false, "HarryPotter", "Harry", "Potter", "harry@potter.com", "");
 
     foreach(facts; failingFactsArray) {
         TestHelper.testDecisionMaker!(RegisterUserDM, RegisterNewUserFacts)(facts, 0, true);    

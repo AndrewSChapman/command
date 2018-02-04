@@ -2,6 +2,7 @@ module api.requestMetadata;
 
 struct RegisterNewUserRequestMetadata
 {
+    string username;
     string userFirstName;
     string userLastName;
     string email;
@@ -10,14 +11,14 @@ struct RegisterNewUserRequestMetadata
 
 struct LoginRequestMetadata
 {
-    string email;
+    string username;
     string password;
     string prefix;
 }
 
 struct PasswordResetRequestMeta
 {
-    string emailAddress;
+    string username;
     string newPassword;
     string newPasswordRepeated;
 }

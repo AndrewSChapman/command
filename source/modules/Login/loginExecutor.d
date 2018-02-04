@@ -38,7 +38,8 @@ class LoginExecutor : AbstractExecutor!(LoginCommand,LoginCommandMetadata)
         token.userAgent = this.meta.userAgent;
         token.prefix = this.meta.prefix;
         token.expiresAt = this.generateExpiryTime();     
-        token.usrId = this.meta.usrId;   
+        token.usrId = this.meta.usrId;
+        token.usrType = this.meta.usrType;
 
         this.saveToken(token);
 
@@ -63,8 +64,8 @@ class LoginExecutor : AbstractExecutor!(LoginCommand,LoginCommandMetadata)
     private void saveToken(ref Token token)
     {
         string sql = "
-                INSERT INTO token(`tokenCode`, `prefix`, `expiresAt`, `ipAddress`, `userAgent`, `usrId`) 
-                VALUES(?, ?, ?, ?, ?, ?);
+                INSERT INTO token(`tokenCode`, `prefix`, `expiresAt`, `ipAddress`, `userAgent`, `usrId`, `usrType`) 
+                VALUES(?, ?, ?, ?, ?, ?, ?);
             "; 
 
         this.relationalDb.execute(sql, variantArray(
@@ -73,7 +74,8 @@ class LoginExecutor : AbstractExecutor!(LoginCommand,LoginCommandMetadata)
             token.expiresAt,
             token.ipAddress,
             token.userAgent,
-            token.usrId
+            token.usrId,
+            token.usrType
         ));
     }   
 }

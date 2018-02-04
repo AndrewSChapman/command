@@ -6,6 +6,7 @@ import vibe.vibe;
 
 import vibe.vibe;
 
+import dcorelib;
 import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.login;
@@ -20,6 +21,7 @@ struct LoginFacts
     bool prefixAssignedToUser;
     bool prefixNotAssigned;
     ulong usrId;
+    uint usrType;
     string userAgent;
     string ipAddress;
     string prefix;    
@@ -36,9 +38,11 @@ class LoginDM : DecisionMakerInterface
         enforce(facts.prefixExists, "Sorry, the prefix code you supplied was invalid.");
         enforce(facts.prefixNotAssigned || facts.prefixAssignedToUser, "The supplied prefix is already assigned to a user or is not assigned to you.  Please generate a new prefix to complete this operation.");
         enforce(facts.usrId > 0, "Please supply a valid user Id.");
+        enforce(facts.usrType >= 0 && facts.usrType <= 1, "Please supply a valid usrType.");
         enforce(facts.userAgent != "", "Please supply a user agent string.");
-        enforce(facts.ipAddress != "", "Please supply an IP address.");
-        enforce(facts.prefix != "", "Please supply a valid prefix code.");        
+        enforce(facts.prefix != "", "Please supply a valid prefix code.");
+
+        (new Varchar255Required(facts.ipAddress, "ipAddress"));
 
         this.facts = facts;
     }
@@ -51,6 +55,7 @@ class LoginDM : DecisionMakerInterface
 
         auto command = new LoginCommand(
             facts.usrId,
+            facts.usrType,
             facts.userAgent,
             facts.ipAddress,
             facts.prefix
@@ -63,6 +68,7 @@ class LoginDM : DecisionMakerInterface
 unittest {
     LoginFacts facts;
     facts.usrId = 1;
+    facts.usrType = 0;
     facts.userAgent = "TESTAGENT";
     facts.ipAddress = "192.168.1.100";
     facts.prefix = "ABCDE";

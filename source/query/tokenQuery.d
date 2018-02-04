@@ -46,7 +46,7 @@ class TokenQuery
         
         string sql = "
                 SELECT
-                    t.tokenCode, t.ipAddress, t.userAgent, t.prefix, t.expiresAt, t.usrId
+                    t.tokenCode, t.ipAddress, t.userAgent, t.prefix, t.expiresAt, t.usrId, t.usrType
                 FROM
                     token t
                 WHERE

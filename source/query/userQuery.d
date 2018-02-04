@@ -60,13 +60,33 @@ class UserQuery
         return (numRows > 0);
     }
 
+    public bool userExistsByUsername(string username) @trusted
+    {
+        enforce(username.length > 1, "Please supply a valid username");
+
+        string sql = "
+                SELECT
+                    count(*) as numRows
+                FROM
+                    usr
+                WHERE
+                    username = ?
+            ";
+
+        auto numRows = this.relationalDb.getColumnValueInt(
+            sql,  variantArray(username)
+        );
+
+        return (numRows > 0);
+    }    
+
     public User getUserByEmail(in string emailAddress) @trusted
     {
         enforce(emailAddress != "", "Please supply a valid email address");
 
         string sql = "
                 SELECT
-                    u.usrId, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
                     usr u
                 WHERE
@@ -82,13 +102,35 @@ class UserQuery
         return user;
     }
 
+    public User getUserByUsername(in string username) @trusted
+    {
+        enforce(username != "", "Please supply a valid username");
+
+        string sql = "
+                SELECT
+                    u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                FROM
+                    usr u
+                WHERE
+                    u.username = ?
+                    AND u.deleted = 0
+            ";
+
+        auto user = this.relationalDb.loadRow!User(
+            sql,
+            variantArray(username)
+        );            
+
+        return user;
+    }    
+
     public User getUserById(ulong usrId) @trusted
     {
         assert(usrId > 0, "Please supply a valid usrId");
         
         string sql = "
                 SELECT
-                    u.usrId, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
                     usr u
                 WHERE

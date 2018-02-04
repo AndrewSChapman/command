@@ -8,4 +8,5 @@ struct Token
     string prefix;
     long expiresAt;
     ulong usrId;
+    uint usrType;
 }

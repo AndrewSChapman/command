@@ -5,9 +5,9 @@
 	],
 	"dependencies": {
         "vibe-d": "~>0.8.2",
-		"vibemail": "~>2.0.0",
+		"vibemail": "~>2.0.1",
 		"mysql-native": "~>1.1.0",
-        "dcorelib": "~>0.0.6",
+        "dcorelib": "~>0.0.8",
         "dini": "~>1.0.1",
         "mustache-d": "~>0.1.3"
 	},

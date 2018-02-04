@@ -4,21 +4,24 @@ import command.abstractcommand;
 
 struct RegisterNewUserCommandMetadata
 {
+    string username;
     string userFirstName;
     string userLastName;
     string email;
-    string password;    
+    string password;
 }
 
 class RegisterUserCommand : AbstractCommand!RegisterNewUserCommandMetadata
 {
     this(
-        ref string userFirstName,
-        ref string userLastName,
-        ref string email,
-        ref string password
+        in ref string username,
+        in ref string userFirstName,
+        in ref string userLastName,
+        in ref string email,
+        in ref string password
     ) @safe {
         RegisterNewUserCommandMetadata meta;
+        meta.username = username;
         meta.userFirstName = userFirstName;
         meta.userLastName = userLastName;
         meta.email = email;

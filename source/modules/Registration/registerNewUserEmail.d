@@ -9,13 +9,15 @@ import helpers.stringsHelper;
 
 class RegisterNewUserEmail : AbstractEmail
 {
+    private string username;
     private string firstName;
     private string email;
     
-    public this(in string firstName, in string email)
+    public this(in ref string username, in ref string firstName, in ref string email)
     {
         super("account/new_user_registration");
 
+        this.username = username;
         this.firstName = firstName;
         this.email = email;
     }
@@ -23,6 +25,7 @@ class RegisterNewUserEmail : AbstractEmail
     public void render()
     {
         auto context = new Mustache.Context;
+        context["username"] = this.username;
         context["email"] = this.email;
         context["firstName"] = this.firstName;
 

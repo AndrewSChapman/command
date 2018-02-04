@@ -1,6 +1,7 @@
 module helpers.testhelper;
 
 import command.all;
+import std.stdio;
 
 class TestHelper
 {
@@ -13,7 +14,14 @@ class TestHelper
         try {
             auto decisionMaker = new T(facts);
             decisionMaker.issueCommands(commandList);
+
+            if (exceptionExpected) {
+                writeln("These facts did NOT fail when they should have: ", facts);
+            }
         } catch(Exception e) {
+            if (!exceptionExpected) {
+                writeln("These facts failed when they should not have: ", facts);
+            }
             exceptionThrown = true;
         }
 

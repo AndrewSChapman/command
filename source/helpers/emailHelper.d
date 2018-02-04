@@ -4,6 +4,7 @@ import vibe.d;
 import vibemail.email;
 import std.exception;
 import std.string;
+import std.stdio;
 import entity.smtpsettings;
 
 class EmailHelper
@@ -58,6 +59,8 @@ class EmailHelper
         email.headers["Subject"] = subject;
         email.headers["Sender"] = sender.getName();
         email.headers["From"] = sender.getNameAndEmail();
+
+        writeln("*" ~ this.messageHTML ~ "*");
 
         if ((this.messagePlainText != "") && (this.messageHTML != "")) {
             email.setContent(

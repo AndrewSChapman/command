@@ -4,6 +4,8 @@ import std.exception;
 import std.stdio;
 import vibe.vibe;
 
+import dcorelib;
+import validators.all;
 import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.passwordresetinitiate;
@@ -28,13 +30,15 @@ class PasswordResetInitiateDM : DecisionMakerInterface
     {
         enforce(facts.usrId > 0, "Sorry, we could not find your user account.");
         enforce(facts.newPassword != "", "Please supply a valid new password.");
-        enforce(facts.userFirstName != "", "Please provide the user first name.");
-        enforce(facts.userLastName != "", "Please provide the user last name.");
-        enforce(facts.userEmail != "", "Please provide the user email address.");
         enforce(facts.userExists, "Sorry, a user account with the specified email address does not exist.");
         enforce(facts.newPasswordValidated,
             "Sorry, either the password and repeatedPassword do not match, or the supplied new " ~
             "password does not meet the minimum security requirements.");
+
+        (new Varchar255Required(facts.userFirstName, "userFirstName"));
+        (new Varchar255Required(facts.userLastName, "userLastName"));
+        (new EmailAddressRequired(facts.userEmail, "userEmail"));
+        (new Password(facts.newPassword, "newPassword"));
 
         this.facts = facts;
     }

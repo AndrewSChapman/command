@@ -70,7 +70,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 
 			// Determine the factors that the command needs in order to make decisions.
 			RegisterNewUserFacts facts;
-			facts.userAlreadyExists = userQuery.userExistsByEmail(requestMetadata.email);
+			facts.usernameAlreadyExists = userQuery.userExistsByUsername(requestMetadata.username);
+            facts.emailAlreadyExists = userQuery.userExistsByEmail(requestMetadata.email);
+            facts.username = requestMetadata.username;
             facts.userFirstName = requestMetadata.userFirstName;
             facts.userLastName = requestMetadata.userLastName;
             facts.email = requestMetadata.email;
@@ -94,13 +96,13 @@ class AuthHandler : AbstractHandler,AuthAPI
 			// Determine the factors that the command needs in order to make decisions.
 			LoginFacts facts;
 			facts.prefixExists = prefixQuery.exists(meta.prefix);
-			facts.userExists = userQuery.userExistsByEmail(meta.email);
+			facts.userExists = userQuery.userExistsByUsername(meta.username);
 
 			if (facts.prefixExists) {
 				Prefix prefix = prefixQuery.getPrefix(meta.prefix);
 				facts.prefix = prefix.prefix;
 				if ((prefix.usrId > 0) && (facts.userExists)) {
-					auto user = userQuery.getUserByEmail(meta.email);
+					auto user = userQuery.getUserByUsername(meta.username);
 					if (user.usrId == prefix.usrId) {
 						facts.prefixAssignedToUser = true;
 					}
@@ -110,10 +112,11 @@ class AuthHandler : AbstractHandler,AuthAPI
 			}
 
 			if (facts.userExists) {
-				auto user = userQuery.getUserByEmail(meta.email);
+				auto user = userQuery.getUserByUsername(meta.username);
 				auto passwordHelper = new PasswordHelper();
 				facts.passwordCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, meta.password);
 				facts.usrId = user.usrId;
+                facts.usrType = user.usrType;
 			}
 
 			facts.userAgent = requestInfo.headers.get("User-Agent", "");
@@ -136,10 +139,10 @@ class AuthHandler : AbstractHandler,AuthAPI
 			PasswordResetInitiateFacts facts;
 
 			auto userQuery = new UserQuery(this._container.getRelationalDb());
-			facts.userExists = userQuery.userExistsByEmail(passwordResetRequest.emailAddress);
+			facts.userExists = userQuery.userExistsByUsername(passwordResetRequest.username);
 
 			if (facts.userExists) {
-				auto user = userQuery.getUserByEmail(passwordResetRequest.emailAddress);
+				auto user = userQuery.getUserByUsername(passwordResetRequest.username);
 				facts.usrId = user.usrId;
 				facts.userFirstName = user.firstName;
 				facts.userLastName = user.lastName;
