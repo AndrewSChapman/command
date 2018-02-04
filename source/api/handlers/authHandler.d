@@ -123,9 +123,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 			facts.ipAddress = requestInfo.ipAddress;
 
 			auto command = new LoginDM(facts);
-			auto director = this.executeAndAwaitCommands(this._container, command);	
+			auto router = this.executeAndAwaitCommands(this._container, command);	
 
-			token = director.getEventMessage!Token("token");
+			token = router.getEventMessage!Token("token");
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}

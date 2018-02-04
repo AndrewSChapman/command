@@ -21,6 +21,9 @@ import helpers.validatorHelper;
 
 import api.interfaces.profileapi;
 
+import query.user;
+import query.prefix;
+
 import decisionmakers.updateuser;
 import commands.updateuser;
 
@@ -29,6 +32,9 @@ import commands.changepassword;
 
 import decisionmakers.changeemail;
 import commands.changeemail;
+
+import decisionmakers.adduser;
+import commands.adduser;
 
 class ProfileHandler : AbstractHandler,ProfileAPI
 {
@@ -147,7 +153,7 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		return userQuery.getProfileByUserId(requestInfo.usrId);
 	}
 
-	@property Profile findProfileByEmail(RequestInfo requestInfo, string email) @safe
+	@property Profile profileByEmail(RequestInfo requestInfo, string email) @safe
 	{
 		this.checkToken(this._container, requestInfo);
 
@@ -174,7 +180,7 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		return profile;
     }
 
-	@property Profile findUserById(RequestInfo requestInfo, uint id) @safe
+	@property Profile userById(RequestInfo requestInfo, uint id) @safe
 	{
 		this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
 
@@ -184,15 +190,52 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 		// If a user with this email address exists, return the profile information.
 		if (userQuery.userExistsById(id)) {
-			auto user = userQuery.getUserById(id);
-
-			profile.email = user.email;
-			profile.firstName = user.firstName;
-			profile.lastName = user.lastName;
-            profile.usrType = user.usrType;
+			profile = userQuery.getProfileByUserId(id);
 		}
 
 		// No matching user, return a blank profile
 		return profile;
-	}    	
+	}
+
+    Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "") @safe
+    {
+        this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
+
+        auto userQuery = this._container.getQueryFactory().createUserQuery();
+
+        Profile[] results = userQuery.getList(pageNo, usrType, searchTerm);
+
+        return results;
+    }
+
+    // ADD USER (ADMIN)
+    @property Profile profile(AddNewUserRequestMetadata userDetails, RequestInfo requestInfo) @safe
+    {   
+        try {
+            this.checkToken(this._container, requestInfo, [UsrType.ADMIN]);
+
+			auto userQuery = new UserQuery(this._container.getRelationalDb());
+			auto prefixQuery = new PrefixQuery(this._container.getRelationalDb());
+
+			// Determine the factors that the command needs in order to make decisions.
+			AddUserFacts facts;
+			facts.usernameAlreadyExists = userQuery.userExistsByUsername(userDetails.username);
+            facts.emailAlreadyExists = userQuery.userExistsByEmail(userDetails.email);
+            facts.usrType = userDetails.usrType;
+            facts.username = userDetails.username;
+            facts.userFirstName = userDetails.userFirstName;
+            facts.userLastName = userDetails.userLastName;
+            facts.email = userDetails.email;
+            facts.password = userDetails.password;
+
+			auto decisionMaker = new AddUserDM(facts);
+			auto router = this.executeAndAwaitCommands(this._container, decisionMaker);  
+            ulong usrId = router.getEventMessage!ulong("usrId");
+
+            return userQuery.getProfileByUserId(usrId);
+
+        } catch (Exception exception) {
+			throw new HTTPStatusException(400, exception.msg);
+		}
+    }
 }

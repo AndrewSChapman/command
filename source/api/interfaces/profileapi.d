@@ -8,7 +8,7 @@ import decisionmakers.changeemail;
 
 interface ProfileAPI
 {
-	// Update Profile
+	// Update Profile (General User)
 	@method(HTTPMethod.POST)
 	@before!getRequestInfo("requestInfo")
 	@property void profile(UpdateUserRequestMeta updateProfile, RequestInfo requestInfo) @safe;
@@ -26,15 +26,25 @@ interface ProfileAPI
 	// Get Profile
 	@method(HTTPMethod.GET)
 	@before!getRequestInfo("requestInfo")
-	@property Profile profile(RequestInfo requestInfo) @safe;
-
-	// Find Profile By Id
-	@method(HTTPMethod.GET)
-	@before!getRequestInfo("requestInfo")
-	@property Profile findUserById(RequestInfo requestInfo, uint id) @safe;    	
+	@property Profile profile(RequestInfo requestInfo) @safe;   	
 
 	// Find Profile By Email
 	@method(HTTPMethod.GET)
 	@before!getRequestInfo("requestInfo")
-	@property Profile findProfileByEmail(RequestInfo requestInfo, string email) @safe;
+	@property Profile profileByEmail(RequestInfo requestInfo, string email) @safe;
+
+	// Find user By Id (ADMIN ONLY)
+	@method(HTTPMethod.GET)
+	@before!getRequestInfo("requestInfo")
+	@property Profile userById(RequestInfo requestInfo, uint id) @safe;
+
+	// List / Search for users (ADMIN ONLY)
+	@method(HTTPMethod.GET)
+	@before!getRequestInfo("requestInfo")
+	Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "") @safe;
+
+	// Add new user
+	@method(HTTPMethod.PUT)
+	@before!getRequestInfo("requestInfo")
+	@property Profile profile(AddNewUserRequestMetadata userDetails, RequestInfo requestInfo) @safe;            
 }

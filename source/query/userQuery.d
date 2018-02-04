@@ -5,18 +5,18 @@ import std.variant;
 import std.conv;
 import std.exception;
 import std.stdio;
+import std.string;
 
+import query.abstractquery;
 import relationaldb.all;
 import entity.profile;
 import entity.user;
 
-class UserQuery
+class UserQuery : AbstractQuery
 {
-    protected RelationalDBInterface relationalDb;
-
     this(RelationalDBInterface relationalDb) @safe
     {
-        this.relationalDb = relationalDb;
+        super(relationalDb);
     }
 
     public bool userExistsById(uint userId) @trusted
@@ -86,7 +86,7 @@ class UserQuery
 
         string sql = "
                 SELECT
-                    u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
                     usr u
                 WHERE
@@ -108,7 +108,7 @@ class UserQuery
 
         string sql = `
                 SELECT
-                    u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
                     usr u
                 WHERE
@@ -130,7 +130,7 @@ class UserQuery
         
         string sql = `
                 SELECT
-                    u.usrId, u.usrType, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.email, u.username, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
                 FROM
                     usr u
                 WHERE
@@ -151,7 +151,7 @@ class UserQuery
         
         string sql = `
                 SELECT
-                    u.email, u.firstName, u.lastName, u.usrType
+                    u.usrId, u.username, u.email, u.firstName, u.lastName, u.usrType
                 FROM
                     usr u
                 WHERE
@@ -165,4 +165,46 @@ class UserQuery
 
         return profile;
     }
+
+    public Profile[] getList(uint pageNo = 0, uint usrType = 999, string searchTerm = "") @trusted
+    {
+        string sql = `
+                SELECT
+                    u.usrId, u.username, u.email, u.firstName, u.lastName, u.usrType
+                FROM
+                    usr u
+                WHERE
+                    1 = 1
+            `;
+
+        auto params = variantArray();
+
+        if (usrType < 99) {
+            sql ~= `AND usrType = ? `;
+            params ~= Variant(usrType);
+        }
+
+        if (searchTerm != "") {
+            sql ~= format(`
+                AND (
+                    username LIKE ? OR firstname LIKE ? OR lastname LIKE ? 
+                )
+            `);
+
+            searchTerm = "%" ~ searchTerm ~ "%";
+
+            params ~= Variant(searchTerm);
+            params ~= Variant(searchTerm);
+            params ~= Variant(searchTerm);
+        }
+
+        this.applyPaging(sql, pageNo);
+
+        auto users = this.relationalDb.loadRows!Profile(
+            sql,
+            params
+        );            
+
+        return users;
+    }  
 }

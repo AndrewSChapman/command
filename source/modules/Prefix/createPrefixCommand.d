@@ -20,9 +20,4 @@ class CreatePrefixCommand : AbstractCommand!CreatePrefixCommandMetadata
         
         super(data);
     }
-
-    public static register(CommandListenerInterface listener)
-    {
-        listener.registerCommand(typeid(CreatePrefixCommand));
-    }
 }

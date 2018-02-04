@@ -34,10 +34,12 @@ import executors.auth.passwordresetcomplete;
 import commands.updateuser;
 import commands.changeemail;
 import commands.changepassword;
+import commands.adduser;
 
 import executors.profile.updateuser;
 import executors.profile.changeemail;
 import executors.profile.changepassword;
+import executors.adduser;
 
 alias CommandHandler = void delegate();
 
@@ -69,13 +71,9 @@ class CommandRouter : CommandListenerInterface
             // PROFILE
             typeid(ChangeEmailCommand),
             typeid(UpdateUserCommand),
-            typeid(ChangePasswordCommand)            
+            typeid(ChangePasswordCommand),
+            typeid(AddUserCommand)            
         ];
-    }
-
-    public void registerCommand(TypeInfo commandType)
-    {
-        writeln("Received register: ", commandType);
     }
 
     public CommandBusInterface executeCommand(CommandInterface command, TypeInfo commandType) @trusted
@@ -145,22 +143,28 @@ class CommandRouter : CommandListenerInterface
             auto executor = new RegisterUserExecutor(this.relationalDb, this.helperFactory, command, this.smtpSettings);
             executor.executeCommand();
             return;       
-        };
+        };        
 
-        // UPDATE USER
+        // UPDATE USER (GENERAL)
         commandHandlers[typeid(UpdateUserCommand)] = {
             auto executor = new UpdateUserExecutor(this.relationalDb, command);
             executor.executeCommand();
             return;       
-        };        
+        };
+
+        // ADD USER
+        commandHandlers[typeid(AddUserCommand)] = {
+            auto executor = new AddUserExecutor(this.relationalDb, this.helperFactory, command, this.smtpSettings);
+            executor.executeCommand(this.eventMessages);
+            return;       
+        };            
 
         if (commandType in commandHandlers) {
             commandHandlers[commandType]();
         } else {
             throw new Exception("Invalid commandType: " ~ commandType.toString());
         }
-
-
+      
         return commandList;
     }
 

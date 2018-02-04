@@ -46,3 +46,13 @@ struct ChangeEmailRequestMeta
 {
     string emailAddress;
 }
+
+struct AddNewUserRequestMetadata
+{
+    uint usrType;
+    string username;
+    string userFirstName;
+    string userLastName;
+    string email;
+    string password;
+}

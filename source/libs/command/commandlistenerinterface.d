@@ -7,5 +7,4 @@ interface CommandListenerInterface
 {
     public TypeInfo[] getRegisteredCommands() @safe;
     public CommandBusInterface executeCommand(CommandInterface command, TypeInfo commandType) @safe;
-    public void registerCommand(TypeInfo commandType);
 }
