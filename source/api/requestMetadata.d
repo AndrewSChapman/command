@@ -64,3 +64,9 @@ struct UpdateUserRequestMeta
     string lastName;
     uint usrType;
 }
+
+struct DeleteUserRequestMeta
+{
+    ulong usrId;
+    bool hardDelete;
+}

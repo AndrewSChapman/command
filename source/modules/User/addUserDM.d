@@ -8,6 +8,7 @@ import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.adduser;
 import helpers.testhelper;
+import entity.user;
 
 struct AddUserFacts
 {
@@ -59,25 +60,24 @@ class AddUserDM : DecisionMakerInterface
 unittest {
     // Test passing facts
     AddUserFacts[] passingFactsArray;
-    passingFactsArray ~= AddUserFacts(false, false, 0, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
-    passingFactsArray ~= AddUserFacts(false, false, 1, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    passingFactsArray ~= AddUserFacts(false, false, UserType.GENERAL, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    passingFactsArray ~= AddUserFacts(false, false, UserType.ADMIN, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
 
     foreach(facts; passingFactsArray) {
-        TestHelper.testDecisionMaker!(RegisterUserDM, AddUserFacts)(facts, 1, false);
+        TestHelper.testDecisionMaker!(AddUserDM, AddUserFacts)(facts, 1, false);
     }
 
     // Test failing facts
     AddUserFacts[] failingFactsArray;
-    failingFactsArray ~= AddUserFacts(true, false, 0, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, true, 0, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, false, 3, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, false, 0, "", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, false, 0,"HarryPotter", "", "Potter", "harry@potter.com", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, false, 0, "HarryPotter", "Harry", "", "harry@potter.com", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, false, 0, "HarryPotter", "Harry", "Potter", "", "PassW0rd*£2017");
-    failingFactsArray ~= AddUserFacts(false, false, 0, "HarryPotter", "Harry", "Potter", "harry@potter.com", "");
+    failingFactsArray ~= AddUserFacts(true, false, UserType.GENERAL, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= AddUserFacts(false, true, UserType.GENERAL, "HarryPotter", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= AddUserFacts(false, false, UserType.GENERAL, "", "Harry", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= AddUserFacts(false, false, UserType.GENERAL,"HarryPotter", "", "Potter", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= AddUserFacts(false, false, UserType.GENERAL, "HarryPotter", "Harry", "", "harry@potter.com", "PassW0rd*£2017");
+    failingFactsArray ~= AddUserFacts(false, false, UserType.GENERAL, "HarryPotter", "Harry", "Potter", "", "PassW0rd*£2017");
+    failingFactsArray ~= AddUserFacts(false, false, UserType.GENERAL, "HarryPotter", "Harry", "Potter", "harry@potter.com", "");
 
     foreach(facts; failingFactsArray) {
-        TestHelper.testDecisionMaker!(RegisterUserDM, AddUserFacts)(facts, 0, true);    
+        TestHelper.testDecisionMaker!(AddUserDM, AddUserFacts)(facts, 0, true);    
     }
 }

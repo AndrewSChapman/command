@@ -12,4 +12,5 @@ struct User
     string lastName;
     string passwordHash;
     ulong newPasswordPin;
+    uint deleted;
 }

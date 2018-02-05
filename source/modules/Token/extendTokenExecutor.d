@@ -5,27 +5,28 @@ import std.variant;
 import std.datetime;
 import core.time;
 
+import command.all;
 import relationaldb.all;
 import entity.sessioninfo;
 import commands.extendtoken;
 import helpers.helperfactory;
 
-class ExtendTokenExecutor
+class ExtendTokenExecutor : AbstractExecutor!(ExtendTokenCommand,ExtendTokenCommandMetadata)
 {
     // Mysql connection
     private RelationalDBInterface relationalDb;
     private RedisDatabase redisDatabase;
-    private ExtendTokenCommandMeta meta;
+    private ExtendTokenCommandMetadata meta;
     private const uint tokenTimeoutInSeconds = 3600;
 
     this(
         RelationalDBInterface relationalDb,
         RedisDatabase redisDatabase,
-        ExtendTokenCommandMeta meta
-    ) @safe {
+        CommandInterface command
+    ) {
         this.relationalDb = relationalDb;
         this.redisDatabase = redisDatabase;
-        this.meta = meta;
+        this.meta = this.getMetadataFromCommandInterface(command);
     }
 
     void executeCommand() @safe

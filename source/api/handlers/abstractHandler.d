@@ -3,6 +3,7 @@ module api.handlers.abstracthandler;
 import std.exception;
 import vibe.vibe;
 import std.algorithm;
+import std.stdio;
 
 import appconfig;
 import commands.extendtoken;
@@ -76,7 +77,6 @@ abstract class AbstractHandler
 				facts.tokenExpiry = token.expiresAt;
 				facts.tokenUserAgent = token.userAgent;
 				facts.tokenIPAddress = token.ipAddress;
-
 				requestInfo.prefix = token.prefix;
 				requestInfo.usrId = token.usrId;
                 requestInfo.usrType = token.usrType;

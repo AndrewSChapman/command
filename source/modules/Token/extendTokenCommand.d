@@ -2,7 +2,7 @@ module commands.extendtoken;
 
 import command.abstractcommand;
 
-struct ExtendTokenCommandMeta
+struct ExtendTokenCommandMetadata
 {
     string tokenCode;
     string userAgent;
@@ -12,7 +12,7 @@ struct ExtendTokenCommandMeta
     uint usrType;
 }
 
-class ExtendTokenCommand : AbstractCommand!ExtendTokenCommandMeta
+class ExtendTokenCommand : AbstractCommand!ExtendTokenCommandMetadata
 {
     this(
         in ref string tokenCode,
@@ -22,12 +22,13 @@ class ExtendTokenCommand : AbstractCommand!ExtendTokenCommandMeta
         in ulong usrId,
         in uint usrType
     ) @safe {
-        ExtendTokenCommandMeta meta;
+        ExtendTokenCommandMetadata meta;
         meta.tokenCode = tokenCode;
         meta.userAgent = userAgent;
         meta.ipAddress = ipAddress;
         meta.usrId = usrId;
         meta.usrType = usrType;
+        meta.prefix = prefix;
 
         super(meta);
     }

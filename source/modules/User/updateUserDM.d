@@ -51,7 +51,7 @@ class UpdateUserDM : DecisionMakerInterface
 unittest {
     // Test passing facts
     UpdateUserFacts[] passingFactsArray;
-    passingFactsArray ~= UpdateUserFacts(true, 1, "Harry", "Potter");
+    passingFactsArray ~= UpdateUserFacts(true, 1, UserType.ADMIN, "Harry", "Potter");
 
     foreach(facts; passingFactsArray) {
         TestHelper.testDecisionMaker!(UpdateUserDM,UpdateUserFacts)(facts, 1, false);
@@ -59,10 +59,9 @@ unittest {
 
     // Test failing facts
     UpdateUserFacts[] failingFactsArray;
-    failingFactsArray ~= UpdateUserFacts(false, 1, "Harry", "Potter");
-    failingFactsArray ~= UpdateUserFacts(true, 0, "Harry", "Potter");
-    failingFactsArray ~= UpdateUserFacts(true, 1, "", "Potter");
-    failingFactsArray ~= UpdateUserFacts(true, 1, "Harry", "");
+    failingFactsArray ~= UpdateUserFacts(false, 1, UserType.ADMIN, "Harry", "Potter");
+    failingFactsArray ~= UpdateUserFacts(true, 1, UserType.ADMIN, "", "Potter");
+    failingFactsArray ~= UpdateUserFacts(true, 1, UserType.ADMIN, "Harry", "");
 
     foreach(facts; failingFactsArray) {
         TestHelper.testDecisionMaker!(UpdateUserDM,UpdateUserFacts)(facts, 0, true);    

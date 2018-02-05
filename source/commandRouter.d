@@ -3,6 +3,7 @@ module commandrouter;
 import std.stdio;
 import std.variant;
 
+import vibe.vibe;
 import command.all;
 import relationaldb.all;
 import helpers.helperfactory;
@@ -35,11 +36,17 @@ import commands.updateuser;
 import commands.changeemail;
 import commands.changepassword;
 import commands.adduser;
+import commands.deleteuser;
+import commands.deletetoken;
+import commands.extendtoken;
 
 import executors.profile.updateuser;
 import executors.profile.changeemail;
 import executors.profile.changepassword;
 import executors.adduser;
+import executors.deleteuser;
+import executors.deletetoken;
+import executors.auth.extendtoken;
 
 alias CommandHandler = void delegate();
 
@@ -48,6 +55,7 @@ class CommandRouter : CommandListenerInterface
     private RelationalDBInterface relationalDb;
     private HelperFactory helperFactory;
     private SMTPSettings smtpSettings;
+    private RedisDatabase redis;
     protected Variant[string] eventMessages;
     
     this(Container container) @safe
@@ -55,6 +63,7 @@ class CommandRouter : CommandListenerInterface
         this.relationalDb = container.getRelationalDb();
         this.helperFactory = container.getHelperFactory();
         this.smtpSettings = container.getSMTPSettings();
+        this.redis = container.getRedisDatabase();
     }
     
     public TypeInfo[] getRegisteredCommands() @safe
@@ -67,12 +76,15 @@ class CommandRouter : CommandListenerInterface
             typeid(CreatePrefixCommand),
             typeid(PasswordResetInitiateCommand),
             typeid(PasswordResetCompleteCommand),
+            typeid(ExtendTokenCommand),
 
             // PROFILE
             typeid(ChangeEmailCommand),
             typeid(UpdateUserCommand),
             typeid(ChangePasswordCommand),
-            typeid(AddUserCommand)            
+            typeid(AddUserCommand),
+            typeid(DeleteUserCommand),
+            typeid(DeleteTokenCommand)
         ];
     }
 
@@ -157,7 +169,28 @@ class CommandRouter : CommandListenerInterface
             auto executor = new AddUserExecutor(this.relationalDb, this.helperFactory, command, this.smtpSettings);
             executor.executeCommand(this.eventMessages);
             return;       
-        };            
+        };
+
+        // DELETE USER
+        commandHandlers[typeid(DeleteUserCommand)] = {
+            auto executor = new DeleteUserExecutor(this.relationalDb, command);
+            executor.executeCommand();
+            return;       
+        };   
+
+        // EXTEND TOKEN
+        commandHandlers[typeid(ExtendTokenCommand)] = {
+            auto executor = new ExtendTokenExecutor(this.relationalDb, this.redis, command);
+            executor.executeCommand();
+            return;       
+        }; 
+
+        // DELETE TOKEN
+        commandHandlers[typeid(DeleteTokenCommand)] = {
+            auto executor = new DeleteTokenExecutor(this.relationalDb, this.redis, command);
+            executor.executeCommand();
+            return;       
+        };                       
 
         if (commandType in commandHandlers) {
             commandHandlers[commandType]();

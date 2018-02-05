@@ -19,7 +19,7 @@ class UserQuery : AbstractQuery
         super(relationalDb);
     }
 
-    public bool userExistsById(uint userId) @trusted
+    public bool userExistsById(ulong userId) @trusted
     {
         enforce(userId > 0, "UserId must be greater than 0");
 
@@ -86,7 +86,7 @@ class UserQuery : AbstractQuery
 
         string sql = "
                 SELECT
-                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted
                 FROM
                     usr u
                 WHERE
@@ -108,7 +108,7 @@ class UserQuery : AbstractQuery
 
         string sql = `
                 SELECT
-                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted
                 FROM
                     usr u
                 WHERE
@@ -130,7 +130,7 @@ class UserQuery : AbstractQuery
         
         string sql = `
                 SELECT
-                    u.usrId, u.usrType, u.email, u.username, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin
+                    u.usrId, u.usrType, u.email, u.username, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted
                 FROM
                     usr u
                 WHERE

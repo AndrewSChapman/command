@@ -52,4 +52,14 @@ interface ProfileAPI
 	@method(HTTPMethod.PUT)
 	@before!getRequestInfo("requestInfo")
 	@property void updateUser(UpdateUserRequestMeta userDetails, RequestInfo requestInfo) @safe;
+
+	// DELETE user (ADMIN ONLY)
+	@method(HTTPMethod.DELETE)
+	@before!getRequestInfo("requestInfo")
+	@property void user(DeleteUserRequestMeta deleteUser, RequestInfo requestInfo) @safe;
+
+	// DELETE profile (Logged in user)
+	@method(HTTPMethod.DELETE)
+	@before!getRequestInfo("requestInfo")
+	@property void deleteMyAccount(RequestInfo requestInfo) @safe;
 }

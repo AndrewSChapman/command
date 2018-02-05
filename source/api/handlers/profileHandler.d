@@ -36,6 +36,9 @@ import commands.changeemail;
 import decisionmakers.adduser;
 import commands.adduser;
 
+import decisionmakers.deleteuser;
+import commands.deleteuser;
+
 class ProfileHandler : AbstractHandler,ProfileAPI
 {
     this(AppConfig appConfig)
@@ -261,5 +264,61 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}        
+    }
+
+    // DELETE Delete user (ADMIN ONLY)
+    @property void user(DeleteUserRequestMeta deleteUser, RequestInfo requestInfo) @safe
+    {
+        try {
+            this.checkToken(this._container, requestInfo, [UserType.ADMIN]);
+
+            auto userQuery = new UserQuery(this._container.getRelationalDb());
+
+            DeleteUserFacts facts;
+            facts.userToDeleteExists = userQuery.userExistsById(deleteUser.usrId);
+            facts.loggedInUsrType = cast(UserType)requestInfo.usrType;
+            facts.userToDeleteId = deleteUser.usrId;
+            facts.loggedInUserId = requestInfo.usrId;
+            facts.hardDelete = deleteUser.hardDelete;
+
+            if (facts.userToDeleteExists) {
+                auto user = userQuery.getUserById(deleteUser.usrId);
+                facts.userToDeleteAlreadyDeleted = user.deleted == 1;
+                facts.usrToDeleteUsrType = cast(UserType)user.usrType;
+            }
+
+			auto decisionMaker = new DeleteUserDM(facts);		
+			this.executeCommands(this._container, decisionMaker);            
+        } catch (Exception exception) {
+			throw new HTTPStatusException(400, exception.msg);
+		}
+    }
+
+    // DELETE logged in user account
+    @property void deleteMyAccount(RequestInfo requestInfo) @safe
+    {
+        try {
+            this.checkToken(this._container, requestInfo, [UserType.GENERAL]);
+            auto userQuery = new UserQuery(this._container.getRelationalDb());
+
+            DeleteUserFacts facts;
+            facts.userToDeleteExists = userQuery.userExistsById(requestInfo.usrId);
+            facts.loggedInUsrType = cast(UserType)requestInfo.usrType;
+            facts.userToDeleteId = requestInfo.usrId;
+            facts.loggedInUserId = requestInfo.usrId;
+            facts.tokenCode = requestInfo.tokenCode;
+            facts.hardDelete = false;
+
+            if (facts.userToDeleteExists) {
+                auto user = userQuery.getUserById(requestInfo.usrId);
+                facts.userToDeleteAlreadyDeleted = user.deleted == 1;
+                facts.usrToDeleteUsrType = cast(UserType)user.usrType;
+            }
+
+			auto decisionMaker = new DeleteUserDM(facts);		
+			this.executeCommands(this._container, decisionMaker);            
+        } catch (Exception exception) {
+			throw new HTTPStatusException(400, exception.msg);
+		}
     }
 }
