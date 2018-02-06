@@ -31,7 +31,9 @@ class DeleteUserDM : DecisionMakerInterface
     public this(ref DeleteUserFacts facts) @safe
     {
         enforce(facts.userToDeleteExists, "The user you which to delete does not seem to exist.");
-        enforce(!facts.userToDeleteAlreadyDeleted, "The user you wish to delete has already been deleted");
+
+        enforce(!facts.userToDeleteAlreadyDeleted || (facts.loggedInUsrType == UserType.ADMIN && facts.hardDelete), 
+            "The user you wish to delete has already been deleted");
 
         enforce(facts.usrToDeleteUsrType != UserType.ADMIN || !facts.userToDeleteIsLastAdminUser, 
             "You may not delete the last system administrator");
@@ -44,9 +46,11 @@ class DeleteUserDM : DecisionMakerInterface
 
         enforce(!facts.hardDelete || facts.loggedInUsrType == UserType.ADMIN, "Only an Admin may perform a hard delete");
 
+        enforce(facts.tokenCode != "" || (facts.loggedInUsrType == UserType.ADMIN && (facts.userToDeleteId != facts.loggedInUserId)),
+            "A token code must be provided when a general user is issueing the delete command");
+
         (new PositiveNumber!ulong(facts.userToDeleteId, "userToDeleteId"));
         (new PositiveNumber!ulong(facts.loggedInUserId, "loggedInUserId"));
-        (new Varchar255Required(facts.tokenCode, "tokenCode"));
         
         this.facts = facts;
     }
@@ -84,7 +88,13 @@ unittest {
 
     // Admin can hard delete other users
     passingFactsArray ~= DeleteUserFacts(true, false, false, UserType.ADMIN, UserType.GENERAL, 2, 1, true, "MYTOKENCODE");
-    passingFactsArray ~= DeleteUserFacts(true, false, false, UserType.ADMIN, UserType.ADMIN, 2, 1, true, "MYTOKENCODE");    
+    passingFactsArray ~= DeleteUserFacts(true, false, false, UserType.ADMIN, UserType.ADMIN, 2, 1, true, "MYTOKENCODE");
+
+    // Admin can hard delete an already soft deleted user
+    passingFactsArray ~= DeleteUserFacts(true, true, false, UserType.ADMIN, UserType.GENERAL, 2, 1, true, "MYTOKENCODE");
+
+    // Admin does't need the token code
+    passingFactsArray ~= DeleteUserFacts(true, false, false, UserType.ADMIN, UserType.ADMIN, 2, 1, false, "");
 
     foreach(facts; passingFactsArray) {
         TestHelper.testDecisionMaker!(DeleteUserDM, DeleteUserFacts)(facts, 2, false);
@@ -100,6 +110,9 @@ unittest {
     // User is already deleted
     failingFactsArray ~= DeleteUserFacts(true, true, false, UserType.ADMIN, UserType.ADMIN, 2, 1, false, "MYTOKENCODE");
 
+    // General user cannot hard delete themselves
+    passingFactsArray ~= DeleteUserFacts(true, false, false, UserType.GENERAL, UserType.GENERAL, 2, 2, true, "MYTOKENCODE");
+
     // Admin may not delete last admin user
     failingFactsArray ~= DeleteUserFacts(true, false, true, UserType.ADMIN, UserType.ADMIN, 2, 1, false, "MYTOKENCODE");
 
@@ -114,7 +127,7 @@ unittest {
     failingFactsArray ~= DeleteUserFacts(true, false, false, UserType.ADMIN, UserType.ADMIN, 2, 2, true, "MYTOKENCODE");
 
     // TokenCode is missing
-    failingFactsArray ~= DeleteUserFacts(true, false, false, UserType.ADMIN, UserType.ADMIN, 2, 1, false, "");
+    failingFactsArray ~= DeleteUserFacts(true, false, false, UserType.GENERAL, UserType.GENERAL, 2, 2, false, "");
 
     foreach(facts; failingFactsArray) {
         TestHelper.testDecisionMaker!(DeleteUserDM, DeleteUserFacts)(facts, 0, true);    

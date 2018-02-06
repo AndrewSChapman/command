@@ -62,6 +62,7 @@ abstract class AbstractHandler
 			facts.tokenExpiry = sessionInfo.expiresAt;
 			facts.tokenUserAgent = sessionInfo.userAgent;
 			facts.tokenIPAddress = sessionInfo.ipAddress;
+            facts.usrType = sessionInfo.usrType;
 
 			requestInfo.prefix = sessionInfo.prefix;
 			requestInfo.usrId = sessionInfo.usrId;	
@@ -77,6 +78,7 @@ abstract class AbstractHandler
 				facts.tokenExpiry = token.expiresAt;
 				facts.tokenUserAgent = token.userAgent;
 				facts.tokenIPAddress = token.ipAddress;
+                facts.usrType = token.usrType;
 				requestInfo.prefix = token.prefix;
 				requestInfo.usrId = token.usrId;
                 requestInfo.usrType = token.usrType;

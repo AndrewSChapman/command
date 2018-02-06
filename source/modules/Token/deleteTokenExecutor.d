@@ -29,7 +29,9 @@ class DeleteTokenExecutor : AbstractExecutor!(DeleteTokenCommand,DeleteTokenComm
 
     void executeCommand() @safe
     {
-        this.deleteToken();
+        if (this.meta.tokenCode != "") {
+            this.deleteToken();
+        }
 
         if (this.meta.deleteAllUserTokens) {
             this.deleteUsrTokens();
