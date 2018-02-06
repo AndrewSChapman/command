@@ -41,7 +41,7 @@ interface ProfileAPI
 	// List / Search for users (ADMIN ONLY)
 	@method(HTTPMethod.GET)
 	@before!getRequestInfo("requestInfo")
-	Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "") @safe;
+	Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "", bool showDeleted=false) @safe;
 
 	// Add new user
 	@method(HTTPMethod.POST)

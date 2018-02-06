@@ -117,6 +117,7 @@ class AuthHandler : AbstractHandler,AuthAPI
 				facts.passwordCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, meta.password);
 				facts.usrId = user.usrId;
                 facts.usrType = user.usrType;
+                facts.userDeleted = (user.deleted == 1);
 			}
 
 			facts.userAgent = requestInfo.headers.get("User-Agent", "");

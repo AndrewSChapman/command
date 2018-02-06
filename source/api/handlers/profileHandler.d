@@ -204,13 +204,13 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 	}
 
     // GET List / Search for Users
-    Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "") @safe
+    Profile[] users(RequestInfo requestInfo, uint pageNo = 0, uint usrType = 999, string searchTerm = "", bool showDeleted = false) @safe
     {
         this.checkToken(this._container, requestInfo, [UserType.ADMIN]);
 
         auto userQuery = this._container.getQueryFactory().createUserQuery();
 
-        Profile[] results = userQuery.getList(pageNo, usrType, searchTerm);
+        Profile[] results = userQuery.getList(pageNo, usrType, searchTerm, showDeleted);
 
         return results;
     }

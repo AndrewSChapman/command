@@ -91,7 +91,6 @@ class UserQuery : AbstractQuery
                     usr u
                 WHERE
                     u.email = ?
-                    AND u.deleted = 0
             ";
 
         auto user = this.relationalDb.loadRow!User(
@@ -113,7 +112,6 @@ class UserQuery : AbstractQuery
                     usr u
                 WHERE
                     u.username = ?
-                    AND u.deleted = 0
             `;
 
         auto user = this.relationalDb.loadRow!User(
@@ -151,7 +149,7 @@ class UserQuery : AbstractQuery
         
         string sql = `
                 SELECT
-                    u.usrId, u.username, u.email, u.firstName, u.lastName, u.usrType
+                    u.usrId, u.username, u.email, u.firstName, u.lastName, u.usrType, u.deleted
                 FROM
                     usr u
                 WHERE
@@ -166,11 +164,11 @@ class UserQuery : AbstractQuery
         return profile;
     }
 
-    public Profile[] getList(uint pageNo = 0, uint usrType = 999, string searchTerm = "") @trusted
+    public Profile[] getList(uint pageNo = 0, uint usrType = 999, string searchTerm = "", bool showDeleted = false) @trusted
     {
         string sql = `
                 SELECT
-                    u.usrId, u.username, u.email, u.firstName, u.lastName, u.usrType
+                    u.usrId, u.username, u.email, u.firstName, u.lastName, u.usrType, u.deleted
                 FROM
                     usr u
                 WHERE
@@ -196,6 +194,10 @@ class UserQuery : AbstractQuery
             params ~= Variant(searchTerm);
             params ~= Variant(searchTerm);
             params ~= Variant(searchTerm);
+        }
+
+        if (!showDeleted) {
+            sql ~= "AND deleted = 0 ";
         }
 
         this.applyPaging(sql, pageNo);

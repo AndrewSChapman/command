@@ -10,6 +10,7 @@ struct Profile
     string firstName;
     string lastName;
     uint usrType;
+    uint deleted;
 
     this(User user)
     {
@@ -19,5 +20,6 @@ struct Profile
         this.firstName = user.firstName;
         this.lastName = user.lastName;
         this.usrType = user.usrType;
+        this.deleted = deleted;
     }
 }

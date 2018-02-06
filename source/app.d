@@ -21,7 +21,8 @@ void main()
 
 	auto router = new URLRouter;
 	router.registerRestInterface(new AuthHandler(appConfig));
-    router.registerRestInterface(new ProfileHandler(appConfig));    
+    router.registerRestInterface(new ProfileHandler(appConfig));
+    router.registerRestInterface(new MiscHandler(appConfig));
 
 	listenHTTP(settings, router);
 	runApplication();

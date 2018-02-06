@@ -16,6 +16,7 @@ import helpers.testhelper;
 struct LoginFacts
 {
     bool userExists;
+    bool userDeleted;
     bool passwordCorrect;
     bool prefixExists;
     bool prefixAssignedToUser;
@@ -34,6 +35,7 @@ class LoginDM : DecisionMakerInterface
     public this(ref LoginFacts facts) @safe
     {
         enforce(facts.userExists, "Sorry, a user account with the specified email address does not exist.");
+        enforce(!facts.userDeleted, "Sorry, your user account is not accessible.");
         enforce(facts.passwordCorrect, "Sorry, the supplied password was incorrect.");            
         enforce(facts.prefixExists, "Sorry, the prefix code you supplied was invalid.");
         enforce(facts.prefixNotAssigned || facts.prefixAssignedToUser, "The supplied prefix is already assigned to a user or is not assigned to you.  Please generate a new prefix to complete this operation.");
@@ -76,6 +78,7 @@ unittest {
     // Test passing facts
     function (ref LoginFacts facts) {
         facts.userExists = true;
+        facts.userDeleted = false;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = true;
@@ -86,6 +89,7 @@ unittest {
 
     function (ref LoginFacts facts) {
         facts.userExists = true;
+        facts.userDeleted = false;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
@@ -96,7 +100,19 @@ unittest {
 
     // Test failing facts
     function (ref LoginFacts facts) {
+        facts.userExists = true;
+        facts.userDeleted = false;
+        facts.passwordCorrect = true;
+        facts.prefixExists = true;
+        facts.prefixAssignedToUser = true;
+        facts.prefixNotAssigned = false;
+
+        TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 1, false);
+    }(facts);
+
+    function (ref LoginFacts facts) {
         facts.userExists = false;
+        facts.userDeleted = false;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
@@ -107,6 +123,7 @@ unittest {
 
     function (ref LoginFacts facts) {
         facts.userExists = true;
+        facts.userDeleted = false;
         facts.passwordCorrect = false;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
@@ -117,6 +134,7 @@ unittest {
 
     function (ref LoginFacts facts) {
         facts.userExists = true;
+        facts.userDeleted = false;
         facts.passwordCorrect = true;
         facts.prefixExists = false;
         facts.prefixAssignedToUser = false;
@@ -127,6 +145,7 @@ unittest {
 
     function (ref LoginFacts facts) {
         facts.userExists = true;
+        facts.userDeleted = false;
         facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
