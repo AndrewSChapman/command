@@ -1,6 +1,6 @@
 module command.commandlistenerinterface;
 
-import command.CommandInterface;
+import command.commandinterface;
 import command.eventlist;
 
 interface CommandListenerInterface

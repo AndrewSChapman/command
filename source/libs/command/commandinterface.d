@@ -1,4 +1,4 @@
-module command.CommandInterface;
+module command.commandinterface;
 
 import std.variant;
 import command.abstractcommand;

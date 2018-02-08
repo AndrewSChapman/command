@@ -1,6 +1,6 @@
 module command.abstractexecutor;
 
-import command.CommandInterface;
+import command.commandinterface;
 
 abstract class AbstractExecutor(CommandType,MetadataType)
 {

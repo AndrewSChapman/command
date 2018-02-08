@@ -6,7 +6,7 @@ import std.algorithm.comparison : equal;
 import std.stdio;
 
 import command.abstractcommand;
-import command.CommandInterface;
+import command.commandinterface;
 import command.commanddispatcher;
 
 struct CommandContainer

@@ -6,7 +6,7 @@ import std.exception;
 import std.stdio;
 import vibe.vibe;
 
-import command.CommandInterface;
+import command.commandinterface;
 import eventstore.all;
 
 struct CommandLifecycle

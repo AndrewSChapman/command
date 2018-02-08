@@ -5,7 +5,7 @@ import std.algorithm.comparison : equal;
 import std.stdio;
 
 import command.commandlistenerinterface;
-import command.CommandInterface;
+import command.commandinterface;
 import command.eventlist;
 
 interface CommandDispatcherInterface
