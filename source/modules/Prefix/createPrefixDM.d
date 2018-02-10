@@ -40,6 +40,11 @@ class CreatePrefixDM : AbstractDecisionMaker,DecisionMakerInterface
 
         commandList.append(command, typeid(CreatePrefixCommand));
     }
+
+    public string getPrefixCode() @safe
+    {
+        return this.router.getEventMessage!string("prefixCode");
+    }    
 }
 
 unittest {

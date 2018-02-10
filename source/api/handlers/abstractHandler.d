@@ -45,8 +45,6 @@ abstract class AbstractHandler
 	{
 		enforce(requestInfo.tokenCode, "Missing or Invalid 'Token-Code' header - A valid Token Code must be supplied as a HTTP Header for this request");
 		
-		auto commandList = new EventListWithStorage(container.getEventStore());
-
 		ExtendTokenFacts facts;
 		facts.tokenCode = requestInfo.tokenCode;
 		facts.userAgent = requestInfo.userAgent;
@@ -93,68 +91,9 @@ abstract class AbstractHandler
 		facts.usrId = requestInfo.usrId;
 
 		auto decisionMaker = new ExtendTokenDM(facts);
-        this.executeAndAwaitCommands(this._container, decisionMaker);
+
+        auto commandList = new EventListWithStorage(this._container.getEventStore());
+        decisionMaker.issueCommands(commandList);
+        decisionMaker.executeCommands(this._container, commandList);
 	}
-
-	protected CommandRouter attachCommandRouter(Container container, ref CommandDispatcher dispatcher) @safe
-    {
-		auto router = new CommandRouter(
-			container
-		);
-
-		// Attach any commandrouter that need to listen to these events.
-		dispatcher.attachListener(router);
-
-		return router;	
-	}
-
-	protected void executeCommands(Container container, DecisionMakerInterface DecisionMakerInterface) @safe
-	{
-		auto commandList = new EventListWithStorage(container.getEventStore());
-
-		// Execute the decision maker - this make thrown an exception if the decision
-		// maker is not happy with some of the factors or metadata.
-		try {
-			DecisionMakerInterface.issueCommands(commandList);
-
-			if (commandList.size == 0) {
-				throw new Exception("Decision maker issued no commands - this should never happen");
-			}	
-
-			// Dispatch the command on separate task so we're not waiting for the result.
-			auto executeTask = runTask({
-				auto dispatcher = new CommandDispatcher();
-				auto director = this.attachCommandRouter(container, dispatcher);
-				commandList.dispatch(dispatcher);
-			});
-		} catch (Exception e) {
-			if (commandList.size > 0) {
-				// Dispatch any commands on separate task so we're not waiting for the result.
-				auto executeTask = runTask({
-					auto dispatcher = new CommandDispatcher();
-					auto director = this.attachCommandRouter(container, dispatcher);
-					commandList.dispatch(dispatcher);
-				});				
-			}
-
-			throw new HTTPStatusException(400, e.msg);
-		}
-	}
-
-	protected CommandRouter executeAndAwaitCommands(Container container, DecisionMakerInterface DecisionMakerInterface) @safe
-	{
-		auto commandList = new EventListWithStorage(container.getEventStore());        
-
-		DecisionMakerInterface.issueCommands(commandList);
-
-		if (commandList.size == 0) {
-			throw new Exception("Decision maker issued no commands - this should never happen");
-		}
-
-		auto dispatcher = new CommandDispatcher();
-		auto director = this.attachCommandRouter(container, dispatcher);
-		commandList.dispatch(dispatcher);
-
-		return director;
-	}     
 }

@@ -55,6 +55,11 @@ class AddUserDM : AbstractDecisionMaker,DecisionMakerInterface
 
         commandList.append(command, typeid(AddUserCommand));
     }
+
+    public ulong getNewUsrId() @safe
+    {
+        return this.router.getEventMessage!ulong("usrId");
+    }    
 }
 
 unittest {

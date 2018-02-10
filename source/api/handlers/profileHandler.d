@@ -60,7 +60,10 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			facts.lastName = updateProfile.lastName;
 
 			auto decisionMaker = new UpdateUserDM(facts);		
-			this.executeCommands(this._container, decisionMaker);		
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -103,7 +106,10 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			facts.password = changePassword.newPassword;
 
 			auto decisionMaker = new ChangePasswordDM(facts);		
-			this.executeCommands(this._container, decisionMaker);	
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -142,7 +148,10 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			facts.usrId = requestInfo.usrId;		
 
 			auto decisionMaker = new ChangeEmailDM(facts);		
-			this.executeCommands(this._container, decisionMaker);	
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -195,12 +204,11 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 		Profile profile;
 
 		// If a user with this email address exists, return the profile information.
-		if (userQuery.userExistsById(id)) {
-			profile = userQuery.getProfileByUserId(id);
+		if (!userQuery.userExistsById(id)) {
+			throw new Exception("There is no user with this id");
 		}
 
-		// No matching user, return a blank profile
-		return profile;
+        return userQuery.getProfileByUserId(id);
 	}
 
     // GET List / Search for Users
@@ -236,8 +244,12 @@ class ProfileHandler : AbstractHandler,ProfileAPI
             facts.password = userDetails.password;
 
 			auto decisionMaker = new AddUserDM(facts);
-			auto router = this.executeAndAwaitCommands(this._container, decisionMaker);  
-            ulong usrId = router.getEventMessage!ulong("usrId");
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);            
+
+            ulong usrId = decisionMaker.getNewUsrId();
 
             return userQuery.getProfileByUserId(usrId);
 
@@ -260,7 +272,10 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 			facts.lastName = userDetails.lastName;
 
 			auto decisionMaker = new UpdateUserDM(facts);		
-			this.executeCommands(this._container, decisionMaker);		
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);      
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}        
@@ -287,8 +302,11 @@ class ProfileHandler : AbstractHandler,ProfileAPI
                 facts.usrToDeleteUsrType = cast(UserType)user.usrType;
             }
 
-			auto decisionMaker = new DeleteUserDM(facts);		
-			this.executeCommands(this._container, decisionMaker);            
+			auto decisionMaker = new DeleteUserDM(facts);	
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);
         } catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -315,8 +333,11 @@ class ProfileHandler : AbstractHandler,ProfileAPI
                 facts.usrToDeleteUsrType = cast(UserType)user.usrType;
             }
 
-			auto decisionMaker = new DeleteUserDM(facts);		
-			this.executeCommands(this._container, decisionMaker);            
+			auto decisionMaker = new DeleteUserDM(facts);	
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);                  
         } catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}

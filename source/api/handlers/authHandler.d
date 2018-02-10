@@ -53,14 +53,16 @@ class AuthHandler : AbstractHandler,AuthAPI
 		facts.ipAddress = requestInfo.ipAddress;
 		facts.timestamp = Clock.currStdTime();
 
+        auto commandList = new EventListWithStorage(this._container.getEventStore());
+
         // Pass the facts to the decision maker
 		auto decisionMaker = new CreatePrefixDM(facts);	
 
-        // Ask the decision maker to create the commands and then excecute them.
-		auto router = this.executeAndAwaitCommands(this._container, decisionMaker);		
+        decisionMaker.issueCommands(commandList);
+        decisionMaker.executeCommands(this._container, commandList);
 
 		Prefix prefix;
-		prefix.prefix = router.getEventMessage!string("prefixCode");
+		prefix.prefix = decisionMaker.getPrefixCode();
 		return prefix;
 	}
 
@@ -80,8 +82,12 @@ class AuthHandler : AbstractHandler,AuthAPI
             facts.email = requestMetadata.email;
             facts.password = requestMetadata.password;
 
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            
 			auto decisionMaker = new RegisterUserDM(facts);
-			this.executeCommands(this._container, decisionMaker);
+
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -131,9 +137,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 			facts.userAgent = requestInfo.headers.get("User-Agent", "");
 			facts.ipAddress = requestInfo.ipAddress;
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-
 			auto decisionMaker = new LoginDM(facts);
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
             decisionMaker.issueCommands(commandList);
             decisionMaker.executeCommands(this._container, commandList);
 
@@ -166,9 +172,13 @@ class AuthHandler : AbstractHandler,AuthAPI
 					((passwordResetRequest.newPassword == passwordResetRequest.newPasswordRepeated) &&
 					passwordHelper.passwordPassesSecurityPolicy(passwordResetRequest.newPassword));
 			}
+
 			
 			auto decisionMaker = new PasswordResetInitiateDM(facts);		
-			auto router = this.executeAndAwaitCommands(this._container, decisionMaker);
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		
@@ -193,7 +203,10 @@ class AuthHandler : AbstractHandler,AuthAPI
 			}
 			
 			auto decisionMaker = new PasswordResetCompleteDM(facts);
-			this.executeCommands(this._container, decisionMaker);			
+
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		
