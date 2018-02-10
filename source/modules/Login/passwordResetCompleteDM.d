@@ -4,7 +4,7 @@ import std.exception;
 import std.stdio;
 import vibe.vibe;
 
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.passwordresetcomplete;
 import helpers.testhelper;
@@ -17,7 +17,7 @@ struct PasswordResetCompleteFacts
     ulong usrId;
 }
 
-class PasswordResetCompleteDM : DecisionMakerInterface
+class PasswordResetCompleteDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private PasswordResetCompleteFacts facts;
     

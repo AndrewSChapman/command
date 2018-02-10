@@ -9,7 +9,7 @@ import appconfig;
 import commands.extendtoken;
 import commandrouter;
 import container;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import decisionmakers.extendtoken;
 import entity.requestinfo;
 import entity.sessioninfo;

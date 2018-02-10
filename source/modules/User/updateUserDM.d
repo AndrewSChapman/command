@@ -5,7 +5,7 @@ import std.stdio;
 import vibe.vibe;
 
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.updateuser;
 import helpers.testhelper;
@@ -20,7 +20,7 @@ struct UpdateUserFacts
     string lastName;    
 }
 
-class UpdateUserDM : DecisionMakerInterface
+class UpdateUserDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private UpdateUserFacts facts;
     

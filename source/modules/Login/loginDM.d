@@ -7,11 +7,13 @@ import vibe.vibe;
 import vibe.vibe;
 
 import dcorelib;
-import decisionmakers.decisionmakerinterface;
 import command.all;
 import commands.login;
 import commands.assignprefix;
+import commands.incrementfailedlogincount;
+import entity.token;
 import helpers.testhelper;
+import facts.toomanyfailedlogins;
 
 struct LoginFacts
 {
@@ -21,6 +23,7 @@ struct LoginFacts
     bool prefixExists;
     bool prefixAssignedToUser;
     bool prefixNotAssigned;
+    TooManyFailedLogins tooManyFailedLogins;
     ulong usrId;
     uint usrType;
     string userAgent;
@@ -28,43 +31,67 @@ struct LoginFacts
     string prefix;    
 }
 
-class LoginDM : DecisionMakerInterface
+class LoginDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private LoginFacts facts;
     
     public this(ref LoginFacts facts) @safe
     {
         enforce(facts.userExists, "Sorry, a user account with the specified email address does not exist.");
-        enforce(!facts.userDeleted, "Sorry, your user account is not accessible.");
-        enforce(facts.passwordCorrect, "Sorry, the supplied password was incorrect.");            
+        enforce(!facts.userDeleted, "Sorry, your user account is not accessible.");        
         enforce(facts.prefixExists, "Sorry, the prefix code you supplied was invalid.");
         enforce(facts.prefixNotAssigned || facts.prefixAssignedToUser, "The supplied prefix is already assigned to a user or is not assigned to you.  Please generate a new prefix to complete this operation.");
         enforce(facts.usrId > 0, "Please supply a valid user Id.");
         enforce(facts.usrType >= 0 && facts.usrType <= 1, "Please supply a valid usrType.");
         enforce(facts.userAgent != "", "Please supply a user agent string.");
-        enforce(facts.prefix != "", "Please supply a valid prefix code.");
+        enforce(facts.prefix != "", "Please supply a valid prefix code."); 
+        enforce((!(facts.tooManyFailedLogins is null)) && !facts.tooManyFailedLogins.isTrue(), 
+            "You have tried to login too many times with an incorrect password.  You must now reset your password.");
 
         (new Varchar255Required(facts.ipAddress, "ipAddress"));
 
         this.facts = facts;
+
+        // As the login command returns information to us and we need to be sure
+        // the login has succeeded, this cannot run asyncronsously.
+        this.executeCommandsAsyncronously = false;
     }
 
     public void issueCommands(CommandBusInterface commandList) @safe
     {
-        if (facts.prefixNotAssigned) {
-            commandList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
-        }
+        if (facts.passwordCorrect) {        
+            if (facts.prefixNotAssigned) {
+                commandList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
+            }
 
-        auto command = new LoginCommand(
-            facts.usrId,
-            facts.usrType,
-            facts.userAgent,
-            facts.ipAddress,
-            facts.prefix
-        );
-        
-        commandList.append(command, typeid(LoginCommand));
+            auto command = new LoginCommand(
+                facts.usrId,
+                facts.usrType,
+                facts.userAgent,
+                facts.ipAddress,
+                facts.prefix
+            );
+            
+            commandList.append(command, typeid(LoginCommand));
+
+            // Add command to reset failed login count and set lastLoginDate
+        } else {
+            auto command = new IncrementFailedLoginCountCommand(facts.usrId);
+            commandList.append(command, typeid(IncrementFailedLoginCountCommand));
+        }
     }
+
+    public Token getLoginToken() @safe
+    {
+        return this.router.getEventMessage!Token("token");
+    }
+
+    override protected void throwExceptionIfNecessary() @safe
+    {
+        if (!facts.passwordCorrect) {
+            throw new Exception("Sorry, your login password was incorrect");
+        }
+    }    
 }
 
 unittest {
@@ -74,6 +101,7 @@ unittest {
     facts.userAgent = "TESTAGENT";
     facts.ipAddress = "192.168.1.100";
     facts.prefix = "ABCDE";
+    facts.tooManyFailedLogins = new TooManyFailedLogins(0);
 
     // Test passing facts
     function (ref LoginFacts facts) {
@@ -83,7 +111,7 @@ unittest {
         facts.prefixExists = true;
         facts.prefixAssignedToUser = true;
         facts.prefixNotAssigned = false;
-
+        
         TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 1, false);
     }(facts);
 
@@ -94,6 +122,7 @@ unittest {
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = true;
+        facts.tooManyFailedLogins = new TooManyFailedLogins(3);
 
         TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 2, false);
     }(facts);
@@ -124,10 +153,11 @@ unittest {
     function (ref LoginFacts facts) {
         facts.userExists = true;
         facts.userDeleted = false;
-        facts.passwordCorrect = false;
+        facts.passwordCorrect = true;
         facts.prefixExists = true;
         facts.prefixAssignedToUser = false;
         facts.prefixNotAssigned = true;
+        facts.tooManyFailedLogins = new TooManyFailedLogins(10);
 
         TestHelper.testDecisionMaker!(LoginDM, LoginFacts)(facts, 0, true);
     }(facts);    

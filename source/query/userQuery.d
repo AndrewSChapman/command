@@ -86,7 +86,8 @@ class UserQuery : AbstractQuery
 
         string sql = "
                 SELECT
-                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted
+                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, 
+                        deleted, numLoginAttempts, COALESCE(UNIX_TIMESTAMP(lastLoginAttempt), 0) as lastLoginAttempt, numPinAttempts
                 FROM
                     usr u
                 WHERE
@@ -107,7 +108,7 @@ class UserQuery : AbstractQuery
 
         string sql = `
                 SELECT
-                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted
+                    u.usrId, u.usrType, u.username, u.email, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted, numLoginAttempts, COALESCE(UNIX_TIMESTAMP(lastLoginAttempt), 0) as lastLoginAttempt, numPinAttempts
                 FROM
                     usr u
                 WHERE
@@ -128,7 +129,7 @@ class UserQuery : AbstractQuery
         
         string sql = `
                 SELECT
-                    u.usrId, u.usrType, u.email, u.username, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted
+                    u.usrId, u.usrType, u.email, u.username, u.firstName, u.lastName, u.password as passwordHash, newPasswordPin, deleted, numLoginAttempts, COALESCE(UNIX_TIMESTAMP(lastLoginAttempt), 0) as lastLoginAttempt, numPinAttempts
                 FROM
                     usr u
                 WHERE

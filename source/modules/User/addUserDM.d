@@ -4,7 +4,7 @@ import std.exception;
 import vibe.vibe;
 
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.adduser;
 import helpers.testhelper;
@@ -22,7 +22,7 @@ struct AddUserFacts
     string password;    
 }
 
-class AddUserDM : DecisionMakerInterface
+class AddUserDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private AddUserFacts facts;
     

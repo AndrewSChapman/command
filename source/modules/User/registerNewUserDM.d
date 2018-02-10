@@ -5,7 +5,7 @@ import vibe.vibe;
 
 import validators.all;
 import dcorelib;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.registeruser;
 import helpers.testhelper;
@@ -21,7 +21,7 @@ struct RegisterNewUserFacts
     string password;    
 }
 
-class RegisterUserDM : DecisionMakerInterface
+class RegisterUserDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private RegisterNewUserFacts facts;
     

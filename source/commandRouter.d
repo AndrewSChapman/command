@@ -23,6 +23,7 @@ import commands.registeruser;
 import commands.createprefix;
 import commands.passwordresetinitiate;
 import commands.passwordresetcomplete;
+import commands.incrementfailedlogincount;
 
 import executors.auth.registeruser;
 import executors.auth.assignprefix;
@@ -30,6 +31,7 @@ import executors.auth.login;
 import executors.auth.createprefix;
 import executors.auth.passwordresetinitiate;
 import executors.auth.passwordresetcomplete;
+import executors.incrementfailedlogincount;
 
 // PROFILE
 import commands.updateuser;
@@ -77,6 +79,7 @@ class CommandRouter : CommandListenerInterface
             typeid(PasswordResetInitiateCommand),
             typeid(PasswordResetCompleteCommand),
             typeid(ExtendTokenCommand),
+            typeid(IncrementFailedLoginCountCommand),
 
             // PROFILE
             typeid(ChangeEmailCommand),
@@ -134,7 +137,15 @@ class CommandRouter : CommandListenerInterface
             auto executor = new LoginExecutor(this.relationalDb, this.helperFactory, command);
             executor.executeCommand(this.eventMessages); 
             return;       
+        }; 
+
+        // FAILED LOGIN - INCREMENT FAILED LOGIN COUNT
+        commandHandlers[typeid(IncrementFailedLoginCountCommand)] = {
+            auto executor = new IncrementFailedLoginCountExecutor(this.relationalDb, command);
+            executor.executeCommand(); 
+            return;       
         };
+
 
         // PASSWORD RESET COMPLETE
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {

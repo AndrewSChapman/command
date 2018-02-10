@@ -11,7 +11,7 @@ import vibe.vibe;
 import vibe.utils.dictionarylist;
 
 import api.handlers.abstracthandler;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import decisionmakers.registeruser;
 import decisionmakers.login;
 import decisionmakers.createprefix;
@@ -34,6 +34,8 @@ import commandrouter;
 import api.interfaces.all;
 import api.requestMetadata;
 import appconfig;
+
+import facts.toomanyfailedlogins;
 
 
 class AuthHandler : AbstractHandler,AuthAPI
@@ -98,11 +100,17 @@ class AuthHandler : AbstractHandler,AuthAPI
 			facts.prefixExists = prefixQuery.exists(meta.prefix);
 			facts.userExists = userQuery.userExistsByUsername(meta.username);
 
+            User user;
+
+            // Load the user record if we can.
+            if (facts.userExists) {
+                user = userQuery.getUserByUsername(meta.username);
+            }
+
 			if (facts.prefixExists) {
 				Prefix prefix = prefixQuery.getPrefix(meta.prefix);
 				facts.prefix = prefix.prefix;
 				if ((prefix.usrId > 0) && (facts.userExists)) {
-					auto user = userQuery.getUserByUsername(meta.username);
 					if (user.usrId == prefix.usrId) {
 						facts.prefixAssignedToUser = true;
 					}
@@ -112,21 +120,24 @@ class AuthHandler : AbstractHandler,AuthAPI
 			}
 
 			if (facts.userExists) {
-				auto user = userQuery.getUserByUsername(meta.username);
 				auto passwordHelper = new PasswordHelper();
 				facts.passwordCorrect = passwordHelper.VerifyBcryptHash(user.passwordHash, meta.password);
 				facts.usrId = user.usrId;
                 facts.usrType = user.usrType;
                 facts.userDeleted = (user.deleted == 1);
+                facts.tooManyFailedLogins = new TooManyFailedLogins(user.numLoginAttempts);
 			}
 
 			facts.userAgent = requestInfo.headers.get("User-Agent", "");
 			facts.ipAddress = requestInfo.ipAddress;
 
-			auto command = new LoginDM(facts);
-			auto router = this.executeAndAwaitCommands(this._container, command);	
+            auto commandList = new EventListWithStorage(this._container.getEventStore());
 
-			token = router.getEventMessage!Token("token");
+			auto decisionMaker = new LoginDM(facts);
+            decisionMaker.issueCommands(commandList);
+            decisionMaker.executeCommands(this._container, commandList);
+
+			token = decisionMaker.getLoginToken();
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}

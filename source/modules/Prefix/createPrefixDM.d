@@ -5,7 +5,7 @@ import std.stdio;
 
 import validators.all;
 import command.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import commands.createprefix;
 import helpers.testhelper;
 
@@ -16,7 +16,7 @@ struct CreatePrefixFacts
     ulong timestamp;
 }
 
-class CreatePrefixDM : DecisionMakerInterface
+class CreatePrefixDM : AbstractDecisionMaker,DecisionMakerInterface
 {    
     private CreatePrefixFacts facts;
     

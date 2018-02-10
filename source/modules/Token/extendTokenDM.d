@@ -6,7 +6,7 @@ import std.stdio;
 import vibe.vibe;
 
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import entity.token;
 import commands.extendtoken;
@@ -26,7 +26,7 @@ struct ExtendTokenFacts
     uint usrType;
 }
 
-class ExtendTokenDM : DecisionMakerInterface
+class ExtendTokenDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private ExtendTokenFacts facts;
     

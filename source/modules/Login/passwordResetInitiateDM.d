@@ -6,7 +6,7 @@ import vibe.vibe;
 
 import dcorelib;
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.passwordresetinitiate;
 import helpers.testhelper;
@@ -22,7 +22,7 @@ struct PasswordResetInitiateFacts
     string newPassword;    
 }
 
-class PasswordResetInitiateDM : DecisionMakerInterface
+class PasswordResetInitiateDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private PasswordResetInitiateFacts facts;
     

@@ -13,4 +13,7 @@ struct User
     string passwordHash;
     ulong newPasswordPin;
     uint deleted;
+    uint numLoginAttempts;
+    long lastLoginAttempt;
+    uint numPinAttempts;
 }

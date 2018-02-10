@@ -4,7 +4,7 @@ import std.exception;
 import vibe.vibe;
 
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.deleteuser;
 import commands.deletetoken;
@@ -24,7 +24,7 @@ struct DeleteUserFacts
     string tokenCode;
 }
 
-class DeleteUserDM : DecisionMakerInterface
+class DeleteUserDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private DeleteUserFacts facts;
     

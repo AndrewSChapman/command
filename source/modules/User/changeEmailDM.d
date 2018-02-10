@@ -5,7 +5,7 @@ import std.stdio;
 import vibe.vibe;
 
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.changeemail;
 import helpers.testhelper;
@@ -20,7 +20,7 @@ struct ChangeEmailFacts
     string emailAddress;    
 }
 
-class ChangeEmailDM : DecisionMakerInterface
+class ChangeEmailDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private ChangeEmailFacts facts;
     

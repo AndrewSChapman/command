@@ -5,7 +5,7 @@ import std.stdio;
 import vibe.vibe;
 
 import validators.all;
-import decisionmakers.decisionmakerinterface;
+import command.decisionmakerinterface;
 import command.all;
 import commands.changepassword;
 import helpers.testhelper;
@@ -19,7 +19,7 @@ struct ChangePasswordFacts
     string password;
 }
 
-class ChangePasswordDM : DecisionMakerInterface
+class ChangePasswordDM : AbstractDecisionMaker,DecisionMakerInterface
 {
     private ChangePasswordFacts facts;
     

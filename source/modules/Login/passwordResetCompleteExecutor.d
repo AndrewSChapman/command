@@ -44,7 +44,7 @@ class PasswordResetCompleteExecutor : AbstractExecutor!(PasswordResetCompleteCom
 
         sql = "
                 UPDATE usr SET 
-                    newPassword = null
+                    newPassword = null, numLoginAttempts = 0
                 WHERE usrId = ?;
             ";
 
