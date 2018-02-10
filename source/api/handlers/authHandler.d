@@ -53,13 +53,13 @@ class AuthHandler : AbstractHandler,AuthAPI
 		facts.ipAddress = requestInfo.ipAddress;
 		facts.timestamp = Clock.currStdTime();
 
-        auto commandList = new EventListWithStorage(this._container.getEventStore());
+        auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
 
         // Pass the facts to the decision maker
 		auto decisionMaker = new CreatePrefixDM(facts);	
 
-        decisionMaker.issueCommands(commandList);
-        decisionMaker.executeCommands(this._container, commandList);
+        decisionMaker.issueCommands(commandBus);
+        decisionMaker.executeCommands(this._container, commandBus);
 
 		Prefix prefix;
 		prefix.prefix = decisionMaker.getPrefixCode();
@@ -82,12 +82,12 @@ class AuthHandler : AbstractHandler,AuthAPI
             facts.email = requestMetadata.email;
             facts.password = requestMetadata.password;
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
             
 			auto decisionMaker = new RegisterUserDM(facts);
 
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -139,9 +139,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 
 			auto decisionMaker = new LoginDM(facts);
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);
 
 			token = decisionMaker.getLoginToken();
 		} catch (Exception exception) {
@@ -176,9 +176,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 			
 			auto decisionMaker = new PasswordResetInitiateDM(facts);		
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		
@@ -204,9 +204,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 			
 			auto decisionMaker = new PasswordResetCompleteDM(facts);
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);            
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}		

@@ -1,12 +1,10 @@
 module command.decisionmakerinterface;
 
 import command.all;
+import container;
 
 interface DecisionMakerInterface
 {
-    public void issueCommands(CommandBusInterface commandList) @safe;
-    /*
-    public bool canRunAsync() @safe;
-    public void throwExceptionIfNecessary() @safe;
-    */
+    public void issueCommands(CommandBusInterface commandBus) @safe;
+    /*public void executeCommands(Container container, CommandBusInterface commandBus) @safe;*/
 }

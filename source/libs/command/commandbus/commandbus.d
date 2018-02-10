@@ -1,4 +1,4 @@
-module command.eventlist;
+module command.commandbus;
 
 import std.container : DList;
 import std.algorithm.comparison : equal;
@@ -22,12 +22,12 @@ interface CommandBusInterface {
     public ulong size() @safe;
 }
 
-class CommandList : CommandBusInterface
+class CommandBus : CommandBusInterface
 {
-    private DList!CommandContainer commandList;
+    private DList!CommandContainer commandBus;
 
     this() @safe {
-        this.commandList = DList!CommandContainer();
+        this.commandBus = DList!CommandContainer();
     }  
 
     public void append(CommandInterface command, TypeInfo commandType) @safe
@@ -36,7 +36,7 @@ class CommandList : CommandBusInterface
         container.commandType = commandType;
         container.command = command;
 
-        this.commandList.insertBack(container);
+        this.commandBus.insertBack(container);
     }
 
     // Allow appending from one command list into another.
@@ -54,12 +54,12 @@ class CommandList : CommandBusInterface
     */
     public void dispatch(CommandDispatcherInterface dispatcher) @safe
     {
-        auto commandList = this.commandList;
+        auto commandBus = this.commandBus;
 
         while (true) {
-            auto newCommandList = new CommandList();
+            auto newCommandList = new CommandBus();
 
-            foreach (container; commandList) {
+            foreach (container; commandBus) {
                 newCommandList.append(dispatcher.dispatch(container.command, container.commandType));
             }
 
@@ -70,20 +70,20 @@ class CommandList : CommandBusInterface
 
             // Use the "new command list" as the basis of the loop
             // for the next interation.
-            commandList = newCommandList.getEventList();
+            commandBus = newCommandList.getEventList();
         }
     }
 
     public DList!CommandContainer getEventList() @safe
     {
-        return this.commandList;
+        return this.commandBus;
     } 
 
     public ulong size() @safe
     {
         ulong count = 0;
 
-        foreach (container; this.commandList) {
+        foreach (container; this.commandBus) {
             ++count;
         }
 

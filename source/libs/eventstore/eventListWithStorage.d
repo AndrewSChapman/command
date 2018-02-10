@@ -10,7 +10,7 @@ import command.all;
 // Delete this later
 import commands.registeruser;
 
-class EventListWithStorage : CommandList
+class CommandBusWithStorage : CommandBus
 {
     protected EventStoreInterface eventStoreInterface;
     
@@ -29,12 +29,12 @@ class EventListWithStorage : CommandList
     */
     override public void dispatch(CommandDispatcherInterface dispatcher) @trusted
     {    
-        auto commandList = this.getEventList();
+        auto commandBus = this.getEventList();
 
         while (true) {
-            auto newCommandList = new CommandList();
+            auto newCommandList = new CommandBus();
 
-            foreach (container; commandList) {
+            foreach (container; commandBus) {
                 // Set the lifecycle time for command received
                 container.command.setEventReceived();
                 newCommandList.append(dispatcher.dispatch(container.command, container.commandType));
@@ -54,7 +54,7 @@ class EventListWithStorage : CommandList
 
             // Use the "new command list" as the basis of the loop
             // for the next interation.
-            commandList = newCommandList.getEventList();
+            commandBus = newCommandList.getEventList();
         }
     }    
 }

@@ -6,7 +6,7 @@ import std.stdio;
 
 import command.commandlistenerinterface;
 import command.commandinterface;
-import command.eventlist;
+import command.commandbus;
 
 interface CommandDispatcherInterface
 {
@@ -36,10 +36,10 @@ class CommandDispatcher : CommandDispatcherInterface
 
     public CommandBusInterface dispatch(CommandInterface command, TypeInfo commandType) @safe
     {
-        auto commandList = new CommandList();
+        auto commandBus = new CommandBus();
         
         if(this.noListenersInterestedInThisEvent(commandType)) {
-            return commandList;
+            return commandBus;
         }
 
         command.setEventReceived();
@@ -47,12 +47,12 @@ class CommandDispatcher : CommandDispatcherInterface
         auto interestedListeners = this.listenerMap[commandType];
 
         foreach (listener; interestedListeners) {
-            commandList.append(listener.executeCommand(command, commandType));
+            commandBus.append(listener.executeCommand(command, commandType));
         }
 
         command.setEventDispatched();
 
-        return commandList;
+        return commandBus;
     }    
 
     private bool noListenersInterestedInThisEvent(TypeInfo commandType) @safe {

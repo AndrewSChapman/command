@@ -35,16 +35,17 @@ class ChangeEmailDM : AbstractDecisionMaker,DecisionMakerInterface
         (new PositiveNumber!ulong(facts.usrId, "usrId"));
                 
         this.facts = facts;
+        this.executeCommandsAsyncronously = true;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {        
         auto command = new ChangeEmailCommand(
             this.facts.usrId,
             this.facts.emailAddress
         );
 
-        commandList.append(command, typeid(ChangeEmailCommand));
+        commandBus.append(command, typeid(ChangeEmailCommand));
     }
 }
 

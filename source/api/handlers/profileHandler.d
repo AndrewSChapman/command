@@ -61,9 +61,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new UpdateUserDM(facts);		
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);            
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -107,9 +107,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new ChangePasswordDM(facts);		
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);            
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -149,9 +149,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new ChangeEmailDM(facts);		
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);            
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);            
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -245,9 +245,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new AddUserDM(facts);
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);            
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);            
 
             ulong usrId = decisionMaker.getNewUsrId();
 
@@ -273,9 +273,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new UpdateUserDM(facts);		
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);      
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);      
 		} catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}        
@@ -304,9 +304,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new DeleteUserDM(facts);	
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);
         } catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}
@@ -335,9 +335,9 @@ class ProfileHandler : AbstractHandler,ProfileAPI
 
 			auto decisionMaker = new DeleteUserDM(facts);	
 
-            auto commandList = new EventListWithStorage(this._container.getEventStore());
-            decisionMaker.issueCommands(commandList);
-            decisionMaker.executeCommands(this._container, commandList);                  
+            auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+            decisionMaker.issueCommands(commandBus);
+            decisionMaker.executeCommands(this._container, commandBus);                  
         } catch (Exception exception) {
 			throw new HTTPStatusException(400, exception.msg);
 		}

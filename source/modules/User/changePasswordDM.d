@@ -33,16 +33,17 @@ class ChangePasswordDM : AbstractDecisionMaker,DecisionMakerInterface
         (new PositiveNumber!ulong(facts.usrId, "usrId"));        
                 
         this.facts = facts;
+        this.executeCommandsAsyncronously = true;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {        
         auto command = new ChangePasswordCommand(
             this.facts.usrId,
             this.facts.password
         );
 
-        commandList.append(command, typeid(ChangePasswordCommand));
+        commandBus.append(command, typeid(ChangePasswordCommand));
     }
 }
 

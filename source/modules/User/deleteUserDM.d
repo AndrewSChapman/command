@@ -53,9 +53,10 @@ class DeleteUserDM : AbstractDecisionMaker,DecisionMakerInterface
         (new PositiveNumber!ulong(facts.loggedInUserId, "loggedInUserId"));
         
         this.facts = facts;
+        this.executeCommandsAsyncronously = true;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {
         auto command = new DeleteUserCommand(
             this.facts.userToDeleteId,
@@ -63,7 +64,7 @@ class DeleteUserDM : AbstractDecisionMaker,DecisionMakerInterface
             this.facts.hardDelete
         );
 
-        commandList.append(command, typeid(DeleteUserCommand));
+        commandBus.append(command, typeid(DeleteUserCommand));
 
         auto deleteTokenCommand = new DeleteTokenCommand(
             facts.tokenCode,
@@ -71,7 +72,7 @@ class DeleteUserDM : AbstractDecisionMaker,DecisionMakerInterface
             true
         );
 
-        commandList.append(deleteTokenCommand, typeid(DeleteTokenCommand));
+        commandBus.append(deleteTokenCommand, typeid(DeleteTokenCommand));
     }
 }
 

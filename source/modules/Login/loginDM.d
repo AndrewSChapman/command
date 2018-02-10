@@ -57,11 +57,11 @@ class LoginDM : AbstractDecisionMaker,DecisionMakerInterface
         this.executeCommandsAsyncronously = false;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {
         if (facts.passwordCorrect) {        
             if (facts.prefixNotAssigned) {
-                commandList.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
+                commandBus.append(new AssignPrefixCommand(facts.prefix, facts.usrId), typeid(AssignPrefixCommand));
             }
 
             auto command = new LoginCommand(
@@ -72,12 +72,12 @@ class LoginDM : AbstractDecisionMaker,DecisionMakerInterface
                 facts.prefix
             );
             
-            commandList.append(command, typeid(LoginCommand));
+            commandBus.append(command, typeid(LoginCommand));
 
             // Add command to reset failed login count and set lastLoginDate
         } else {
             auto command = new IncrementFailedLoginCountCommand(facts.usrId);
-            commandList.append(command, typeid(IncrementFailedLoginCountCommand));
+            commandBus.append(command, typeid(IncrementFailedLoginCountCommand));
         }
     }
 

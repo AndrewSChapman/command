@@ -15,9 +15,9 @@ abstract class AbstractDecisionMaker
 
     }
 
-    public void executeCommands(Container container, CommandBusInterface commandList) @safe
+    public void executeCommands(Container container, CommandBusInterface commandBus) @safe
     {
-        if (commandList.size == 0) {
+        if (commandBus.size == 0) {
             throw new Exception("Decision maker issued no commands - this should never happen");
         }	 
 
@@ -28,10 +28,10 @@ abstract class AbstractDecisionMaker
 
         if (this.executeCommandsAsyncronously) {
             auto executeTask = runTask({
-                commandList.dispatch(dispatcher);
+                commandBus.dispatch(dispatcher);
             });
         } else {
-            commandList.dispatch(dispatcher);
+            commandBus.dispatch(dispatcher);
             this.throwExceptionIfNecessary();
         }
     }

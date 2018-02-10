@@ -44,9 +44,10 @@ class ExtendTokenDM : AbstractDecisionMaker,DecisionMakerInterface
         (new PositiveNumber!ulong(facts.usrId, "usrId"));            
 
         this.facts = facts;
+        this.executeCommandsAsyncronously = true;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {        
         auto command = new ExtendTokenCommand(
             this.facts.tokenCode,
@@ -57,7 +58,7 @@ class ExtendTokenDM : AbstractDecisionMaker,DecisionMakerInterface
             this.facts.usrType
         );
 
-        commandList.append(command, typeid(ExtendTokenCommand));
+        commandBus.append(command, typeid(ExtendTokenCommand));
     }
 }
 

@@ -9,11 +9,11 @@ class TestHelper
     {
         bool exceptionThrown = false;
 
-        auto commandList = new CommandList();
+        auto commandBus = new CommandBus();
         
         try {
             auto decisionMaker = new T(facts);
-            decisionMaker.issueCommands(commandList);
+            decisionMaker.issueCommands(commandBus);
 
             if (exceptionExpected) {
                 writeln("These facts did NOT fail when they should have: ", facts);
@@ -25,7 +25,7 @@ class TestHelper
             exceptionThrown = true;
         }
 
-        assert(commandList.size() == numberOfExpectedCommands);        
+        assert(commandBus.size() == numberOfExpectedCommands);        
         assert(exceptionExpected == exceptionThrown);
     }
 }

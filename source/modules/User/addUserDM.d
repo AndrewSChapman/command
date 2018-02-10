@@ -42,7 +42,7 @@ class AddUserDM : AbstractDecisionMaker,DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {
         auto command = new AddUserCommand(
             this.facts.usrType,
@@ -53,7 +53,7 @@ class AddUserDM : AbstractDecisionMaker,DecisionMakerInterface
             this.facts.password
         );
 
-        commandList.append(command, typeid(AddUserCommand));
+        commandBus.append(command, typeid(AddUserCommand));
     }
 
     public ulong getNewUsrId() @safe

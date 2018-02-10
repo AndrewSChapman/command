@@ -7,5 +7,5 @@ public import command.commanddispatcher;
 public import command.commandinterface;
 public import command.commandlistenerinterface;
 public import command.decisionmakerinterface;
-public import command.eventlist;
+public import command.commandbus;
 public import facts.abstractfact;

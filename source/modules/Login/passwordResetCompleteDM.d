@@ -31,10 +31,10 @@ class PasswordResetCompleteDM : AbstractDecisionMaker,DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {
         auto command = new PasswordResetCompleteCommand(this.facts.usrId);
-        commandList.append(command, typeid(PasswordResetCompleteCommand));
+        commandBus.append(command, typeid(PasswordResetCompleteCommand));
     }
 }
 

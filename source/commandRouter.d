@@ -101,7 +101,7 @@ class CommandRouter : CommandListenerInterface
 
         CommandHandler[TypeInfo] commandHandlers;    
 
-        auto commandList = new CommandList();
+        auto commandBus = new CommandBus();
         auto metaVariant = command.getMetadata();    
 
         // ASSIGN PREFIX COMMAND
@@ -209,7 +209,7 @@ class CommandRouter : CommandListenerInterface
             throw new Exception("Invalid commandType: " ~ commandType.toString());
         }
       
-        return commandList;
+        return commandBus;
     }
 
     public T getEventMessage(T)(string key) @trusted

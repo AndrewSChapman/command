@@ -92,8 +92,8 @@ abstract class AbstractHandler
 
 		auto decisionMaker = new ExtendTokenDM(facts);
 
-        auto commandList = new EventListWithStorage(this._container.getEventStore());
-        decisionMaker.issueCommands(commandList);
-        decisionMaker.executeCommands(this._container, commandList);
+        auto commandBus = new CommandBusWithStorage(this._container.getEventStore());
+        decisionMaker.issueCommands(commandBus);
+        decisionMaker.executeCommands(this._container, commandBus);
 	}
 }

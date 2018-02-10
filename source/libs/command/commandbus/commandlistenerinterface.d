@@ -1,7 +1,7 @@
 module command.commandlistenerinterface;
 
 import command.commandinterface;
-import command.eventlist;
+import command.commandbus;
 
 interface CommandListenerInterface
 {

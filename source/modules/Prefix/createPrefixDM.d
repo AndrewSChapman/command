@@ -30,7 +30,7 @@ class CreatePrefixDM : AbstractDecisionMaker,DecisionMakerInterface
         this.facts = facts;
     }
 
-    public void issueCommands(CommandBusInterface commandList) @safe
+    public void issueCommands(CommandBusInterface commandBus) @safe
     {        
         auto command = new CreatePrefixCommand(
             this.facts.userAgent,
@@ -38,7 +38,7 @@ class CreatePrefixDM : AbstractDecisionMaker,DecisionMakerInterface
             this.facts.timestamp
         );
 
-        commandList.append(command, typeid(CreatePrefixCommand));
+        commandBus.append(command, typeid(CreatePrefixCommand));
     }
 
     public string getPrefixCode() @safe
