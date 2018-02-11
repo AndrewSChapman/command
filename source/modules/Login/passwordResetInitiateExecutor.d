@@ -64,7 +64,8 @@ class PasswordResetInitiateExecutor : AbstractExecutor!(PasswordResetInitiateCom
         string sql = "
                 UPDATE usr SET 
                     newPassword = ?,
-                    newPasswordPin = ?
+                    newPasswordPin = ?,
+                    numPinAttempts = 0
                 WHERE usrId = ?;
             ";
 

@@ -24,6 +24,7 @@ import commands.createprefix;
 import commands.passwordresetinitiate;
 import commands.passwordresetcomplete;
 import commands.incrementfailedlogincount;
+import commands.incrementfailedpincount;
 
 import executors.auth.registeruser;
 import executors.auth.assignprefix;
@@ -32,6 +33,7 @@ import executors.auth.createprefix;
 import executors.auth.passwordresetinitiate;
 import executors.auth.passwordresetcomplete;
 import executors.incrementfailedlogincount;
+import executors.incrementfailedpincount;
 
 // PROFILE
 import commands.updateuser;
@@ -80,6 +82,7 @@ class CommandRouter : CommandListenerInterface
             typeid(PasswordResetCompleteCommand),
             typeid(ExtendTokenCommand),
             typeid(IncrementFailedLoginCountCommand),
+            typeid(IncrementFailedPinCountCommand),
 
             // PROFILE
             typeid(ChangeEmailCommand),
@@ -146,6 +149,12 @@ class CommandRouter : CommandListenerInterface
             return;       
         };
 
+        // FAILED PASSWORD RESET - INCREMENT FAILED PIN COUNT
+        commandHandlers[typeid(IncrementFailedPinCountCommand)] = {
+            auto executor = new IncrementFailedPinCountExecutor(this.relationalDb, command);
+            executor.executeCommand(); 
+            return;       
+        };
 
         // PASSWORD RESET COMPLETE
         commandHandlers[typeid(PasswordResetCompleteCommand)] = {

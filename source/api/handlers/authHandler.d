@@ -36,7 +36,7 @@ import api.requestMetadata;
 import appconfig;
 
 import facts.toomanyfailedlogins;
-
+import facts.toomanyincorrectpinattempts;
 
 class AuthHandler : AbstractHandler,AuthAPI
 {
@@ -195,8 +195,9 @@ class AuthHandler : AbstractHandler,AuthAPI
 			if (facts.userExists) {
 				auto const user = userQuery.getUserByEmail(passwordResetCompleteRequest.emailAddress);
 				facts.usrId = user.usrId;
+                facts.tooManyIncorrectPinAttempts = new TooManyIncorrectPinAttempts(user.numPinAttempts);
 
-				facts.newPasswordPinValidated = (passwordResetCompleteRequest.newPasswordPin == user.newPasswordPin);
+				facts.newPasswordPinCorrect = (passwordResetCompleteRequest.newPasswordPin == user.newPasswordPin);
 
 				// @todo - Implement pin expiry
 				facts.pinHasNotExpired = true;
