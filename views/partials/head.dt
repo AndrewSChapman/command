@@ -1,0 +1,4 @@
+link(rel="stylesheet",href="https://fonts.googleapis.com/css?family=Nunito")
+link(rel="stylesheet",href="css/main.css")
+script(type="text/javascript",src="/js/bundle.js")
+script(type="text/javascript",src="https://use.fontawesome.com/releases/v5.0.6/js/all.js",defer)

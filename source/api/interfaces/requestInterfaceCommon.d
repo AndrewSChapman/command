@@ -17,6 +17,6 @@ static RequestInfo getRequestInfo(HTTPServerRequest req, HTTPServerResponse res)
 	requestInfo.ipAddress = req.clientAddress.toAddressString();
 	requestInfo.userAgent = requestInfo.headers.get("User-Agent", "");
 	requestInfo.tokenCode = requestInfo.headers.get("Token-Code", "");
-	
+
 	return requestInfo;
 }

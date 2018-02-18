@@ -1,0 +1,18 @@
+nav
+    h2.logo commanD
+    ul
+        li 
+            a(href="/") Home
+        - if (authUser.isLoggedIn)
+            li
+                a(href="/logout") Logout        
+        - else
+            li
+                a(href="/register") Register
+            li
+                a(href="/login") Login 
+
+
+    - if (authUser.isLoggedIn)
+        div.loggedInUser Welcome back &nbsp;
+            span #{authUser.firstName ~ " " ~ authUser.lastName}

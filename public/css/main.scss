@@ -1,0 +1,164 @@
+@import 'reset';
+@import 'overlayLoader';
+
+body {
+    background-color: white;
+    font-family: 'Nunito', Arial, Helvetica, sans-serif;
+    color: #333333;
+    font-size: 1rem;
+}
+
+h1, h2, h3, h4 {
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+}
+
+h4 {
+    font-size: 1.2rem;
+}
+
+p {
+    margin: 10px 0;
+}
+
+.hidden {
+    display: none;
+}
+
+nav {
+    display: block;
+    width: 100%;
+    background-color: skyblue;
+    margin-bottom: 20px;
+
+    .logo {
+        color: white;
+        font-weight: bold;
+        display: inline-block;
+        padding: 10px;
+        margin: 0;
+    }
+
+    ul {
+        list-style-type: none;
+        display: inline-block;
+        margin-top: -4px;
+    }
+
+    li {
+        display: inline-block;
+        padding: 10px;
+
+        a {
+            text-decoration: none;
+            color: #333333;
+            
+            &:focus {
+                color: orange;
+            }
+
+            &:hover {
+                color: #666666;
+            }
+        }
+    }
+
+    .loggedInUser {
+        float: right;
+        margin: 10px;
+        font-size: 0.8rem;
+
+        span {
+            color: orangered;
+        }
+    }
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 300px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin: 10px 0 3px 0;
+}
+
+    .tooltip {
+        float: right;
+    }
+
+.fieldInfo {
+    display: block;
+    font-size: 0.8rem;
+    color: #666666;
+    width: 300px;
+    padding: 0 0 3px 0;
+}
+
+input[type="text"], input[type="password"], input[type="number"] {
+    padding: 7px;
+    border: 1px solid #CCCCCC;
+    margin-bottom: 5px;
+    width: 100%;
+
+    &:focus {
+        border-color: orange;
+    }
+}
+
+input[type="submit"] {
+    display: block;
+    width: 150px;
+    margin: 10px 0 3px 0;
+    padding: 7px;
+}
+
+.main {
+    padding: 10px 20px;
+}
+
+.messages
+{
+    padding: 10px;
+    display: none;
+    width: 300px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+
+.error {
+    background-color: pink;
+}
+
+.alert {
+    background-color: orange;
+}
+
+.info {
+    background-color: skyblue;
+}
+
+.frmLogin {
+    position: relative;
+}

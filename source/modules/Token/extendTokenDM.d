@@ -44,7 +44,7 @@ class ExtendTokenDM : AbstractDecisionMaker,DecisionMakerInterface
         (new PositiveNumber!ulong(facts.usrId, "usrId"));            
 
         this.facts = facts;
-        this.executeCommandsAsyncronously = true;
+        this.executeCommandsAsyncronously = false;
     }
 
     public void issueCommands(CommandBusInterface commandBus) @safe

@@ -42,6 +42,7 @@ class LoginExecutor : AbstractExecutor!(LoginCommand,LoginCommandMetadata)
         token.usrType = this.meta.usrType;
 
         this.saveToken(token);
+        this.clearLoginAttemptsAndSetLastLoginDate(token.usrId);
 
         Variant tokenAsVariant = token;
         eventMessage["token"] = tokenAsVariant;        
@@ -77,5 +78,17 @@ class LoginExecutor : AbstractExecutor!(LoginCommand,LoginCommandMetadata)
             token.usrId,
             token.usrType
         ));
-    }   
+    }
+
+    private void clearLoginAttemptsAndSetLastLoginDate(ref ulong usrId)
+    {
+        string sql = "
+                UPDATE usr SET numLoginAttempts = 0, lastLoginAttempt = Now() 
+                WHERE usrId = ?
+            "; 
+
+        this.relationalDb.execute(sql, variantArray(
+            usrId
+        ));
+    }        
 }

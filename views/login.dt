@@ -1,0 +1,40 @@
+doctype html
+html
+    head
+        title System Login
+        include partials/head
+    body
+        include partials/nav
+
+        article.main
+
+            h1 System Login
+
+            div.messages
+
+            div.loginWrapper
+
+                form#frmLogin.frmLogin
+                    fieldset
+                        label(for="username") Username
+                        input#username(type="text", name="username", required="required")
+
+                        label(for="password") Password
+                        input#password(type="password", name="password", required="required")
+
+                    input#btnSubmit(type="submit", value="Login >>")
+
+            p If you don't yet have a CommanD account, &nbsp;
+                a(href="/register") register a new account.
+
+            p Forgotten your password? &nbsp;
+                a(href="/password_reset") Reset your login password.
+            
+            
+            script(type="text/javascript").
+                $(document).ready(function() {
+                    const loginManager = AppFactory.LoginManager();
+                });
+            
+
+    

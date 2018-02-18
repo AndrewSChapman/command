@@ -15,7 +15,9 @@ import entity.requestinfo;
 import entity.sessioninfo;
 import command.all;
 import eventstore.all;
+import api.requestinterface.common;
 public import entity.user;
+public import entity.profile;
 
 abstract class AbstractHandler
 {
@@ -39,7 +41,34 @@ abstract class AbstractHandler
         }
 
         return this.container;
-    } 
+    }
+
+    protected Profile checkCookieToken(
+        HTTPServerRequest req,
+        HTTPServerResponse res,
+        ref RequestInfo requestInfo,
+        uint[] allowedUserTypes = [UserType.GENERAL, UserType.ADMIN]
+    ) @safe {
+        Profile profile;
+
+        if (!("tokenCode" in req.cookies)) {
+            return profile;
+        }   
+
+        requestInfo = getRequestInfo(req, res);
+        requestInfo.tokenCode = req.cookies["tokenCode"]; 
+
+        this.checkToken(this._container, requestInfo, allowedUserTypes);
+
+        auto queryFactory = this._container.getQueryFactory();
+        auto tokenQuery = queryFactory.createTokenQuery();
+        auto userQuery = queryFactory.createUserQuery();
+
+        auto token = tokenQuery.getByCode(requestInfo.tokenCode);
+        profile = userQuery.getProfileByUserId(token.usrId);
+
+        return profile;
+    }
     
     protected void checkToken(Container container, ref RequestInfo requestInfo, uint[] allowedUserTypes = [UserType.GENERAL, UserType.ADMIN]) @safe
 	{

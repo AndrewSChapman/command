@@ -7,3 +7,4 @@ __test__*__
 *.dll
 *.exe
 config.ini
+frontend/node_modules/*

@@ -1,0 +1,24 @@
+{
+  "name": "command",
+  "version": "1.0.0",
+  "description": "Reference UI Implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --config webpack.config.js"
+  },
+  "author": "Andy Chapman",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jquery": "^3.3.0",
+    "ts-loader": "^3.5.0",
+    "typescript": "^2.7.1",
+    "webpack": "^3.11.0"
+  },
+  "dependencies": {
+    "@types/js-cookie": "^2.1.0",
+    "jquery": "^3.3.1",
+    "js-cookie": "^2.2.0",
+    "vue": "^2.5.13"
+  }
+}

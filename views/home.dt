@@ -1,0 +1,13 @@
+doctype html
+html
+    head
+        title Home
+        include partials/head
+    body
+        include partials/nav
+
+        article.main
+
+            h1 Welcome to Command!
+
+            p This is the home page.  You can find the template for this page in views/home.dt

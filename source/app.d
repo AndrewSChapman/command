@@ -6,6 +6,12 @@ import helpers.commandHelper;
 import appconfig;
 import api.handlers.all;
 
+import std.stdio;
+import entity.authenticateduser;
+import container;
+
+import handlers.pagehandler;
+
 // Global objects
 AppConfig appConfig;
 
@@ -20,9 +26,39 @@ void main()
 	settings.errorPageHandler = commandHelper.makeCustomErrorHandler();
 
 	auto router = new URLRouter;
-	router.registerRestInterface(new AuthHandler(appConfig));
-    router.registerRestInterface(new ProfileHandler(appConfig));
-    router.registerRestInterface(new MiscHandler(appConfig));
+
+    // Setup router to service static files
+    router.get("*", serveStaticFiles("public"));
+
+    // Add REST API routes
+    router
+	    .registerRestInterface(new AuthHandler(appConfig))
+        .registerRestInterface(new ProfileHandler(appConfig))
+        .registerRestInterface(new MiscHandler(appConfig));
+
+    // Add HTML page routes
+    router
+        .get("/login", (HTTPServerRequest req, HTTPServerResponse res) @safe {
+            auto pageHandler = new PageHandler(req, res, appConfig);
+            pageHandler.login();
+        })
+        .get("/", (HTTPServerRequest req, HTTPServerResponse res) @safe {
+            auto pageHandler = new PageHandler(req, res, appConfig);
+            pageHandler.home();
+        })
+        .get("/logout", (HTTPServerRequest req, HTTPServerResponse res) @safe {
+            res.setCookie("tokenCode", null);
+            res.redirect("/");
+        })
+        .get("/register", (HTTPServerRequest req, HTTPServerResponse res) @safe {
+            auto pageHandler = new PageHandler(req, res, appConfig);
+            pageHandler.register();
+        })
+        .get("/password_reset", (HTTPServerRequest req, HTTPServerResponse res) @safe {
+            auto pageHandler = new PageHandler(req, res, appConfig);
+            pageHandler.login();
+        })        
+    ;        
 
 	listenHTTP(settings, router);
 	runApplication();

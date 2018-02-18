@@ -1,0 +1,283 @@
+/* 
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com 
+Twitter: @rich_clark
+*/
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+body {
+  line-height: 1;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+nav ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+a {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none;
+}
+
+/* change colours to suit your needs */
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+del {
+  text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* change border colour to suit your needs */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #cccccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+input, select {
+  vertical-align: middle;
+}
+
+.overlayLoader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  opacity: 0.5;
+  background-color: white;
+}
+
+.overlayLoader img {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+body {
+  background-color: white;
+  font-family: 'Nunito', Arial, Helvetica, sans-serif;
+  color: #333333;
+  font-size: 1rem;
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+p {
+  margin: 10px 0;
+}
+
+.hidden {
+  display: none;
+}
+
+nav {
+  display: block;
+  width: 100%;
+  background-color: skyblue;
+  margin-bottom: 20px;
+}
+
+nav .logo {
+  color: white;
+  font-weight: bold;
+  display: inline-block;
+  padding: 10px;
+  margin: 0;
+}
+
+nav ul {
+  list-style-type: none;
+  display: inline-block;
+  margin-top: -4px;
+}
+
+nav li {
+  display: inline-block;
+  padding: 10px;
+}
+
+nav li a {
+  text-decoration: none;
+  color: #333333;
+}
+
+nav li a:focus {
+  color: orange;
+}
+
+nav li a:hover {
+  color: #666666;
+}
+
+nav .loggedInUser {
+  float: right;
+  margin: 10px;
+  font-size: 0.8rem;
+}
+
+nav .loggedInUser span {
+  color: orangered;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 300px;
+  position: relative;
+}
+
+label {
+  display: block;
+  margin: 10px 0 3px 0;
+}
+
+.tooltip {
+  float: right;
+}
+
+.fieldInfo {
+  display: block;
+  font-size: 0.8rem;
+  color: #666666;
+  width: 300px;
+  padding: 0 0 3px 0;
+}
+
+input[type="text"], input[type="password"], input[type="number"] {
+  padding: 7px;
+  border: 1px solid #CCCCCC;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+  border-color: orange;
+}
+
+input[type="submit"] {
+  display: block;
+  width: 150px;
+  margin: 10px 0 3px 0;
+  padding: 7px;
+}
+
+.main {
+  padding: 10px 20px;
+}
+
+.messages {
+  padding: 10px;
+  display: none;
+  width: 300px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+
+.error {
+  background-color: pink;
+}
+
+.alert {
+  background-color: orange;
+}
+
+.info {
+  background-color: skyblue;
+}
+
+.frmLogin {
+  position: relative;
+}
+/*# sourceMappingURL=main.css.map */
