@@ -15,4 +15,4 @@ nav
 
     - if (authUser.isLoggedIn)
         div.loggedInUser Welcome back &nbsp;
-            span #{authUser.firstName ~ " " ~ authUser.lastName}
+            a(href="/my_profile") #{authUser.firstName ~ " " ~ authUser.lastName}

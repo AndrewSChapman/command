@@ -1,0 +1,33 @@
+doctype html
+html
+    head
+        title Profile
+        include partials/head
+    body
+        include partials/nav
+
+        article.main
+
+            h1 My Profile
+
+            p Feel free to edit any of your details below.  You must click the 'Save' button to presist the changes.
+
+            div.messages
+
+            form#frmProfile.frmProfile
+                fieldset
+                    label(for="firstName") First Name
+                    input#firstName(type="text", name="firstName", required="required", value="#{profile.firstName}")
+
+                    label(for="lastName") Last Name
+                    input#lastName(type="text", name="lastName", required="required", value="#{profile.lastName}")        
+
+                input#btnSubmit(type="submit", value="Save")
+
+            script(type="text/javascript").
+                $(document).ready(function() {
+                    const profileManager = AppFactory.ProfileManager();
+                });
+            
+
+    

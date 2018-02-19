@@ -202,7 +202,7 @@ nav .loggedInUser {
   font-size: 0.8rem;
 }
 
-nav .loggedInUser span {
+nav .loggedInUser a {
   color: orangered;
 }
 

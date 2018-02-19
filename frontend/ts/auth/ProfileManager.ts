@@ -6,7 +6,7 @@ import { OverlayLoader } from "../ui/overlayLoader";
 
 enum MessageType { ALERT, ERROR, INFO }
 
-export class LoginManager
+export class ProfileManager
 {
     private _apiClient: ApiClient;
     private _errorHelper: ErrorHelper;
@@ -14,8 +14,15 @@ export class LoginManager
     private _overlayLoader: OverlayLoader;
 
     private _$form: JQuery<HTMLElement>;
+    private _$firstName: JQuery<HTMLElement>;
+    private _$lastName: JQuery<HTMLElement>;
+
+    /*
+    private _$emailAddress: JQuery<HTMLElement>;
     private _$username: JQuery<HTMLElement>;
     private _$password: JQuery<HTMLElement>;
+    private _$passwordRepeat: JQuery<HTMLElement>;
+    */
     private _$messages: JQuery<HTMLElement>;
 
     constructor(
@@ -27,12 +34,19 @@ export class LoginManager
         this._errorHelper = errorHelper;
         this._storageHelper = storageHelper;
 
-        this._overlayLoader = new OverlayLoader('#frmLogin');
+        this._overlayLoader = new OverlayLoader('#frmProfile');
 
         this._$messages = $('div.messages');
-        this._$form = $('#frmLogin');
+        this._$form = $('#frmProfile');
+        this._$firstName = this._$form.find('#firstName');
+        this._$lastName = this._$form.find('#lastName');
+        
+        /*
+        this._$emailAddress = this._$form.find('#emailAddress');
         this._$username = this._$form.find('#username');
         this._$password = this._$form.find('#password');
+        this._$passwordRepeat = this._$form.find('#passwordRepeat');
+        */
 
         this.attachListeners();
     }
@@ -40,6 +54,21 @@ export class LoginManager
     private attachListeners(): void
     {
         this.onFormSubmit();
+    }
+
+    private formIsValid(): boolean
+    {
+        /*
+        if (this._$password.val() != this._$passwordRepeat.val()) {
+            this.showError("Your passwords do not match.  Please enter your new password again twice and ensure you type it correctly twice.");
+            this._$password.val("");
+            this._$passwordRepeat.val("");
+
+            return false;
+        }
+        */
+        
+        return true;
     }
 
     private onFormSubmit(): void
@@ -51,23 +80,17 @@ export class LoginManager
             this._overlayLoader.render();
 
             try {
-                const prefix = await this._storageHelper.getPrefix(this._apiClient);
-    
-                const loginRequest = {
-                    'login': {
-                        'prefix': prefix,
-                        'username': this._$username.val(),
-                        'password': this._$password.val(),
+                const request = {
+                    'updateProfile': {
+                        'firstName': this._$firstName.val(),
+                        'lastName': this._$lastName.val()
                     }
                 }
 
-                this._apiClient.post('login', loginRequest).then((response) => {
+                this._apiClient.post('profile', request).then((response) => {
                     this._overlayLoader.remove();
-                    const loginResponse: LoginResponse = LoginResponse.fromResponse(response);
-                    this._storageHelper.setCookie('tokenCode', loginResponse.tokenCode);
-                    this._storageHelper.setValue('usrId', loginResponse.usrId);
-                    this._storageHelper.setValue('usrType', loginResponse.usrType);
-                    window.location.href = '/';
+
+                    this.showInfo(`Your account has been updated successfully.`);
                 }, (error: any) => {
                     this._overlayLoader.remove();
                     this._errorHelper.resolveError(error);
@@ -76,7 +99,7 @@ export class LoginManager
                     if (message != "") {
                         this.showError(message);
                     } else {
-                        this.showError('Sorry, your login failed.  Please check your username and password and try again.');
+                        this.showError('Sorry, your request failed.  Please check your details and try again.');
                     }
                 });
             } catch (error) {

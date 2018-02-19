@@ -1,4 +1,5 @@
 import * as $ from "jquery";
+import { StorageHelper } from "./helpers/storageHelper";
 
 export enum HttpMethod { POST = 'POST', GET = 'GET', PUT = 'PUT', DELETE = 'DELETE' }
 
@@ -8,10 +9,12 @@ export enum HttpMethod { POST = 'POST', GET = 'GET', PUT = 'PUT', DELETE = 'DELE
 export class ApiClient
 {
     private _apiURL: string;
+    private _storageHelper: StorageHelper;
 
-    constructor(apiURL: string)
+    constructor(apiURL: string, storageHelper: StorageHelper)
     {
         this._apiURL = apiURL;
+        this._storageHelper = storageHelper;
     }
 
     public async get(url: string): Promise<any>
@@ -40,6 +43,12 @@ export class ApiClient
                 data: data,
                 url: requestUrl,
                 method: method,
+                beforeSend: (xhr: any) => {
+                    const tokenCode = this._storageHelper.getCookie('tokenCode');
+                    if (tokenCode != '') {
+                        xhr.setRequestHeader("Token-Code", tokenCode);
+                    }
+                },                
                 success: (response: any) => {
                     resolve(response);
                 },

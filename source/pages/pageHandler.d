@@ -54,5 +54,20 @@ class PageHandler : AbstractPageHandler
         }
 
         render!("password_reset.dt", authUser)(this._response);
-    }             
+    }
+
+    public void profile() @safe
+    {
+        AuthenticatedUser authUser = this.checkToken();
+        if (!authUser.isLoggedIn) {
+            this._response.redirect("/");
+            return;
+        }
+
+        auto queryFactory = this._container.getQueryFactory();
+        auto userQuery = queryFactory.createUserQuery();
+        const Profile profile = userQuery.getProfileByUserId(authUser.usrId); 
+
+        render!("profile.dt", authUser, profile)(this._response);
+    }              
 }

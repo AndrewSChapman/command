@@ -3,13 +3,10 @@ import * as Cookies from 'js-cookie';
 
 export class StorageHelper
 {
-    private _apiClient: ApiClient;
     private _prefix: string;
     
-    constructor(apiClient: ApiClient)
+    constructor()
     {
-        this._apiClient = apiClient;
-
         if (typeof(Storage) == "undefined") {
             throw new Error('LocalStorage not supported in this browser');
         }
@@ -38,7 +35,7 @@ export class StorageHelper
         return result;
     }
 
-    public async getPrefix(): Promise<string>
+    public async getPrefix(apiClient: ApiClient): Promise<string>
     {
         if (this._prefix != '') {
             return this._prefix;
@@ -46,7 +43,7 @@ export class StorageHelper
         
         let prefix = localStorage.getItem("prefix");
         if (prefix == null) {
-            const response = await this._apiClient.get("prefix");
+            const response = await apiClient.get("prefix");
             prefix = response.prefix;
         }
 

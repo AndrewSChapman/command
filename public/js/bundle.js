@@ -65,6 +65,37 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+
+class OverlayLoader {
+    constructor(domSelector) {
+        this._domSelector = domSelector;
+    }
+    render() {
+        if (this.loaderAlreadyPresentInDOM()) {
+            return;
+        }
+        __WEBPACK_IMPORTED_MODULE_0_jquery__(this._domSelector).append(`<div class="overlayLoader">
+                <img src="/images/loader.gif" width="80" height="80" />
+            </div>`);
+    }
+    remove() {
+        __WEBPACK_IMPORTED_MODULE_0_jquery__(this._domSelector + ' div.overlayLoader').remove();
+    }
+    loaderAlreadyPresentInDOM() {
+        return __WEBPACK_IMPORTED_MODULE_0_jquery__(this._domSelector).find('div.overlayLoader').length > 0;
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = OverlayLoader;
+
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10435,44 +10466,13 @@ return jQuery;
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-
-class OverlayLoader {
-    constructor(domSelector) {
-        this._domSelector = domSelector;
-    }
-    render() {
-        if (this.loaderAlreadyPresentInDOM()) {
-            return;
-        }
-        __WEBPACK_IMPORTED_MODULE_0_jquery__(this._domSelector).append(`<div class="overlayLoader">
-                <img src="/images/loader.gif" width="80" height="80" />
-            </div>`);
-    }
-    remove() {
-        __WEBPACK_IMPORTED_MODULE_0_jquery__(this._domSelector + ' div.overlayLoader').remove();
-    }
-    loaderAlreadyPresentInDOM() {
-        return __WEBPACK_IMPORTED_MODULE_0_jquery__(this._domSelector).find('div.overlayLoader').length > 0;
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = OverlayLoader;
-
-
-
-/***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__appFactory__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
 
 
@@ -10493,6 +10493,8 @@ myWindow.jQuery = __WEBPACK_IMPORTED_MODULE_1_jquery__;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__auth_RegisterManager__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth_PasswordResetManager__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__auth_ProfileManager__ = __webpack_require__(13);
+
 
 
 
@@ -10501,19 +10503,22 @@ myWindow.jQuery = __WEBPACK_IMPORTED_MODULE_1_jquery__;
 
 class AppFactory {
     constructor() {
-        this._apiClient = new __WEBPACK_IMPORTED_MODULE_0__apiClient__["a" /* ApiClient */]('/');
+        this._apiClient = new __WEBPACK_IMPORTED_MODULE_0__apiClient__["a" /* ApiClient */]('/', new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */]());
     }
     GetApiClient() {
         return this._apiClient;
     }
     LoginManager() {
-        return new __WEBPACK_IMPORTED_MODULE_1__auth_LoginManager__["a" /* LoginManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */](this._apiClient));
+        return new __WEBPACK_IMPORTED_MODULE_1__auth_LoginManager__["a" /* LoginManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */]());
     }
     RegisterManager() {
-        return new __WEBPACK_IMPORTED_MODULE_4__auth_RegisterManager__["a" /* RegisterManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */](this._apiClient));
+        return new __WEBPACK_IMPORTED_MODULE_4__auth_RegisterManager__["a" /* RegisterManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */]());
     }
     PasswordResetManager() {
-        return new __WEBPACK_IMPORTED_MODULE_5__auth_PasswordResetManager__["a" /* PasswordResetManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */](this._apiClient));
+        return new __WEBPACK_IMPORTED_MODULE_5__auth_PasswordResetManager__["a" /* PasswordResetManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */]());
+    }
+    ProfileManager() {
+        return new __WEBPACK_IMPORTED_MODULE_6__auth_ProfileManager__["a" /* ProfileManager */](this._apiClient, new __WEBPACK_IMPORTED_MODULE_2__helpers_errorHelper__["a" /* ErrorHelper */](), new __WEBPACK_IMPORTED_MODULE_3__helpers_storageHelper__["a" /* StorageHelper */]());
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = AppFactory;
@@ -10526,7 +10531,7 @@ class AppFactory {
 
 "use strict";
 /* unused harmony export HttpMethod */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10545,8 +10550,9 @@ var HttpMethod;
     HttpMethod["DELETE"] = "DELETE";
 })(HttpMethod || (HttpMethod = {}));
 class ApiClient {
-    constructor(apiURL) {
+    constructor(apiURL, storageHelper) {
         this._apiURL = apiURL;
+        this._storageHelper = storageHelper;
     }
     get(url) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -10571,6 +10577,12 @@ class ApiClient {
                     data: data,
                     url: requestUrl,
                     method: method,
+                    beforeSend: (xhr) => {
+                        const tokenCode = this._storageHelper.getCookie('tokenCode');
+                        if (tokenCode != '') {
+                            xhr.setRequestHeader("Token-Code", tokenCode);
+                        }
+                    },
                     success: (response) => {
                         resolve(response);
                     },
@@ -10593,7 +10605,7 @@ class ApiClient {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__valueObjects_loginResponse__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_overlayLoader__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_overlayLoader__ = __webpack_require__(0);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -10631,7 +10643,7 @@ class LoginManager {
             this.hideMessage();
             this._overlayLoader.render();
             try {
-                const prefix = yield this._storageHelper.getPrefix();
+                const prefix = yield this._storageHelper.getPrefix(this._apiClient);
                 const loginRequest = {
                     'login': {
                         'prefix': prefix,
@@ -10820,8 +10832,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 
 class StorageHelper {
-    constructor(apiClient) {
-        this._apiClient = apiClient;
+    constructor() {
         if (typeof (Storage) == "undefined") {
             throw new Error('LocalStorage not supported in this browser');
         }
@@ -10841,14 +10852,14 @@ class StorageHelper {
         }
         return result;
     }
-    getPrefix() {
+    getPrefix(apiClient) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this._prefix != '') {
                 return this._prefix;
             }
             let prefix = localStorage.getItem("prefix");
             if (prefix == null) {
-                const response = yield this._apiClient.get("prefix");
+                const response = yield apiClient.get("prefix");
                 prefix = response.prefix;
             }
             if ((!prefix) || (prefix.length == 0)) {
@@ -11054,7 +11065,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_overlayLoader__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_overlayLoader__ = __webpack_require__(0);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -11175,7 +11186,7 @@ class RegisterManager {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_overlayLoader__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_overlayLoader__ = __webpack_require__(0);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -11351,6 +11362,111 @@ class PasswordResetManager {
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = PasswordResetManager;
+
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_overlayLoader__ = __webpack_require__(0);
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+var MessageType;
+(function (MessageType) {
+    MessageType[MessageType["ALERT"] = 0] = "ALERT";
+    MessageType[MessageType["ERROR"] = 1] = "ERROR";
+    MessageType[MessageType["INFO"] = 2] = "INFO";
+})(MessageType || (MessageType = {}));
+class ProfileManager {
+    constructor(apiClient, errorHelper, storageHelper) {
+        this._apiClient = apiClient;
+        this._errorHelper = errorHelper;
+        this._storageHelper = storageHelper;
+        this._overlayLoader = new __WEBPACK_IMPORTED_MODULE_0__ui_overlayLoader__["a" /* OverlayLoader */]('#frmProfile');
+        this._$messages = $('div.messages');
+        this._$form = $('#frmProfile');
+        this._$firstName = this._$form.find('#firstName');
+        this._$lastName = this._$form.find('#lastName');
+        this.attachListeners();
+    }
+    attachListeners() {
+        this.onFormSubmit();
+    }
+    formIsValid() {
+        return true;
+    }
+    onFormSubmit() {
+        this._$form.on('submit', (evt) => __awaiter(this, void 0, void 0, function* () {
+            evt.preventDefault();
+            this.hideMessage();
+            this._overlayLoader.render();
+            try {
+                const request = {
+                    'updateProfile': {
+                        'firstName': this._$firstName.val(),
+                        'lastName': this._$lastName.val()
+                    }
+                };
+                this._apiClient.post('profile', request).then((response) => {
+                    this._overlayLoader.remove();
+                    this.showInfo(`Your account has been updated successfully.`);
+                }, (error) => {
+                    this._overlayLoader.remove();
+                    this._errorHelper.resolveError(error);
+                    const message = this._errorHelper.getMessage();
+                    if (message != "") {
+                        this.showError(message);
+                    }
+                    else {
+                        this.showError('Sorry, your request failed.  Please check your details and try again.');
+                    }
+                });
+            }
+            catch (error) {
+                this._overlayLoader.remove();
+                this.showError(error);
+            }
+        }));
+    }
+    showError(message) {
+        this.showMessage(message, MessageType.ERROR);
+    }
+    showAlert(message) {
+        this.showMessage(message, MessageType.ALERT);
+    }
+    showInfo(message) {
+        this.showMessage(message, MessageType.INFO);
+    }
+    showMessage(message, messageType = MessageType.INFO) {
+        this._$messages.html(message);
+        this._$messages.removeClass('alert');
+        this._$messages.removeClass('info');
+        this._$messages.removeClass('error');
+        if (messageType == MessageType.ALERT) {
+            this._$messages.addClass('alert');
+        }
+        else if (messageType == MessageType.INFO) {
+            this._$messages.addClass('info');
+        }
+        else {
+            this._$messages.addClass('error');
+        }
+        this._$messages.show();
+    }
+    hideMessage() {
+        this._$messages.hide();
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = ProfileManager;
 
 
 

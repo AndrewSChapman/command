@@ -4,13 +4,14 @@ import { ErrorHelper } from "./helpers/errorHelper";
 import { StorageHelper } from "./helpers/storageHelper";
 import { RegisterManager } from "./auth/RegisterManager";
 import { PasswordResetManager } from "./auth/PasswordResetManager";
+import { ProfileManager } from "./auth/ProfileManager";
 
 export class AppFactory
 {
     private _apiClient: ApiClient;
 
     constructor() {
-        this._apiClient = new ApiClient('/');
+        this._apiClient = new ApiClient('/', new StorageHelper());
     }
     
     public GetApiClient(): ApiClient
@@ -23,7 +24,7 @@ export class AppFactory
         return new LoginManager(
             this._apiClient,
             new ErrorHelper(),
-            new StorageHelper(this._apiClient)
+            new StorageHelper()
         );
     }
 
@@ -32,7 +33,7 @@ export class AppFactory
         return new RegisterManager(
             this._apiClient,
             new ErrorHelper(),
-            new StorageHelper(this._apiClient)
+            new StorageHelper()
         );
     } 
     
@@ -41,7 +42,16 @@ export class AppFactory
         return new PasswordResetManager(
             this._apiClient,
             new ErrorHelper(),
-            new StorageHelper(this._apiClient)
+            new StorageHelper()
         );
-    }     
+    }
+    
+    public ProfileManager(): ProfileManager
+    {
+        return new ProfileManager(
+            this._apiClient,
+            new ErrorHelper(),
+            new StorageHelper()
+        );
+    }
 }
