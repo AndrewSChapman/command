@@ -280,4 +280,26 @@ input[type="submit"] {
 .frmLogin {
   position: relative;
 }
+
+ul.actions {
+  list-style-type: none;
+  margin: 30px 0 0 0;
+  padding: 0;
+}
+
+ul.actions li {
+  list-style-type: none;
+}
+
+ul.actions li a {
+  display: inline-block;
+  text-decoration: underline;
+  margin-right: 20px;
+  color: #333333;
+  cursor: pointer;
+}
+
+ul.actions li a:hover {
+  color: orange;
+}
 /*# sourceMappingURL=main.css.map */

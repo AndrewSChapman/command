@@ -11396,13 +11396,39 @@ class ProfileManager {
         this._$form = $('#frmProfile');
         this._$firstName = this._$form.find('#firstName');
         this._$lastName = this._$form.find('#lastName');
+        this._$username = this._$form.find('#username');
+        this._$password = this._$form.find('#password');
+        this._$passwordRepeat = this._$form.find('#passwordRepeat');
+        this._$actionLinks = $('ul.actions');
         this.attachListeners();
     }
     attachListeners() {
         this.onFormSubmit();
+        this.onActionLinkClick();
     }
     formIsValid() {
         return true;
+    }
+    onActionLinkClick() {
+        this._$actionLinks.find('a').on('click', (evt) => {
+            evt.preventDefault();
+            const $link = $(evt.target);
+            const action = $link.data('action');
+            switch (action) {
+                case 'changePassword':
+                    console.log('Handle Change Password');
+                    break;
+                case 'changeEmail':
+                    console.log('Handle Change Email');
+                    break;
+                case 'changeUsername':
+                    console.log('Handle Change Username');
+                    break;
+                default:
+                    console.log('Unhandled action link: ' + action);
+                    break;
+            }
+        });
     }
     onFormSubmit() {
         this._$form.on('submit', (evt) => __awaiter(this, void 0, void 0, function* () {

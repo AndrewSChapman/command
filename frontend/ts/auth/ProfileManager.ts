@@ -19,10 +19,14 @@ export class ProfileManager
 
     /*
     private _$emailAddress: JQuery<HTMLElement>;
+    */
+
     private _$username: JQuery<HTMLElement>;
     private _$password: JQuery<HTMLElement>;
     private _$passwordRepeat: JQuery<HTMLElement>;
-    */
+
+    private _$actionLinks: JQuery<HTMLElement>;
+    
     private _$messages: JQuery<HTMLElement>;
 
     constructor(
@@ -43,10 +47,13 @@ export class ProfileManager
         
         /*
         this._$emailAddress = this._$form.find('#emailAddress');
+        */
+        
         this._$username = this._$form.find('#username');
         this._$password = this._$form.find('#password');
         this._$passwordRepeat = this._$form.find('#passwordRepeat');
-        */
+
+        this._$actionLinks = $('ul.actions');
 
         this.attachListeners();
     }
@@ -54,6 +61,7 @@ export class ProfileManager
     private attachListeners(): void
     {
         this.onFormSubmit();
+        this.onActionLinkClick();
     }
 
     private formIsValid(): boolean
@@ -69,6 +77,34 @@ export class ProfileManager
         */
         
         return true;
+    }
+
+    private onActionLinkClick(): void
+    {
+        this._$actionLinks.find('a').on('click', (evt) => {
+            evt.preventDefault();
+
+            const $link = $(evt.target);
+            const action: string = $link.data('action');
+
+            switch(action) {
+                case 'changePassword':
+                    console.log('Handle Change Password');
+                    break;
+
+                    case 'changeEmail':
+                    console.log('Handle Change Email');
+                    break;
+                    
+                    case 'changeUsername':
+                    console.log('Handle Change Username');
+                    break;                    
+
+                default:
+                    console.log('Unhandled action link: ' + action);
+                    break;
+            }
+        });
     }
 
     private onFormSubmit(): void

@@ -16,13 +16,38 @@ html
 
             form#frmProfile.frmProfile
                 fieldset
+                    label(for="username") Username
+                    input#username(type="text", name="username", disabled="disabled", value="#{profile.username}")
+
                     label(for="firstName") First Name
                     input#firstName(type="text", name="firstName", required="required", value="#{profile.firstName}")
 
                     label(for="lastName") Last Name
-                    input#lastName(type="text", name="lastName", required="required", value="#{profile.lastName}")        
+                    input#lastName(type="text", name="lastName", required="required", value="#{profile.lastName}")
 
                 input#btnSubmit(type="submit", value="Save")
+
+            div.changePasswordWrapper.hidden
+                p To change your login password, please enter your current password, and then enter a new password repeated twice and click submit.
+
+                form#frmChangePassword.frmChangePassword
+                    fieldset
+                        label(for="existingPassword") Current Password
+                        input#existingPassword(type="password", name="existingPassword", value="")
+
+                        label(for="newPassword") New Password
+                        input#newPassword(type="password", name="newPassword", value="")   
+
+                        label(for="newPasswordRepeated") New Password Repeated
+                        input#newPasswordRepeated(type="password", name="newPasswordRepeated", value="")                                     
+
+                    input#btnSubmitChangePassword(type="submit", value="Submit")                
+
+            ul.actions
+                li
+                    a(data-action="changePassword") Change My Password
+                    a(data-action="changeEmail") Change My Email Address
+                    a(data-action="changeUsername") Change My Username
 
             script(type="text/javascript").
                 $(document).ready(function() {
