@@ -122,7 +122,7 @@ class Container
         auto connection = new Connection(dbConnectionStr);
 
         // Connect to Mongo
-        auto mongoClient = connectMongoDB(appConfig.getMongoHost());
+        //auto mongoClient = connectMongoDB(appConfig.getMongoHost());
 
         // Connect to Redis
 		auto redisClient = connectRedis (appConfig.getRedisHost(), appConfig.getRedisPort());
@@ -133,6 +133,6 @@ class Container
             versionIsRelease = false;
         }
 
-        return new Container(connection, mongoClient, redisDatabase, appConfig, versionIsRelease, smtpSettings);
+        return new Container(connection, null, redisDatabase, appConfig, versionIsRelease, smtpSettings);
     }
 }

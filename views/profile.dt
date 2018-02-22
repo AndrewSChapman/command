@@ -4,55 +4,74 @@ html
         title Profile
         include partials/head
     body
-        include partials/nav
+        div.contentWrapper
+            include partials/nav
 
-        article.main
+            article.main
 
-            h1 My Profile
+                h1 My Profile
 
-            p Feel free to edit any of your details below.  You must click the 'Save' button to presist the changes.
+                div.messages
 
-            div.messages
+                p Feel free to edit any of your details below.  You must click the 'Save' button to presist the changes.
 
-            form#frmProfile.frmProfile
-                fieldset
-                    label(for="username") Username
-                    input#username(type="text", name="username", disabled="disabled", value="#{profile.username}")
-
-                    label(for="firstName") First Name
-                    input#firstName(type="text", name="firstName", required="required", value="#{profile.firstName}")
-
-                    label(for="lastName") Last Name
-                    input#lastName(type="text", name="lastName", required="required", value="#{profile.lastName}")
-
-                input#btnSubmit(type="submit", value="Save")
-
-            div.changePasswordWrapper.hidden
-                p To change your login password, please enter your current password, and then enter a new password repeated twice and click submit.
-
-                form#frmChangePassword.frmChangePassword
+                form#frmProfile.frmProfile
                     fieldset
-                        label(for="existingPassword") Current Password
-                        input#existingPassword(type="password", name="existingPassword", value="")
+                        label(for="username") Username
+                        input#username(type="text", name="username", disabled="disabled", value="#{profile.username}")
 
-                        label(for="newPassword") New Password
-                        input#newPassword(type="password", name="newPassword", value="")   
+                        label(for="emailAddress") Email Address
+                        input#emailAddress(type="text", name="emailAddress", disabled="disabled", value="#{profile.email}")                    
 
-                        label(for="newPasswordRepeated") New Password Repeated
-                        input#newPasswordRepeated(type="password", name="newPasswordRepeated", value="")                                     
+                        label(for="firstName") First Name
+                        input#firstName(type="text", name="firstName", required="required", value="#{profile.firstName}")
 
-                    input#btnSubmitChangePassword(type="submit", value="Submit")                
+                        label(for="lastName") Last Name
+                        input#lastName(type="text", name="lastName", required="required", value="#{profile.lastName}")
 
-            ul.actions
-                li
-                    a(data-action="changePassword") Change My Password
-                    a(data-action="changeEmail") Change My Email Address
-                    a(data-action="changeUsername") Change My Username
+                    input#btnSubmit(type="submit", value="Save")
 
-            script(type="text/javascript").
-                $(document).ready(function() {
-                    const profileManager = AppFactory.ProfileManager();
-                });
-            
+                ul.actions
+                    li
+                        a(data-action="changePassword") Change My Password
+                        a(data-action="changeEmail") Change My Email Address                
+
+                div#changePasswordWrapper.hidden
+                    h2 Change My Password
+
+                    p To change your login password, please enter your current password, and then enter a new password repeated twice and click submit.
+
+                    form#frmChangePassword.frmChangePassword
+                        fieldset
+                            label(for="existingPassword") Current Password
+                            input#existingPassword(type="password", name="existingPassword", value="", required="required")
+
+                            label(for="newPassword") New Password
+                            input#newPassword(type="password", name="newPassword", value="", required="required")   
+
+                            label(for="newPasswordRepeat") New Password Repeated
+                            input#newPasswordRepeat(type="password", name="newPasswordRepeat", value="", required="required")                                     
+
+                        input#btnSubmitChangePassword(type="submit", value="Submit")  
+
+                div#changeEmailWrapper.hidden
+                    h2 Change My Email Address
+
+                    p To change your email address, please enter your new email address in the box below and then click submit.
+                    p Please note that your email address is required to recover your password in the event that you forget it in the future.
+
+                    form#frmChangeEmail.frmChangeEmail
+                        fieldset
+                            label(for="newEmailAddress") New Email Address
+                            input#newEmailAddress(type="text", name="newEmailAddress", value="", required="required")   
+
+                        input#btnSubmitChangeEmail(type="submit", value="Submit")                                   
+
+                script(type="text/javascript").
+                    $(document).ready(function() {
+                        const profileManager = AppFactory.ProfileManager();
+                    });
+                    
+        include partials/footer
 
     

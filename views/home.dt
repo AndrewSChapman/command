@@ -4,10 +4,13 @@ html
         title Home
         include partials/head
     body
-        include partials/nav
+        div.contentWrapper
+            include partials/nav
 
-        article.main
+            article.main
 
-            h1 Welcome to Command!
+                h1 Welcome to Command!
 
-            p This is the home page.  You can find the template for this page in views/home.dt
+                p This is the home page.  You can find the template for this page in views/home.dt
+
+        include partials/footer

@@ -56,7 +56,7 @@ void main()
         })
         .get("/password_reset", (HTTPServerRequest req, HTTPServerResponse res) @safe {
             auto pageHandler = new PageHandler(req, res, appConfig);
-            pageHandler.login();
+            pageHandler.passwordReset();
         })
         .get("/my_profile", (HTTPServerRequest req, HTTPServerResponse res) @safe {
             auto pageHandler = new PageHandler(req, res, appConfig);

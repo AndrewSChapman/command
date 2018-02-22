@@ -4,51 +4,51 @@ html
         title Register
         include partials/head
     body
-        include partials/nav
+        div.contentWrapper
+            include partials/nav
 
-        article.main
+            article.main
 
-            h1 Register
+                h1 Register
 
-            p To create an account with CommanD, please enter your details in the form below.   Please note that all fields are required.
+                p To create an account with CommanD, please enter your details in the form below.   Please note that all fields are required.
 
-            div.messages
+                div.messages
 
-            div.loginWrapper
+                div.loginWrapper
 
-                form#frmRegister.frmRegister
-                    fieldset
-                        label(for="firstName") First Name
-                        input#firstName(type="text", name="firstName", required="required", value="")
+                    form#frmRegister.frmRegister
+                        fieldset
+                            label(for="firstName") First Name
+                            input#firstName(type="text", name="firstName", required="required", value="")
 
-                        label(for="lastName") Last Name
-                        input#lastName(type="text", name="lastName", required="required", value="")
+                            label(for="lastName") Last Name
+                            input#lastName(type="text", name="lastName", required="required", value="")
 
-                        label(for="emailAddress") Email Address
-                            i.tooltip.fas.fa-info-circle(alt="",title="You will need this to reset your password in the future.")
-                        input#emailAddress(type="text", name="emailAddress", required="required", value="")                    
+                            label(for="emailAddress") Email Address
+                                i.tooltip.fas.fa-info-circle(alt="",title="You will need this to reset your password in the future.")
+                            input#emailAddress(type="text", name="emailAddress", required="required", value="")                    
 
-                        label(for="username") Username
-                            i.tooltip.fas.fa-info-circle(alt="",title="You will use this to login.")
-                        input#username(type="text", name="username", required="required", value="")
+                            label(for="username") Username
+                                i.tooltip.fas.fa-info-circle(alt="",title="You will use this to login.")
+                            input#username(type="text", name="username", required="required", value="")
 
-                        label(for="password") Strong Password
-                            i.tooltip.fas.fa-info-circle(alt="",title="Should be at least 8 characters long, and contain varying upper/lower case and symbols.")
-                        input#password(type="password", name="password", required="required", value="")
+                            label(for="password") Strong Password
+                                i.tooltip.fas.fa-info-circle(alt="",title="Should be at least 8 characters long, and contain varying upper/lower case and symbols.")
+                            input#password(type="password", name="password", required="required", value="")
 
-                        label(for="passwordRepeat") Please Repeat Your Password
-                        input#passwordRepeat(type="password", name="passwordRepeat", required="required", value="")              
+                            label(for="passwordRepeat") Please Repeat Your Password
+                            input#passwordRepeat(type="password", name="passwordRepeat", required="required", value="")              
 
-                    input#btnSubmit(type="submit", value="Create My Account >>")
+                        input#btnSubmit(type="submit", value="Create My Account >>")
 
-            p Already have a CommanD account? &nbsp;
-                a(href="/login") Click here to login.
-            
-            
-            script(type="text/javascript").
-                $(document).ready(function() {
-                    const registerManager = AppFactory.RegisterManager();
-                });
-            
-
+                p Already have a CommanD account? &nbsp;
+                    a(href="/login") Click here to login.
+                
+                
+                script(type="text/javascript").
+                    $(document).ready(function() {
+                        const registerManager = AppFactory.RegisterManager();
+                    });
+        include partials/footer
     

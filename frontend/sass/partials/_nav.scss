@@ -1,0 +1,125 @@
+/* Navigation */
+.mainNav {
+    position: relative;
+    display: block;
+    width: 100%;
+    background-color: skyblue;
+    margin-bottom: 20px;
+    box-shadow: 3px 3px 5px 6px #ccc;
+    min-height: 50px;
+
+    a {
+        font-size: 1.0em;
+    }
+
+    a.openMenu {
+        right: 10px;
+        top: 10px;            
+        color: white;
+        position: absolute;
+
+        @media only screen and (min-width: 500px) {
+            display: none;
+        }        
+
+        .hamburger {     
+            width: 30px;
+            height: 30px;
+        }         
+    }   
+
+    a.closeMenu {
+        right: 10px;
+        top: 8px;            
+        color: white;
+        position: absolute;
+        display: none;        
+
+        .hamburger-close {      
+            width: 30px;
+            height: 30px;
+        }        
+    }
+
+
+    .logo {
+        color: white;
+        font-weight: bold;
+        margin: 0;
+        display: inline-block;
+        padding: 10px 0 15px 10px;
+        position: initial;
+    }
+
+    ul {
+        list-style-type: none;
+        display: none;
+        margin-top: -4px;
+
+        @media only screen and (min-width: 500px) {
+            display: inline-block;
+        }        
+    }
+
+    li {
+        display: inline-block;
+        padding: 10px;
+
+        a {
+            text-decoration: none;
+            color: #333333;
+            
+            &:focus {
+                color: orange;
+            }
+
+            &:hover {
+                color: #666666;
+            }
+        }
+    }
+
+    .loggedInUser {
+        display: none;
+        float: right;
+        margin: 10px;
+        font-size: 0.8rem;
+
+        a {
+            color: orangered;
+        }
+
+        @media only screen and (min-width: 800px) {
+            display: inline-block;
+        }        
+    }
+}
+
+:target {
+    ul {
+        display: block;
+        position: static;
+    }
+
+    a.openMenu {
+        display: none;
+    }
+
+    a.closeMenu {
+        display: block;
+    }
+
+    li {
+        display: block;
+        border-bottom: 1px dashed white;
+
+        &:first-child {
+            border-top: 1px solid white;
+        }
+
+        a {
+            display: block;
+            padding: 10px 0;
+        }
+    }
+}

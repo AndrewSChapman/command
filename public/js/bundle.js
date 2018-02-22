@@ -11396,17 +11396,31 @@ class ProfileManager {
         this._$form = $('#frmProfile');
         this._$firstName = this._$form.find('#firstName');
         this._$lastName = this._$form.find('#lastName');
-        this._$username = this._$form.find('#username');
-        this._$password = this._$form.find('#password');
-        this._$passwordRepeat = this._$form.find('#passwordRepeat');
+        this._$emailAddress = this._$form.find('#emailAddress');
+        this._$changePasswordWrapper = $('#changePasswordWrapper ');
+        this._$formChangePassword = this._$changePasswordWrapper.find('#frmChangePassword');
+        this._$existingPassword = this._$formChangePassword.find('#existingPassword');
+        this._$newPassword = this._$formChangePassword.find('#newPassword');
+        this._$newPasswordRepeat = this._$formChangePassword.find('#newPasswordRepeat');
+        this._$changeEmailWrapper = $('#changeEmailWrapper ');
+        this._$formChangeEmail = this._$changeEmailWrapper.find('#frmChangeEmail');
+        this._$newEmailAddress = this._$formChangeEmail.find('#newEmailAddress');
         this._$actionLinks = $('ul.actions');
         this.attachListeners();
     }
     attachListeners() {
-        this.onFormSubmit();
+        this.onProfileFormSubmit();
+        this.onChangePasswordFormSubmit();
+        this.onChangeEmailFormSubmit();
         this.onActionLinkClick();
     }
-    formIsValid() {
+    changePasswordFormIsValid() {
+        if (this._$newPassword.val() != this._$newPasswordRepeat.val()) {
+            this.showError("Your passwords do not match.  Please enter your new password again twice and ensure you type it correctly.");
+            this._$newPassword.val("");
+            this._$newPasswordRepeat.val("");
+            return false;
+        }
         return true;
     }
     onActionLinkClick() {
@@ -11416,13 +11430,12 @@ class ProfileManager {
             const action = $link.data('action');
             switch (action) {
                 case 'changePassword':
-                    console.log('Handle Change Password');
+                    this._$changeEmailWrapper.addClass('hidden');
+                    this._$changePasswordWrapper.removeClass('hidden');
                     break;
                 case 'changeEmail':
-                    console.log('Handle Change Email');
-                    break;
-                case 'changeUsername':
-                    console.log('Handle Change Username');
+                    this._$changePasswordWrapper.addClass('hidden');
+                    this._$changeEmailWrapper.removeClass('hidden');
                     break;
                 default:
                     console.log('Unhandled action link: ' + action);
@@ -11430,7 +11443,7 @@ class ProfileManager {
             }
         });
     }
-    onFormSubmit() {
+    onProfileFormSubmit() {
         this._$form.on('submit', (evt) => __awaiter(this, void 0, void 0, function* () {
             evt.preventDefault();
             this.hideMessage();
@@ -11445,6 +11458,83 @@ class ProfileManager {
                 this._apiClient.post('profile', request).then((response) => {
                     this._overlayLoader.remove();
                     this.showInfo(`Your account has been updated successfully.`);
+                }, (error) => {
+                    this._overlayLoader.remove();
+                    this._errorHelper.resolveError(error);
+                    const message = this._errorHelper.getMessage();
+                    if (message != "") {
+                        this.showError(message);
+                    }
+                    else {
+                        this.showError('Sorry, your request failed.  Please check your details and try again.');
+                    }
+                });
+            }
+            catch (error) {
+                this._overlayLoader.remove();
+                this.showError(error);
+            }
+        }));
+    }
+    onChangePasswordFormSubmit() {
+        this._$formChangePassword.on('submit', (evt) => __awaiter(this, void 0, void 0, function* () {
+            evt.preventDefault();
+            if (!this.changePasswordFormIsValid()) {
+                return;
+            }
+            this.hideMessage();
+            this._overlayLoader.render();
+            try {
+                const request = {
+                    'changePassword': {
+                        'existingPassword': this._$existingPassword.val(),
+                        'newPassword': this._$newPassword.val(),
+                        'newPasswordRepeated': this._$newPasswordRepeat.val()
+                    }
+                };
+                this._apiClient.post('change_password', request).then((response) => {
+                    this._overlayLoader.remove();
+                    this.showInfo(`Your password has been updated successfully.`);
+                    this._$changePasswordWrapper.addClass('hidden');
+                }, (error) => {
+                    this._overlayLoader.remove();
+                    this._$existingPassword.val("");
+                    this._$newPassword.val("");
+                    this._$newPasswordRepeat.val("");
+                    this._errorHelper.resolveError(error);
+                    const message = this._errorHelper.getMessage();
+                    if (message != "") {
+                        this.showError(message);
+                    }
+                    else {
+                        this.showError('Sorry, your request failed.  Please check your details and try again.');
+                    }
+                });
+            }
+            catch (error) {
+                this._overlayLoader.remove();
+                this.showError(error);
+            }
+        }));
+    }
+    onChangeEmailFormSubmit() {
+        this._$formChangeEmail.on('submit', (evt) => __awaiter(this, void 0, void 0, function* () {
+            evt.preventDefault();
+            this.hideMessage();
+            this._overlayLoader.render();
+            try {
+                const request = {
+                    'changeEmail': {
+                        'emailAddress': this._$newEmailAddress.val()
+                    }
+                };
+                this._apiClient.post('change_email', request).then((response) => {
+                    this._overlayLoader.remove();
+                    this.showInfo(`Your email address has been updated successfully.`);
+                    const newEmail = this._$newEmailAddress.val();
+                    this._$newEmailAddress.val('');
+                    this._$emailAddress.val(newEmail);
+                    this._$changeEmailWrapper.addClass('hidden');
                 }, (error) => {
                     this._overlayLoader.remove();
                     this._errorHelper.resolveError(error);

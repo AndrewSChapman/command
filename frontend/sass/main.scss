@@ -1,5 +1,5 @@
-@import 'reset';
-@import 'overlayLoader';
+@import 'partials/_reset';
+@import 'partials/_overlayLoader';
 
 body {
     background-color: white;
@@ -38,53 +38,37 @@ p {
     display: none;
 }
 
-nav {
-    display: block;
+/* Main Structure */
+html, body {
+    height: 100%;   
+}
+
+.contentWrapper {
+    min-height: 100%;
+    margin-bottom: -100px; 
+
+    &::after {
+        content: '';
+        display: block;
+        height: 100px;
+    }  
+}
+
+footer {
+    background: #333333;
     width: 100%;
-    background-color: skyblue;
-    margin-bottom: 20px;
+    height: 90px;
+    color: white;
 
-    .logo {
-        color: white;
-        font-weight: bold;
-        display: inline-block;
-        padding: 10px;
-        margin: 0;
+    p {
+        padding: 20px;
     }
+}
 
-    ul {
-        list-style-type: none;
-        display: inline-block;
-        margin-top: -4px;
-    }
+@import 'partials/_nav';
 
-    li {
-        display: inline-block;
-        padding: 10px;
-
-        a {
-            text-decoration: none;
-            color: #333333;
-            
-            &:focus {
-                color: orange;
-            }
-
-            &:hover {
-                color: #666666;
-            }
-        }
-    }
-
-    .loggedInUser {
-        float: right;
-        margin: 10px;
-        font-size: 0.8rem;
-
-        a {
-            color: orangered;
-        }
-    }
+.main {
+    padding: 10px 20px; 
 }
 
 form {
@@ -134,10 +118,6 @@ input[type="submit"] {
     padding: 7px;
 }
 
-.main {
-    padding: 10px 20px;
-}
-
 .messages
 {
     padding: 10px;
@@ -165,7 +145,7 @@ input[type="submit"] {
 
 ul.actions {
     list-style-type: none;
-    margin: 30px 0 0 0;
+    margin: 30px 0 30px 0;
     padding: 0;
 
     li {

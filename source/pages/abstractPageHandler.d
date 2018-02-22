@@ -56,6 +56,7 @@ abstract class AbstractPageHandler
         auto tokenQuery = queryFactory.createTokenQuery();
 
         if (!tokenQuery.existsByCode(requestInfo.tokenCode)) {
+            this.response.setCookie("tokenCode", null);
             return authenticatedUser;
         }
 

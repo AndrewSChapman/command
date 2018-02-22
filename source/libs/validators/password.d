@@ -7,11 +7,11 @@ class Password
 {
     this(string password, string identifier) @safe {
         if (password.length < 8) {
-            throw new Exception(format("%s must be at least 8 characters long", identifier));
+            throw new Exception(format("%s must be at least 8 characters long", capitalize(identifier)));
         }
 
         if (!this.strengthOK(password)) {
-            throw new Exception(format("%s is too weak", identifier));
+            throw new Exception(format("%s is too weak", capitalize(identifier)));
         }
     }
 

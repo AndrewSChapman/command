@@ -1,5 +1,11 @@
-nav
+nav#mainNav.mainNav
     h2.logo commanD
+    a.openMenu(href="#mainNav")
+        i.hamburger.fas.fa-bars
+
+    a.closeMenu(href="#")
+        i.hamburger-close.fas.fa-times-circle        
+
     ul
         li 
             a(href="/") Home
